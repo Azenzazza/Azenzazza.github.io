@@ -37,7 +37,7 @@ SITE_URL = os.environ.get("SITE_URL", "https://azenzazza.github.io")
 GROQ_MODEL_PLAN = "openai/gpt-oss-20b"
 GROQ_MODEL_REVIEW = "openai/gpt-oss-20b"
 GROQ_MODEL_POST = "openai/gpt-oss-20b"
-CEREBRAS_MODEL_CODE = "gpt-oss-120b"
+GROQ_MODEL_CODE = "openai/gpt-oss-120b"
 
 MAX_REVIEW_RETRY = 3
 SLEEP_BETWEEN_CALLS = 2  # 秒
@@ -55,12 +55,6 @@ groq = OpenAI(
     api_key=os.environ["GROQ_API_KEY"],
     base_url="https://api.groq.com/openai/v1",
 )
-
-cerebras = OpenAI(
-    api_key=os.environ["CEREBRAS_API_KEY"],
-    base_url="https://api.cerebras.ai/v1",
-)
-
 
 def chat(client: OpenAI, model: str, prompt: str, retries: int = 3) -> str:
     """LLM呼び出し（429時は指数バックオフでリトライ）"""
@@ -186,7 +180,7 @@ def implement_tool(plan: dict) -> str:
 - ユーザー入力は textContent で扱う
 - 出力はHTMLのみ。説明文・コードブロック記号は一切付けない。
 """
-    html = chat(cerebras, CEREBRAS_MODEL_CODE, prompt)
+    html = chat(groq, GROQ_MODEL_CODE, prompt)
     return strip_code_fence(html)
 
 
@@ -237,7 +231,7 @@ def fix_tool(html: str, issues: list[str], hint: str) -> str:
 【修正前のコード】
 {html}
 """
-    fixed = chat(cerebras, CEREBRAS_MODEL_CODE, prompt)
+    fixed = chat(groq, GROQ_MODEL_CODE, prompt)
     return strip_code_fence(fixed)
 
 
