@@ -71,16 +71,6 @@
       margin-bottom: 28px;
     }
 
-    .subtitle a {
-      color: #4a7c2f;
-      text-decoration: none;
-    }
-
-    .subtitle a:hover {
-      text-decoration: underline;
-    }
-
-    /* 検索・フィルタ */
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -144,7 +134,6 @@
       margin-left: auto;
     }
 
-    /* カードグリッド */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -241,7 +230,7 @@
     <nav class="navbar">
       <a href="../">ホーム</a>
       <a href="../project/project.html">プロジェクト</a>
-      <a href="#" style="font-weight:700;">ツール</a>
+      <a href="./tools.html" style="font-weight:700;">ツール</a>
     </nav>
   </header>
 
@@ -341,7 +330,7 @@
     list.sort((a, b) => (b.id || "").localeCompare(a.id || ""));
 
     contentEl.innerHTML = `<div class="grid">${list.map(t => {
-      const href = t.path || `./${t.id}-${t.slug}/`;
+      const href = `./${t.id}-${t.slug}/`;
       const catLabel = CATEGORY_LABELS[t.category] || t.category || "";
       return `
         <a class="card" href="${escapeHtml(href)}">
