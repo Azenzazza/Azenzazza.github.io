@@ -1,0 +1,39 @@
+name: Daily Tool
+
+on:
+  schedule:
+    - cron: '37 18 * * *'   # JST 03:37
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: pip install -r scripts/requirements.txt
+
+      - name: Run agents
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+          # Bluesky（後で追加する場合はコメントを外す）
+          # BSKY_HANDLE: ${{ secrets.BSKY_HANDLE }}
+          # BSKY_APP_PASSWORD: ${{ secrets.BSKY_APP_PASSWORD }}
+          SITE_URL: https://azenzazza.github.io
+        run: python scripts/main.py
+
+      - name: Commit & push
+        run: |
+          git config user.name "ai-bot"
+          git config user.email "bot@azenzazza.github.io"
+          git add tools/ data/
+          git diff --staged --quiet || git commit -m "Add tool $(date +%F)"
+          git push
