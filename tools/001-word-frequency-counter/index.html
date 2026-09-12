@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>単語頻度カウンタ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial,sans-serif;margin:0;padding:0;display:flex;flex-direction:column;align-items:center;background:#f5f5f5;}
+header{width:100%;background:#4a90e2;color:#fff;padding:1rem;text-align:center;}
+main{max-width:800px;width:90%;margin:1rem 0;}
+textarea{width:100%;height:150px;padding:0.5rem;font-size:1rem;box-sizing:border-box;resize:vertical;}
+button{margin-top:0.5rem;padding:0.5rem 1rem;font-size:1rem;background:#4a90e2;color:#fff;border:none;border-radius:4px;cursor:pointer;}
+button:hover{background:#357ab8;}
+table{width:100%;border-collapse:collapse;margin-top:1rem;background:#fff;}
+th,td{border:1px solid #ddd;padding:0.5rem;text-align:left;}
+th{background:#e9e9e9;}
+@media (max-width:600px){
+    textarea{height:120px;}
+    button{width:100%;}
+}
+</style>
+</head>
+<body>
+<header>
+<h1>単語頻度カウンタ</h1>
+</header>
+<main>
+<label for="inputText">テキストを入力してください：</label>
+<textarea id="inputText" placeholder="ここにテキストを貼り付け..."></textarea>
+<button id="runBtn">集計実行</button>
+<div id="result"></div>
+</main>
+<script>
+document.getElementById('runBtn').addEventListener('click', function(){
+    var text = document.getElementById('inputText').value;
+    var words = text.toLowerCase().match(/[a-z0-9]+/gi) || [];
+    var freq = Object.create(null);
+    words.forEach(function(w){
+        freq[w] = (freq[w] || 0) + 1;
+    });
+    var entries = Object.keys(freq).map(function(k){return {word:k,count:freq[k]};});
+    entries.sort(function(a,b){
+        if(b.count!==a.count) return b.count-a.count;
+        return a.word.localeCompare(b.word);
+    });
+    var resultDiv = document.getElementById('result');
+    // clear previous result
+    while (resultDiv.firstChild) resultDiv.removeChild(resultDiv.firstChild);
+    if(entries.length===0){
+        var p = document.createElement('p');
+        p.textContent = '単語が見つかりませんでした。';
+        resultDiv.appendChild(p);
+        return;
+    }
+    var table = document.createElement('table');
+    var thead = document.createElement('thead');
+    var trHead = document.createElement('tr');
+    var thWord = document.createElement('th');
+    thWord.textContent = '単語';
+    var thCount = document.createElement('th');
+    thCount.textContent = '頻度';
+    trHead.appendChild(thWord);
+    trHead.appendChild(thCount);
+    thead.appendChild(trHead);
+    table.appendChild(thead);
+    var tbody = document.createElement('tbody');
+    entries.forEach(function(item){
+        var tr = document.createElement('tr');
+        var tdWord = document.createElement('td');
+        tdWord.textContent = item.word;
+        var tdCount = document.createElement('td');
+        tdCount.textContent = item.count;
+        tr.appendChild(tdWord);
+        tr.appendChild(tdCount);
+        tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    resultDiv.appendChild(table);
+});
+</script>
+</body>
+</html>

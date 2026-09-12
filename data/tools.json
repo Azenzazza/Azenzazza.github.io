@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "001",
+    "slug": "word-frequency-counter",
+    "title": "単語頻度カウンタ",
+    "description": "入力テキストの単語頻度を表示",
+    "category": "text",
+    "created": "2026-09-12",
+    "path": "tools/001-word-frequency-counter/"
+  }
+]
