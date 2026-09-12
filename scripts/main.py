@@ -1,13 +1,13 @@
 """
 毎日1つ、AIがWebツールを生成してサイトに追加する。
+テンプレートをベースに生成するので、全ツールのデザインが統一される。
 Blueskyの環境変数が設定されていれば自動投稿、未設定ならスキップ。
 
 必要な環境変数:
   GROQ_API_KEY       - Groq APIキー（必須）
-  CEREBRAS_API_KEY   - Cerebras APIキー（必須）
   BSKY_HANDLE        - Blueskyハンドル（任意）
   BSKY_APP_PASSWORD  - Blueskyアプリパスワード（任意）
-  SITE_URL           - https://azenzazza.github.io
+  SITE_URL           - 例: https://azenzazza.github.io
 """
 
 from __future__ import annotations
@@ -30,10 +30,11 @@ ROOT = Path(__file__).resolve().parent.parent
 TOOLS_DIR = ROOT / "tools"
 DATA_DIR = ROOT / "data"
 INDEX_JSON = DATA_DIR / "tools.json"
+TEMPLATE_PATH = ROOT / "scripts" / "template.html"
 
 SITE_URL = os.environ.get("SITE_URL", "https://azenzazza.github.io")
 
-# モデル
+# モデル（Groqに統一）
 GROQ_MODEL_PLAN = "openai/gpt-oss-20b"
 GROQ_MODEL_REVIEW = "openai/gpt-oss-20b"
 GROQ_MODEL_POST = "openai/gpt-oss-20b"
@@ -55,6 +56,7 @@ groq = OpenAI(
     api_key=os.environ["GROQ_API_KEY"],
     base_url="https://api.groq.com/openai/v1",
 )
+
 
 def chat(client: OpenAI, model: str, prompt: str, retries: int = 3) -> str:
     """LLM呼び出し（429時は指数バックオフでリトライ）"""
@@ -162,23 +164,35 @@ def plan_tool(existing: list[dict]) -> dict:
 
 
 def implement_tool(plan: dict) -> str:
-    """実装AI：HTML 1ファイルを生成"""
-    prompt = f"""以下の仕様で、HTML/CSS/JSを1ファイルにまとめたWebツールを作成してください。
+    """実装AI：テンプレートをベースにHTMLを生成"""
+    template = TEMPLATE_PATH.read_text(encoding="utf-8")
 
-【タイトル】{plan['title']}
+    prompt = f"""あなたはWebツールの実装担当です。
+以下の「テンプレート」をベースに、指定されたツールを実装してください。
+
+【ツール名】{plan['title']}
 【説明】{plan['description']}
 【仕様】
 {plan['spec']}
 
-【厳守事項】
-- HTML 1ファイルで完結（外部ライブラリ・外部API禁止）
-- CDN読み込みも禁止
-- インラインCSS・インラインJSのみ
-- レスポンシブ対応（スマホでも使える）
-- UIは日本語
+【実装ルール】
+- テンプレートの構造（header, main, footer, style, script）は絶対に変更しない
+- プレースホルダを以下のように置き換える：
+  - {{TITLE}} → {plan['title']}
+  - {{DESCRIPTION}} → {plan['description']}
+  - {{CONTENT}} → ツールの入力フォームやボタンなど（HTML）
+  - {{SCRIPT}} → ツールの動作を実装するJavaScript
+- テンプレートの <style> は変更しない（既存のクラス・ボタン・テーブルスタイルをそのまま使う）
+- 結果は id="result" の要素に textContent で出力する
 - innerHTML / eval / document.write は使わない
-- ユーザー入力は textContent で扱う
-- 出力はHTMLのみ。説明文・コードブロック記号は一切付けない。
+- 外部ライブラリ・外部API禁止
+- 出力はHTMLのみ。説明文・コードブロック記号は一切付けない
+
+【テンプレート】
+{template}
+
+【出力】
+上記テンプレートのプレースホルダを埋めた、完全なHTMLファイルを出力してください。
 """
     html = chat(groq, GROQ_MODEL_CODE, prompt)
     return strip_code_fence(html)
@@ -194,6 +208,7 @@ def review_tool(html: str) -> dict:
 - ユーザー入力のエスケープ漏れ
 - 明らかなバグ、動作しない箇所
 - 外部リソース（CDN・API）への依存
+- プレースホルダ（{{{{TITLE}}}} など）が残っていないか
 
 【出力形式】JSONのみ。コードブロックで囲まないこと。
 {{
@@ -226,6 +241,7 @@ def fix_tool(html: str, issues: list[str], hint: str) -> str:
 - HTML 1ファイルで完結
 - 外部ライブラリ・外部API禁止
 - innerHTML / eval / document.write 禁止
+- 既存の <style> は変更しない
 - 出力はHTMLのみ。説明文・コードブロック記号は一切付けない。
 
 【修正前のコード】
