@@ -34,9 +34,9 @@ INDEX_JSON = DATA_DIR / "tools.json"
 SITE_URL = os.environ.get("SITE_URL", "https://azenzazza.github.io")
 
 # モデル
-GROQ_MODEL_PLAN = "llama-3.1-8b-instant"
-GROQ_MODEL_REVIEW = "llama-3.1-8b-instant"
-GROQ_MODEL_POST = "llama-3.1-8b-instant"
+GROQ_MODEL_PLAN = "openai/gpt-oss-20b"
+GROQ_MODEL_REVIEW = "openai/gpt-oss-20b"
+GROQ_MODEL_POST = "openai/gpt-oss-20b"
 CEREBRAS_MODEL_CODE = "gpt-oss-120b"
 
 MAX_REVIEW_RETRY = 3
