@@ -32,6 +32,6 @@ jobs:
         run: |
           git config user.name "ai-bot"
           git config user.email "bot@azenzazza.github.io"
-          git add tools/ data/
+          git add tools/ data/ sitemap.xml
           git diff --staged --quiet || git commit -m "Add tool $(date +%F)"
           git push
