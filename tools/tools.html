@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ツール - Azenzazzaのサイト</title>
-  <meta name="description" content="AIが毎日1つ作る便利なWebツール集">
+  <meta name="description" content="AIが毎日作る便利なWebツール集">
   <style>
     body {
       margin: 0;
@@ -237,7 +237,7 @@
   <main>
     <h1>ツール</h1>
     <p class="subtitle">
-      AIが毎日1つ作る、小さな便利ツール集です。
+      AIが毎日作る、小さな便利ツール集です。
     </p>
 
     <div class="controls">
@@ -262,6 +262,7 @@
 
 <script>
 (function () {
+  // 既知カテゴリのラベルマッピング（英語キーが来たとき用）
   const CATEGORY_LABELS = {
     text: "テキスト",
     image: "画像",
@@ -290,7 +291,13 @@
   }
 
   function renderCategories() {
-    const used = new Set(allTools.map(t => t.category).filter(Boolean));
+    // 実際に使われているカテゴリを収集
+    const used = new Set();
+    allTools.forEach(t => {
+      if (t && t.category) used.add(String(t.category));
+    });
+
+    // 既知カテゴリ（CATEGORY_LABELSのキー）を先に、未知カテゴリを後ろに
     const known = Object.keys(CATEGORY_LABELS).filter(c => used.has(c));
     const unknown = Array.from(used).filter(c => !(c in CATEGORY_LABELS));
     const cats = ["all", ...known, ...unknown];
@@ -315,7 +322,7 @@
     return allTools.filter(t => {
       if (activeCategory !== "all" && t.category !== activeCategory) return false;
       if (!q) return true;
-      const hay = (t.title + " " + t.description + " " + (t.slug || "")).toLowerCase();
+      const hay = ((t.title || "") + " " + (t.description || "") + " " + (t.slug || "")).toLowerCase();
       return hay.includes(q);
     });
   }
@@ -329,6 +336,7 @@
       return;
     }
 
+    // 新しい順
     list.sort((a, b) => (b.id || "").localeCompare(a.id || ""));
 
     contentEl.innerHTML = `<div class="grid">${list.map(t => {
