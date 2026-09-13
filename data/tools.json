@@ -34,5 +34,14 @@
     "category": "変換",
     "created": "2026-09-13",
     "path": "tools/004-url-encoder/"
+  },
+  {
+    "id": "005",
+    "slug": "csv-table-viewer",
+    "title": "CSVテーブル表示ツール",
+    "description": "CSVデータを表形式で表示",
+    "category": "変換",
+    "created": "2026-09-13",
+    "path": "tools/005-csv-table-viewer/"
   }
 ]
