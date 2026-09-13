@@ -2,7 +2,7 @@ name: Daily Tool
 
 on:
   schedule:
-    - cron: '37 18 * * *'   # JST 03:37
+    - cron: '37 6,18 * * *'   # JST 15:37 と 03:37
   workflow_dispatch:
 
 jobs:
