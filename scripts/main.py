@@ -285,6 +285,32 @@ def append_to_index(tool_id: str, plan: dict) -> None:
         "path": f"tools/{tool_id}-{plan['slug']}/",
     })
     save_tools(tools)
+def generate_sitemap() -> None:
+    """sitemap.xml を tools.json から生成する"""
+    tools = load_tools()
+    today = date.today().isoformat()
+
+    urls = [
+        (f"{SITE_URL}/", today),
+        (f"{SITE_URL}/tools/tools.html", today),
+    ]
+    for t in tools:
+        tool_url = f"{SITE_URL}/tools/{t['id']}-{t['slug']}/"
+        urls.append((tool_url, t.get("created", today)))
+
+    lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ]
+    for loc, lastmod in urls:
+        lines.append("  <url>")
+        lines.append(f"    <loc>{loc}</loc>")
+        lines.append(f"    <lastmod>{lastmod}</lastmod>")
+        lines.append("  </url>")
+    lines.append("</urlset>")
+
+    (ROOT / "sitemap.xml").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"[sitemap] {len(urls)} URLを書き出しました")
 
 
 # ============================================================
@@ -369,6 +395,7 @@ def main() -> int:
     url = write_tool(tool_id, plan, html)
     append_to_index(tool_id, plan)
     print(f"[save] {url}")
+    generate_sitemap()
 
     # 5. Bluesky告知（有効なら）
     if BSKY_ENABLED:
