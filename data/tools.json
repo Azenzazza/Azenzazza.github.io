@@ -7,5 +7,14 @@
     "category": "text",
     "created": "2026-09-12",
     "path": "tools/001-word-frequency-counter/"
+  },
+  {
+    "id": "002",
+    "slug": "list-formatter",
+    "title": "リスト整形ツール",
+    "description": "カンマ区切りを箇条書きに変換",
+    "category": "text",
+    "created": "2026-09-13",
+    "path": "tools/002-list-formatter/"
   }
 ]
