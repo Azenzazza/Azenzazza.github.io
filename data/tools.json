@@ -25,5 +25,14 @@
     "category": "text",
     "created": "2026-09-13",
     "path": "tools/003-lexical-diversity/"
+  },
+  {
+    "id": "004",
+    "slug": "url-encoder",
+    "title": "URLエンコード/デコードツール",
+    "description": "URL文字列をエンコード・デコードする簡易ツール",
+    "category": "変換",
+    "created": "2026-09-13",
+    "path": "tools/004-url-encoder/"
   }
 ]
