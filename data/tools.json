@@ -16,5 +16,14 @@
     "category": "text",
     "created": "2026-09-13",
     "path": "tools/002-list-formatter/"
+  },
+  {
+    "id": "003",
+    "slug": "lexical-diversity",
+    "title": "語彙多様性指数計算",
+    "description": "文章の語彙多様性を数値化します",
+    "category": "text",
+    "created": "2026-09-13",
+    "path": "tools/003-lexical-diversity/"
   }
 ]
