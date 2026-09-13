@@ -43,5 +43,14 @@
     "category": "変換",
     "created": "2026-09-13",
     "path": "tools/005-csv-table-viewer/"
+  },
+  {
+    "id": "006",
+    "slug": "base64-encode-decode",
+    "title": "Base64エンコード/デコードツール",
+    "description": "文字列をBase64でエンコード/デコードします",
+    "category": "変換",
+    "created": "2026-09-13",
+    "path": "tools/006-base64-encode-decode/"
   }
 ]
