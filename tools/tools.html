@@ -291,7 +291,9 @@
 
   function renderCategories() {
     const used = new Set(allTools.map(t => t.category).filter(Boolean));
-    const cats = ["all", ...Object.keys(CATEGORY_LABELS).filter(c => used.has(c))];
+    const known = Object.keys(CATEGORY_LABELS).filter(c => used.has(c));
+    const unknown = Array.from(used).filter(c => !(c in CATEGORY_LABELS));
+    const cats = ["all", ...known, ...unknown];
 
     categoriesEl.innerHTML = cats.map(cat => {
       const label = cat === "all" ? "すべて" : (CATEGORY_LABELS[cat] || cat);
