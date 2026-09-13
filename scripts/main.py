@@ -158,7 +158,7 @@ def plan_tool(existing: list[dict]) -> dict:
   "slug": "英数字とハイフンのみ（例: char-count）",
   "title": "日本語タイトル（20文字以内）",
   "description": "30文字以内の説明",
-  "category": "text|image|calc|convert|generate|other のいずれか",
+  "category": "カテゴリ名（日本語で短く。例: テキスト、計算、画像、変換、ゲーム、色、日付、文字列、ランダム）。既存ツールで使われているカテゴリがあれば、それを優先して使うこと。",
   "spec": "実装仕様を箇条書きで3〜6行"
 }}
 """
