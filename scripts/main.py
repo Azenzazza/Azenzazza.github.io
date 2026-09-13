@@ -136,10 +136,15 @@ def next_id(tools: list[dict]) -> str:
 
 def plan_tool(existing: list[dict]) -> dict:
     """企画AI：重複しないツール案を1つ提案"""
+    from collections import Counter
+
     existing_brief = [
         {"title": t["title"], "category": t.get("category", "")}
         for t in existing
     ]
+    category_counts = Counter(t.get("category", "") for t in existing)
+    recent_titles = [t["title"] for t in existing[-5:]]
+
     prompt = f"""あなたは「毎日1つ便利なWebツールを作る」プロジェクトの企画担当です。
 以下の既存ツールと重複しない、新しいWebツールを1つ提案してください。
 
@@ -147,8 +152,20 @@ def plan_tool(existing: list[dict]) -> dict:
 - HTML/CSS/JSのみで完結（外部API・外部ライブラリ禁止）
 - ログイン不要、1ファイルで動作
 - 実装が30分以内で終わる小規模なもの
-- 実用的で、誰かが「使いたい」と思うもの
 - 既存ツールと機能が被らないこと
+
+【重要：マンネリを避ける】
+現在のカテゴリ分布：{json.dumps(dict(category_counts), ensure_ascii=False)}
+- 件数が最も少ないカテゴリ、またはまだ使われていない新しいカテゴリを優先すること
+- 直近5件（{recent_titles}）と同じ系統・似た機能は避けること
+
+【歓迎するツール例（参考）】
+- 計算系：割り勘、ローン、BMI、日付差分、年齢計算
+- テキスト系：敬語変換、文字種判定、差分表示
+- 画像系：色抽出、サムネイル生成、ドット絵変換
+- ゲーム系：じゃんけん、サイコロ、おみくじ、ビンゴ
+- 生活系：買い物リスト、献立提案、ゴミ出し日計算
+- 趣味系：ギターコード、ポケモン相性、麻雀点数
 
 【既存ツール（{len(existing_brief)}件）】
 {json.dumps(existing_brief, ensure_ascii=False, indent=2)}
@@ -158,7 +175,7 @@ def plan_tool(existing: list[dict]) -> dict:
   "slug": "英数字とハイフンのみ（例: char-count）",
   "title": "日本語タイトル（20文字以内）",
   "description": "30文字以内の説明",
-  "category": "カテゴリ名（日本語で短く。例: テキスト、計算、画像、変換、ゲーム、色、日付、文字列、ランダム）。既存ツールで使われているカテゴリがあれば、それを優先して使うこと。",
+  "category": "カテゴリ名（日本語で短く。既存にない新しいカテゴリも歓迎）",
   "spec": "実装仕様を箇条書きで3〜6行"
 }}
 """
