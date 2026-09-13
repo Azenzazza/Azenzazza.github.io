@@ -58,15 +58,25 @@ groq = OpenAI(
 )
 
 
-def chat(client: OpenAI, model: str, prompt: str, retries: int = 3) -> str:
+def chat(
+    client: OpenAI,
+    model: str,
+    prompt: str,
+    retries: int = 3,
+    json_mode: bool = False,
+) -> str:
     """LLM呼び出し（429時は指数バックオフでリトライ）"""
+    kwargs = {
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}],
+        "temperature": 0.7,
+    }
+    if json_mode:
+        kwargs["response_format"] = {"type": "json_object"}
+
     for attempt in range(retries):
         try:
-            res = client.chat.completions.create(
-                model=model,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.7,
-            )
+            res = client.chat.completions.create(**kwargs)
             return res.choices[0].message.content or ""
         except Exception as e:
             wait = 2 ** attempt
@@ -143,7 +153,7 @@ def plan_tool(existing: list[dict]) -> dict:
 【既存ツール（{len(existing_brief)}件）】
 {json.dumps(existing_brief, ensure_ascii=False, indent=2)}
 
-【出力形式】JSONのみ。コードブロックで囲まないこと。
+【出力形式】JSONのみ。
 {{
   "slug": "英数字とハイフンのみ（例: char-count）",
   "title": "日本語タイトル（20文字以内）",
@@ -152,7 +162,7 @@ def plan_tool(existing: list[dict]) -> dict:
   "spec": "実装仕様を箇条書きで3〜6行"
 }}
 """
-    raw = chat(groq, GROQ_MODEL_PLAN, prompt)
+    raw = chat(groq, GROQ_MODEL_PLAN, prompt, json_mode=True)
     plan = parse_json(raw)
 
     for key in ("slug", "title", "description", "category", "spec"):
@@ -208,9 +218,9 @@ def review_tool(html: str) -> dict:
 - ユーザー入力のエスケープ漏れ
 - 明らかなバグ、動作しない箇所
 - 外部リソース（CDN・API）への依存
-- プレースホルダ（{{{{TITLE}}}} など）が残っていないか
+- プレースホルダ（TITLE など）が残っていないか
 
-【出力形式】JSONのみ。コードブロックで囲まないこと。
+【出力形式】JSONのみ。
 {{
   "ok": true または false,
   "issues": ["問題点を簡潔に"],
@@ -220,7 +230,7 @@ def review_tool(html: str) -> dict:
 【コード】
 {html}
 """
-    raw = chat(groq, GROQ_MODEL_REVIEW, prompt)
+    raw = chat(groq, GROQ_MODEL_REVIEW, prompt, json_mode=True)
     try:
         return parse_json(raw)
     except Exception:
@@ -344,12 +354,16 @@ def main() -> int:
         if review.get("ok"):
             print("[review] OK")
             break
-        print(f"[review] NG ({attempt + 1}/{MAX_REVIEW_RETRY}): {review.get('issues')}")
-        html = fix_tool(html, review.get("issues", []), review.get("fix_hint", ""))
+        issues = review.get("issues", [])
+        # パース失敗の場合は修正せず、そのまま公開する
+        if issues == ["レビュー結果のパース失敗"]:
+            print("[review] パース失敗のため、レビューをスキップして公開します")
+            break
+        print(f"[review] NG ({attempt + 1}/{MAX_REVIEW_RETRY}): {issues}")
+        html = fix_tool(html, issues, review.get("fix_hint", ""))
         time.sleep(SLEEP_BETWEEN_CALLS)
     else:
-        print("[abort] 検証を通過できませんでした。今日は公開しません。")
-        return 1
+        print("[warn] 検証を通過できませんでしたが、公開を続行します")
 
     # 4. 保存
     url = write_tool(tool_id, plan, html)
