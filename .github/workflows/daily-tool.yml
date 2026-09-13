@@ -23,9 +23,8 @@ jobs:
       - name: Run agents
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          # Bluesky（後で追加する場合はコメントを外す）
-          # BSKY_HANDLE: ${{ secrets.BSKY_HANDLE }}
-          # BSKY_APP_PASSWORD: ${{ secrets.BSKY_APP_PASSWORD }}
+          BSKY_HANDLE: ${{ secrets.BSKY_HANDLE }}
+          BSKY_APP_PASSWORD: ${{ secrets.BSKY_APP_PASSWORD }}
           SITE_URL: https://azenzazza.github.io
         run: python scripts/main.py
 
