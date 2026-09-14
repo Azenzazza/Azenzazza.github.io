@@ -97,5 +97,14 @@
     "category": "画像",
     "created": "2026-09-14",
     "path": "tools/011-image-resizer/"
+  },
+  {
+    "id": "012",
+    "slug": "regex-tester",
+    "title": "正規表現テストツール",
+    "description": "入力文字列とパターンを入力してマッチを確認",
+    "category": "テキスト",
+    "created": "2026-09-14",
+    "path": "tools/012-regex-tester/"
   }
 ]

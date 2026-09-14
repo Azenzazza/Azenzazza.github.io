@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <link rel="icon" href="../../../logo.png" type="image/png">
+  <link rel="stylesheet" href="../../../main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>正規表現テストツール - Azenzazzaのサイト</title>
+  <meta name="description" content="入力文字列とパターンを入力してマッチを確認">
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background-color: #AFE48E;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      margin-right: 16px;
+    }
+
+    .site-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    nav.navbar {
+      margin-left: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    nav.navbar a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+
+    nav.navbar a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .lead {
+      line-height: 1.7;
+      color: #333;
+      margin-top: 0;
+      margin-bottom: 28px;
+    }
+
+    .tool-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 1rem;
+      font-family: inherit;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: #AFE48E;
+      box-shadow: 0 0 0 3px rgba(175,228,142,0.3);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 600;
+      background: #AFE48E;
+      color: #2a3d1a;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    button:hover {
+      background: #9dd97a;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      background: #fafafa;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      min-height: 40px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: #fff;
+    }
+
+    th, td {
+      border: 1px solid #e5e5e5;
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #eef7e6;
+      color: #4a7c2f;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 16px 32px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #777;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 12px 16px; }
+      .logo { width: 48px; height: 48px; margin-right: 12px; }
+      .site-title { font-size: 1.1rem; }
+      nav.navbar { margin-left: 0; }
+      nav.navbar a { margin: 0 8px; }
+      main { padding: 0 16px; margin: 24px auto; }
+      h1 { font-size: 1.5rem; }
+      .tool-card { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center;">
+      <img src="../../../logo.png" alt="サイトロゴ" class="logo">
+      <div class="site-title">Azenzazzaのサイト</div>
+    </div>
+
+    <nav class="navbar">
+      <a href="../../../">ホーム</a>
+      <a href="../../../project/project.html">プロジェクト</a>
+      <a href="../../../tools/tools.html">ツール</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>正規表現テストツール</h1>
+    <p class="lead">入力文字列とパターンを入力してマッチを確認</p>
+
+    <div class="tool-card">
+      <label for="inputText">テキスト入力</label>
+      <textarea id="inputText" placeholder="テストしたい文字列を入力"></textarea>
+
+      <label for="regexPattern">正規表現パターン</label>
+      <input type="text" id="regexPattern" placeholder="例: \d+">
+
+      <div style="margin-top:12px;">
+        <input type="checkbox" id="globalFlag">
+        <label for="globalFlag">グローバル (g)</label>
+        &nbsp;&nbsp;
+        <input type="checkbox" id="ignoreCaseFlag">
+        <label for="ignoreCaseFlag">大文字小文字無視 (i)</label>
+      </div>
+
+      <button id="testBtn">テスト</button>
+
+      <div id="highlight" style="margin-top:20px; padding:12px; background:#fff; border:1px solid #e5e5e5; border-radius:8px; white-space:pre-wrap;"></div>
+    </div>
+
+    <div class="result" id="result"></div>
+  </main>
+
+  <footer>
+    &copy; 2026 Azenzazza.
+  </footer>
+
+  <script>
+    const inputText = document.getElementById('inputText');
+    const regexPattern = document.getElementById('regexPattern');
+    const globalFlag = document.getElementById('globalFlag');
+    const ignoreCaseFlag = document.getElementById('ignoreCaseFlag');
+    const testBtn = document.getElementById('testBtn');
+    const resultDiv = document.getElementById('result');
+    const highlightDiv = document.getElementById('highlight');
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, function(m) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[m];
+      });
+    }
+
+    testBtn.addEventListener('click', () => {
+      const text = inputText.value;
+      const pattern = regexPattern.value;
+      let flags = '';
+      if (globalFlag.checked) flags += 'g';
+      if (ignoreCaseFlag.checked) flags += 'i';
+
+      let regex;
+      try {
+        regex = new RegExp(pattern, flags);
+      } catch (e) {
+        resultDiv.textContent = '正規表現の構文エラー: ' + e.message;
+        highlightDiv.innerHTML = '';
+        return;
+      }
+
+      const matches = [];
+      let match;
+      if (flags.includes('g')) {
+        while ((match = regex.exec(text)) !== null) {
+          matches.push({ index: match.index, length: match[0].length });
+          // Avoid infinite loops for zero-length matches
+          if (match[0].length === 0) regex.lastIndex++;
+        }
+      } else {
+        match = regex.exec(text);
+        if (match) {
+          matches.push({ index: match.index, length: match[0].length });
+        }
+      }
+
+      if (matches.length === 0) {
+        resultDiv.textContent = '一致する箇所はありません。';
+        highlightDiv.innerHTML = escapeHtml(text);
+        return;
+      }
+
+      resultDiv.textContent = `一致件数: ${matches.length}`;
+
+      // Build highlighted HTML
+      let highlighted = '';
+      let lastIndex = 0;
+      matches.forEach(m => {
+        const safePart = escapeHtml(text.slice(lastIndex, m.index));
+        const safeMatch = escapeHtml(text.slice(m.index, m.index + m.length));
+        highlighted += safePart + '<mark>' + safeMatch + '</mark>';
+        lastIndex = m.index + m.length;
+      });
+      highlighted += escapeHtml(text.slice(lastIndex));
+      highlightDiv.innerHTML = highlighted;
+    });
+  </script>
+</body>
+</html>
