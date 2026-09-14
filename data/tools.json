@@ -61,5 +61,14 @@
     "category": "生活",
     "created": "2026-09-14",
     "path": "tools/007-task-manager/"
+  },
+  {
+    "id": "008",
+    "slug": "string-shuffle",
+    "title": "文字列シャッフルツール",
+    "description": "文字列をランダムに並び替えるツール",
+    "category": "ランダム",
+    "created": "2026-09-14",
+    "path": "tools/008-string-shuffle/"
   }
 ]
