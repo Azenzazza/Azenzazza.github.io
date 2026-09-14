@@ -79,5 +79,14 @@
     "category": "時間",
     "created": "2026-09-14",
     "path": "tools/009-stopwatch-timer/"
+  },
+  {
+    "id": "010",
+    "slug": "simple-minesweeper",
+    "title": "簡易マインスイーパー",
+    "description": "5x5マスで簡易マインスイーパー",
+    "category": "ゲーム",
+    "created": "2026-09-14",
+    "path": "tools/010-simple-minesweeper/"
   }
 ]
