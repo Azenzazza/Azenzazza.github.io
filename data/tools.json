@@ -52,5 +52,14 @@
     "category": "変換",
     "created": "2026-09-13",
     "path": "tools/006-base64-encode-decode/"
+  },
+  {
+    "id": "007",
+    "slug": "task-manager",
+    "title": "簡易タスク管理ツール",
+    "description": "タスクの追加・完了・削除をローカルで管理",
+    "category": "生活",
+    "created": "2026-09-14",
+    "path": "tools/007-task-manager/"
   }
 ]

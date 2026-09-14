@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <link rel="icon" href="../../../logo.png" type="image/png">
+  <link rel="stylesheet" href="../../../main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>簡易タスク管理ツール - Azenzazzaのサイト</title>
+  <meta name="description" content="タスクの追加・完了・削除をローカルで管理">
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background-color: #AFE48E;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      margin-right: 16px;
+    }
+
+    .site-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    nav.navbar {
+      margin-left: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    nav.navbar a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+
+    nav.navbar a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .lead {
+      line-height: 1.7;
+      color: #333;
+      margin-top: 0;
+      margin-bottom: 28px;
+    }
+
+    .tool-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 1rem;
+      font-family: inherit;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: #AFE48E;
+      box-shadow: 0 0 0 3px rgba(175,228,142,0.3);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 600;
+      background: #AFE48E;
+      color: #2a3d1a;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    button:hover {
+      background: #9dd97a;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      background: #fafafa;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      min-height: 40px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: #fff;
+    }
+
+    th, td {
+      border: 1px solid #e5e5e5;
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #eef7e6;
+      color: #4a7c2f;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 16px 32px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #777;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 12px 16px; }
+      .logo { width: 48px; height: 48px; margin-right: 12px; }
+      .site-title { font-size: 1.1rem; }
+      nav.navbar { margin-left: 0; }
+      nav.navbar a { margin: 0 8px; }
+      main { padding: 0 16px; margin: 24px auto; }
+      h1 { font-size: 1.5rem; }
+      .tool-card { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center;">
+      <img src="../../../logo.png" alt="サイトロゴ" class="logo">
+      <div class="site-title">Azenzazzaのサイト</div>
+    </div>
+
+    <nav class="navbar">
+      <a href="../../../">ホーム</a>
+      <a href="../../../project/project.html">プロジェクト</a>
+      <a href="../../../tools/tools.html">ツール</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>簡易タスク管理ツール</h1>
+    <p class="lead">タスクの追加・完了・削除をローカルで管理</p>
+
+    <div class="tool-card">
+      <label for="taskInput">タスクを入力</label>
+      <input type="text" id="taskInput" placeholder="例: 書類を整理する">
+      <button id="addBtn">追加</button>
+
+      <label for="filterSelect" style="margin-top:12px;">表示フィルタ</label>
+      <select id="filterSelect">
+        <option value="all">全て</option>
+        <option value="active">未完了</option>
+        <option value="completed">完了</option>
+      </select>
+
+      <button id="deleteBtn">完了タスクを削除</button>
+
+      <table id="taskTable">
+        <thead>
+          <tr>
+            <th>完了</th>
+            <th>タスク</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="result" id="result"></div>
+  </main>
+
+  <footer>
+    &copy; 2026 Azenzazza.
+  </footer>
+
+  <script>
+const STORAGE_KEY = 'simpleTasks';
+let tasks = [];
+
+// 要素取得
+const taskInput = document.getElementById('taskInput');
+const addBtn = document.getElementById('addBtn');
+const filterSelect = document.getElementById('filterSelect');
+const deleteBtn = document.getElementById('deleteBtn');
+const taskTableBody = document.querySelector('#taskTable tbody');
+const resultEl = document.getElementById('result');
+
+// ローカルストレージから読み込み
+function loadTasks() {
+  const data = localStorage.getItem(STORAGE_KEY);
+  if (data) {
+    try {
+      tasks = JSON.parse(data);
+    } catch (e) {
+      tasks = [];
+    }
+  }
+}
+
+// 保存
+function saveTasks() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+}
+
+// 結果表示
+function setResult(message) {
+  resultEl.textContent = message;
+}
+
+// タスク描画
+function renderTasks() {
+  // クリア
+  while (taskTableBody.firstChild) {
+    taskTableBody.removeChild(taskTableBody.firstChild);
+  }
+
+  const filter = filterSelect.value;
+  const filtered = tasks.filter(task => {
+    if (filter === 'all') return true;
+    if (filter === 'active') return !task.completed;
+    if (filter === 'completed') return task.completed;
+  });
+
+  filtered.forEach(task => {
+    const tr = document.createElement('tr');
+
+    const tdCheck = document.createElement('td');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = task.completed;
+    checkbox.addEventListener('change', () => {
+      task.completed = checkbox.checked;
+      saveTasks();
+      renderTasks();
+      setResult('タスクの状態を更新しました');
+    });
+    tdCheck.appendChild(checkbox);
+    tr.appendChild(tdCheck);
+
+    const tdText = document.createElement('td');
+    tdText.textContent = task.text;
+    tr.appendChild(tdText);
+
+    taskTableBody.appendChild(tr);
+  });
+}
+
+// 追加処理
+addBtn.addEventListener('click', () => {
+  const text = taskInput.value.trim();
+  if (!text) {
+    setResult('タスクを入力してください');
+    return;
+  }
+  const newTask = {
+    id: Date.now(),
+    text,
+    completed: false
+  };
+  tasks.push(newTask);
+  saveTasks();
+  renderTasks();
+  taskInput.value = '';
+  setResult('タスクを追加しました');
+});
+
+// フィルタ変更
+filterSelect.addEventListener('change', () => {
+  renderTasks();
+});
+
+// 完了タスク削除
+deleteBtn.addEventListener('click', () => {
+  const before = tasks.length;
+  tasks = tasks.filter(t => !t.completed);
+  if (tasks.length === before) {
+    setResult('削除できる完了タスクがありません');
+  } else {
+    saveTasks();
+    renderTasks();
+    setResult('完了タスクを削除しました');
+  }
+});
+
+// 初期化
+loadTasks();
+renderTasks();
+  </script>
+</body>
+</html>
