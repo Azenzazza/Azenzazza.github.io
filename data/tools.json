@@ -70,5 +70,14 @@
     "category": "ランダム",
     "created": "2026-09-14",
     "path": "tools/008-string-shuffle/"
+  },
+  {
+    "id": "009",
+    "slug": "stopwatch-timer",
+    "title": "ストップウォッチ＆カウントダウン",
+    "description": "秒単位でタイマーとストップウォッチを操作できるツール",
+    "category": "時間",
+    "created": "2026-09-14",
+    "path": "tools/009-stopwatch-timer/"
   }
 ]
