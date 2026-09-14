@@ -318,7 +318,7 @@ def generate_sitemap() -> None:
 # ============================================================
 
 def generate_post_text(plan: dict, url: str) -> str:
-    """告知AI：Bluesky投稿文を生成"""
+    """告知AI：Bluesky投稿文を生成（ハッシュタグはコード側で付与）"""
     prompt = f"""以下をBlueskyに投稿する文面にしてください。
 
 【ツール名】{plan['title']}
@@ -326,13 +326,22 @@ def generate_post_text(plan: dict, url: str) -> str:
 【URL】{url}
 
 【制約】
-- 全体で280文字以内（URL含む）
+- 全体で200文字以内
 - 絵文字を1〜2個
 - 宣伝臭を抑え、便利さを端的に
-- 末尾にハッシュタグ #AIが作ったツール #毎日ツール
+- ハッシュタグは付けないこと
 - 出力は投稿文のみ。説明・引用符・コードブロックは付けない。
 """
-    return chat(groq, GROQ_MODEL_POST, prompt).strip()
+    body = chat(groq, GROQ_MODEL_POST, prompt).strip()
+
+    # コード側でハッシュタグを強制付与
+    hashtags = "#AIが作ったツール #AIツール #Webツール"
+    max_body_len = 280 - len(hashtags) - 2  # 改行2つ分を考慮
+
+    if len(body) > max_body_len:
+        body = body[:max_body_len].rstrip()
+
+    return f"{body}\n\n{hashtags}"
 
 
 def post_to_bluesky(text: str) -> None:
