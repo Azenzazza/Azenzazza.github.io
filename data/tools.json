@@ -88,5 +88,14 @@
     "category": "ゲーム",
     "created": "2026-09-14",
     "path": "tools/010-simple-minesweeper/"
+  },
+  {
+    "id": "011",
+    "slug": "image-resizer",
+    "title": "画像リサイズツール",
+    "description": "画像をドラッグ＆ドロップでリサイズ",
+    "category": "画像",
+    "created": "2026-09-14",
+    "path": "tools/011-image-resizer/"
   }
 ]
