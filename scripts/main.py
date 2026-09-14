@@ -326,7 +326,8 @@ def generate_post_text(plan: dict, url: str) -> str:
 【URL】{url}
 
 【制約】
-- 全体で200文字以内
+- 全体で220文字以内
+- 220文字に近づけてください(220文字を超えてはいけません)
 - 絵文字を1〜2個
 - 宣伝臭を抑え、便利さを端的に
 - ハッシュタグは付けないこと
@@ -336,12 +337,12 @@ def generate_post_text(plan: dict, url: str) -> str:
 
     # コード側でハッシュタグを強制付与
     hashtags = "#AIが作ったツール #AIツール #Webツール"
-    max_body_len = 280 - len(hashtags) - 2  # 改行2つ分を考慮
+    max_body_len = 280 - len(hashtags)
 
     if len(body) > max_body_len:
         body = body[:max_body_len].rstrip()
 
-    return f"{body}\n\n{hashtags}"
+    return f"{body} {hashtags}"
 
 
 def post_to_bluesky(text: str) -> None:
