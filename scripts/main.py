@@ -240,7 +240,7 @@ def review_tool(html: str) -> dict:
 【コード】
 {html}
 """
-    raw = chat(groq, GROQ_MODEL_REVIEW, prompt, json_mode=True)
+    raw = chat(groq, GROQ_MODEL_REVIEW, prompt)
     try:
         return parse_json(raw)
     except Exception:
