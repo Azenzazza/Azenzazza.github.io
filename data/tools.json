@@ -106,5 +106,14 @@
     "category": "テキスト",
     "created": "2026-09-14",
     "path": "tools/012-regex-tester/"
+  },
+  {
+    "id": "013",
+    "slug": "random-password",
+    "title": "ランダムパスワード生成器",
+    "description": "指定長さの安全なパスワードを生成",
+    "category": "ランダム",
+    "created": "2026-09-15",
+    "path": "tools/013-random-password/"
   }
 ]
