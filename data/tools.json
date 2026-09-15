@@ -124,5 +124,14 @@
     "category": "時間",
     "created": "2026-09-15",
     "path": "tools/014-timezone-converter/"
+  },
+  {
+    "id": "015",
+    "slug": "color-converter",
+    "title": "カラー変換ツール",
+    "description": "HEX・RGB・HSLを相互変換",
+    "category": "色",
+    "created": "2026-09-15",
+    "path": "tools/015-color-converter/"
   }
 ]
