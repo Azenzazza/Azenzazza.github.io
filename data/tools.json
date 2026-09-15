@@ -115,5 +115,14 @@
     "category": "ランダム",
     "created": "2026-09-15",
     "path": "tools/013-random-password/"
+  },
+  {
+    "id": "014",
+    "slug": "timezone-converter",
+    "title": "世界時刻変換ツール",
+    "description": "複数タイムゾーンの現在時刻を一括表示",
+    "category": "時間",
+    "created": "2026-09-15",
+    "path": "tools/014-timezone-converter/"
   }
 ]
