@@ -174,38 +174,49 @@ def plan_tool(existing: list[dict]) -> dict:
 
 
 def implement_tool(plan: dict) -> str:
-    """実装AI：テンプレートをベースにHTMLを生成"""
-    template = TEMPLATE_PATH.read_text(encoding="utf-8")
-
+    """実装AI：CONTENTとSCRIPTのみを生成し、テンプレートにPython側で埋め込む"""
     prompt = f"""あなたはWebツールの実装担当です。
-以下の「テンプレート」をベースに、指定されたツールを実装してください。
+以下のツールを実装するための「HTML断片」と「JavaScript」を生成してください。
 
 【ツール名】{plan['title']}
 【説明】{plan['description']}
 【仕様】
 {plan['spec']}
 
-【実装ルール】
-- テンプレートの構造（header, main, footer, style, script）は絶対に変更しない
-- プレースホルダを以下のように置き換える：
-  - {{TITLE}} → {plan['title']}
-  - {{DESCRIPTION}} → {plan['description']}
-  - {{CONTENT}} → ツールの入力フォームやボタンなど（HTML）
-  - {{SCRIPT}} → ツールの動作を実装するJavaScript
-- テンプレートの <style> は変更しない（既存のクラス・ボタン・テーブルスタイルをそのまま使う）
+【生成するもの】
+1. CONTENT: ツールの入力フォームやボタンなど（HTML断片）
+2. SCRIPT: ツールの動作を実装するJavaScript
+
+【厳守事項】
+- CONTENTは<div class="tool-card">の中に入るHTMLのみ
+- SCRIPTは<script>タグの中身のみ（<script>タグ自体は書かない）
 - 結果は id="result" の要素に textContent で出力する
 - innerHTML / eval / document.write は使わない
 - 外部ライブラリ・外部API禁止
-- 出力はHTMLのみ。説明文・コードブロック記号は一切付けない
+- 出力は以下のJSON形式のみ。コードブロック記号は一切付けない。
 
-【テンプレート】
-{template}
-
-【出力】
-上記テンプレートのプレースホルダを埋めた、完全なHTMLファイルを出力してください。
+{{
+  "content": "ここにCONTENTのHTML",
+  "script": "ここにSCRIPTのJavaScript"
+}}
 """
-    html = chat(groq, GROQ_MODEL_CODE, prompt)
-    return strip_code_fence(html)
+    raw = chat(groq, GROQ_MODEL_CODE, prompt, json_mode=True)
+    parts = parse_json(raw)
+
+    content = parts.get("content", "")
+    script = parts.get("script", "")
+
+    if not content or not script:
+        raise ValueError(f"CONTENTまたはSCRIPTが空です: {parts}")
+
+    # テンプレートを読み込んでPython側で埋め込む
+    template = TEMPLATE_PATH.read_text(encoding="utf-8")
+    html = template.replace("{{TITLE}}", plan["title"])
+    html = html.replace("{{DESCRIPTION}}", plan["description"])
+    html = html.replace("{{CONTENT}}", content)
+    html = html.replace("{{SCRIPT}}", script)
+
+    return html
 
 
 def review_tool(html: str) -> dict:
@@ -218,7 +229,6 @@ def review_tool(html: str) -> dict:
 - ユーザー入力のエスケープ漏れ
 - 明らかなバグ、動作しない箇所
 - 外部リソース（CDN・API）への依存
-- プレースホルダ（TITLE など）が残っていないか
 
 【出力形式】JSONのみ。
 {{
