@@ -151,5 +151,14 @@
     "category": "変換",
     "created": "2026-09-16",
     "path": "tools/017-zenkaku-halfwidth-converter/"
+  },
+  {
+    "id": "018",
+    "slug": "markdown-preview",
+    "title": "Markdownプレビュー",
+    "description": "MarkdownをリアルタイムでHTMLに変換表示",
+    "category": "変換",
+    "created": "2026-09-16",
+    "path": "tools/018-markdown-preview/"
   }
 ]
