@@ -133,5 +133,14 @@
     "category": "色",
     "created": "2026-09-15",
     "path": "tools/015-color-converter/"
+  },
+  {
+    "id": "016",
+    "slug": "url-params-extractor",
+    "title": "URLパラメータ抽出ツール",
+    "description": "URLからクエリパラメータを抽出して表に表示",
+    "category": "変換",
+    "created": "2026-09-16",
+    "path": "tools/016-url-params-extractor/"
   }
 ]
