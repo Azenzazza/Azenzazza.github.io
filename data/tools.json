@@ -142,5 +142,14 @@
     "category": "変換",
     "created": "2026-09-16",
     "path": "tools/016-url-params-extractor/"
+  },
+  {
+    "id": "017",
+    "slug": "zenkaku-halfwidth-converter",
+    "title": "全角半角変換ツール",
+    "description": "全角と半角を相互変換する簡易ツール",
+    "category": "変換",
+    "created": "2026-09-16",
+    "path": "tools/017-zenkaku-halfwidth-converter/"
   }
 ]
