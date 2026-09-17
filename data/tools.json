@@ -160,5 +160,14 @@
     "category": "変換",
     "created": "2026-09-16",
     "path": "tools/018-markdown-preview/"
+  },
+  {
+    "id": "019",
+    "slug": "date-calculator",
+    "title": "日付計算ツール",
+    "description": "日付に対して日数加算・減算を行い、曜日を表示する",
+    "category": "日付",
+    "created": "2026-09-17",
+    "path": "tools/019-date-calculator/"
   }
 ]
