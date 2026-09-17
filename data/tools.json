@@ -169,5 +169,14 @@
     "category": "日付",
     "created": "2026-09-17",
     "path": "tools/019-date-calculator/"
+  },
+  {
+    "id": "020",
+    "slug": "unique-lines",
+    "title": "重複行除去ツール",
+    "description": "テキストの重複行を除去して表示",
+    "category": "テキスト",
+    "created": "2026-09-17",
+    "path": "tools/020-unique-lines/"
   }
 ]
