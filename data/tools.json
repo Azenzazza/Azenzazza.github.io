@@ -178,5 +178,14 @@
     "category": "テキスト",
     "created": "2026-09-17",
     "path": "tools/020-unique-lines/"
+  },
+  {
+    "id": "021",
+    "slug": "char-type-stat",
+    "title": "文字種統計ツール",
+    "description": "入力文字列の文字種をカウントします。",
+    "category": "テキスト",
+    "created": "2026-09-17",
+    "path": "tools/021-char-type-stat/"
   }
 ]
