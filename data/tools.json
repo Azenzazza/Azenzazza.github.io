@@ -205,5 +205,14 @@
     "category": "テキスト",
     "created": "2026-09-18",
     "path": "tools/023-vigenere-cipher/"
+  },
+  {
+    "id": "024",
+    "slug": "text-to-speech",
+    "title": "テキスト読み上げツール",
+    "description": "入力テキストを音声で再生",
+    "category": "テキスト",
+    "created": "2026-09-18",
+    "path": "tools/024-text-to-speech/"
   }
 ]
