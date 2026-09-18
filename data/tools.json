@@ -196,5 +196,14 @@
     "category": "ランダム",
     "created": "2026-09-18",
     "path": "tools/022-random-date-generator/"
+  },
+  {
+    "id": "023",
+    "slug": "vigenere-cipher",
+    "title": "ヴィジェナ暗号ツール",
+    "description": "文字列をVigenère暗号で暗号化・復号する",
+    "category": "テキスト",
+    "created": "2026-09-18",
+    "path": "tools/023-vigenere-cipher/"
   }
 ]
