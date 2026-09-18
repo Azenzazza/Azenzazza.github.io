@@ -187,5 +187,14 @@
     "category": "テキスト",
     "created": "2026-09-17",
     "path": "tools/021-char-type-stat/"
+  },
+  {
+    "id": "022",
+    "slug": "random-date-generator",
+    "title": "ランダム日付生成器",
+    "description": "指定範囲からランダムに日付を生成",
+    "category": "ランダム",
+    "created": "2026-09-18",
+    "path": "tools/022-random-date-generator/"
   }
 ]
