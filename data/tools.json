@@ -232,5 +232,14 @@
     "category": "生活",
     "created": "2026-09-19",
     "path": "tools/026-simple-memo/"
+  },
+  {
+    "id": "027",
+    "slug": "password-strength-checker",
+    "title": "パスワード強度チェッカー",
+    "description": "入力したパスワードの強度を可視化します",
+    "category": "テキスト",
+    "created": "2026-09-19",
+    "path": "tools/027-password-strength-checker/"
   }
 ]
