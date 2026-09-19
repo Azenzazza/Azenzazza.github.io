@@ -223,5 +223,14 @@
     "category": "色",
     "created": "2026-09-19",
     "path": "tools/025-color-picker/"
+  },
+  {
+    "id": "026",
+    "slug": "simple-memo",
+    "title": "シンプルメモ帳",
+    "description": "簡単にメモを取ることができるツール",
+    "category": "生活",
+    "created": "2026-09-19",
+    "path": "tools/026-simple-memo/"
   }
 ]
