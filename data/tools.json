@@ -214,5 +214,14 @@
     "category": "テキスト",
     "created": "2026-09-18",
     "path": "tools/024-text-to-speech/"
+  },
+  {
+    "id": "025",
+    "slug": "color-picker",
+    "title": "簡単カラーピッカー",
+    "description": "色を選んでRGB・HEXを表示するツール",
+    "category": "色",
+    "created": "2026-09-19",
+    "path": "tools/025-color-picker/"
   }
 ]
