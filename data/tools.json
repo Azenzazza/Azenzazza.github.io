@@ -259,5 +259,14 @@
     "category": "変換",
     "created": "2026-09-20",
     "path": "tools/029-csv-to-json/"
+  },
+  {
+    "id": "030",
+    "slug": "csv-filter",
+    "title": "CSV行フィルタ",
+    "description": "列値でCSVを絞り込むツール",
+    "category": "変換",
+    "created": "2026-09-20",
+    "path": "tools/030-csv-filter/"
   }
 ]
