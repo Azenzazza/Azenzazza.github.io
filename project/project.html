@@ -4,6 +4,7 @@
   <link rel="stylesheet" href="main.css">
   <link rel="icon" href="logo.png" type="image/png">
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>プロジェクト - Azenzazzaのサイト</title>
   <style>
     body {
@@ -81,6 +82,35 @@
       text-align: center;
       font-size: 0.85rem;
       color: #777;
+    }
+    @media (max-width: 600px) {
+      header {
+        padding: 12px 16px;
+        gap: 8px;
+      }
+      .logo {
+        width: 48px;
+        height: 48px;
+        margin-right: 12px;
+      }
+      .site-title {
+        font-size: 1.1rem;
+      }
+      nav.navbar {
+        margin-left: 0;
+        flex-wrap: wrap;
+      }
+      nav.navbar a {
+        margin: 0 8px;
+        font-size: 0.95rem;
+      }
+      main {
+        margin: 24px auto;
+        padding: 0 16px;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
     }
   </style>
 </head>
