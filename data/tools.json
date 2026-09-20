@@ -241,5 +241,14 @@
     "category": "テキスト",
     "created": "2026-09-19",
     "path": "tools/027-password-strength-checker/"
+  },
+  {
+    "id": "028",
+    "slug": "text-compare",
+    "title": "テキスト比較ツール",
+    "description": "2つのテキストを比較して差分をハイライト表示",
+    "category": "テキスト",
+    "created": "2026-09-20",
+    "path": "tools/028-text-compare/"
   }
 ]
