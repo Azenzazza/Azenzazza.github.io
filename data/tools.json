@@ -250,5 +250,14 @@
     "category": "テキスト",
     "created": "2026-09-20",
     "path": "tools/028-text-compare/"
+  },
+  {
+    "id": "029",
+    "slug": "csv-to-json",
+    "title": "CSV→JSON変換ツール",
+    "description": "CSVをJSONに変換してダウンロードできるツール",
+    "category": "変換",
+    "created": "2026-09-20",
+    "path": "tools/029-csv-to-json/"
   }
 ]
