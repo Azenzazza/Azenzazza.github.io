@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <link rel="stylesheet" href="main.css">
-  <link rel="icon" href="logo.png" type="image/png">
+  <link rel="icon" href="../logo.png" type="image/png">
+  <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>プロジェクト - Azenzazzaのサイト</title>
+  <meta name="description" content="個人で制作したプロジェクトの一覧">
   <style>
     body {
       margin: 0;
@@ -52,19 +53,9 @@
       text-decoration: underline;
     }
 
-    .lang-buttons button {
-      margin-left: 8px;
-      padding: 6px 12px;
-      border: none;
-      background: #fff;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-
     main {
       max-width: 960px;
-      margin: 40px 24px;
+      margin: 40px auto;
       padding: 0 24px;
     }
 
@@ -73,9 +64,169 @@
       margin-bottom: 12px;
     }
 
-    p {
+    .subtitle {
       line-height: 1.7;
       color: #333;
+      margin-top: 0;
+      margin-bottom: 28px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+      align-items: center;
+    }
+
+    #search {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fff;
+      color: #333;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: border-color 0.15s;
+    }
+
+    #search:focus {
+      outline: none;
+      border-color: #AFE48E;
+      box-shadow: 0 0 0 3px rgba(175,228,142,0.3);
+    }
+
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .cat-btn {
+      padding: 6px 14px;
+      border: 1px solid #ddd;
+      border-radius: 999px;
+      background: #fff;
+      color: #666;
+      font-size: 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .cat-btn:hover {
+      border-color: #AFE48E;
+      color: #333;
+    }
+
+    .cat-btn.active {
+      background: #AFE48E;
+      border-color: #AFE48E;
+      color: #2a3d1a;
+      font-weight: 600;
+    }
+
+    .count {
+      color: #777;
+      font-size: 0.85rem;
+      margin-left: auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      display: block;
+      padding: 18px;
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.15s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: #AFE48E;
+      box-shadow: 0 4px 12px rgba(175,228,142,0.35);
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 6px;
+      color: #222;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: #666;
+      margin: 0 0 10px;
+      line-height: 1.5;
+      min-height: 2.4em;
+    }
+
+    /* 使用技術タグ */
+    .tech-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .tech-tag {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #f0f0f0;
+      color: #555;
+      font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: #888;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .card-cat {
+      background: #eef7e6;
+      color: #4a7c2f;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 500;
+    }
+
+    /* ステータス表示 */
+    .status-badge {
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 500;
+    }
+
+    .status-badge.active   { background: #e6f4e0; color: #3d7a1f; }
+    .status-badge.wip      { background: #fff4d6; color: #8a6a00; }
+    .status-badge.archived { background: #eee;    color: #888; }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #777;
+      font-size: 0.95rem;
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
     }
 
     footer {
@@ -85,34 +236,15 @@
       font-size: 0.85rem;
       color: #777;
     }
+
     @media (max-width: 600px) {
-      header {
-        padding: 12px 16px;
-        gap: 8px;
-      }
-      .logo {
-        width: 48px;
-        height: 48px;
-        margin-right: 12px;
-      }
-      .site-title {
-        font-size: 1.1rem;
-      }
-      nav.navbar {
-        margin-left: 0;
-        flex-wrap: wrap;
-      }
-      nav.navbar a {
-        margin: 0 8px;
-        font-size: 0.95rem;
-      }
-      main {
-        margin: 24px auto;
-        padding: 0 16px;
-      }
-      h1 {
-        font-size: 1.5rem;
-      }
+      header { padding: 12px 16px; }
+      .logo { width: 48px; height: 48px; margin-right: 12px; }
+      .site-title { font-size: 1.1rem; }
+      nav.navbar { margin-left: 0; }
+      nav.navbar a { margin: 0 8px; }
+      main { padding: 0 16px; margin: 24px auto; }
+      h1 { font-size: 1.5rem; }
       .grid { grid-template-columns: 1fr; }
       .count { margin-left: 0; }
     }
@@ -122,27 +254,194 @@
   <header>
     <div style="display:flex; align-items:center;">
       <img src="../logo.png" alt="サイトロゴ" class="logo">
-      <div class="site-title" id="title">Azenzazzaのサイト</div>
+      <div class="site-title">Azenzazzaのサイト</div>
     </div>
 
     <nav class="navbar">
-      <a id="nav-home" href="../">ホーム</a>
-      <a id="nav-projects" href="#">プロジェクト</a>
+      <a href="../">ホーム</a>
+      <a href="./projects.html" style="font-weight:700;">プロジェクト</a>
       <a href="../tools/tools.html">ツール</a>
     </nav>
-
   </header>
 
   <main>
-    <h1 id="hello">Azenzazza（アゼンザッザ）のプロジェクト</h1>
-    <p id="desc">
-      まだプロジェクトはしていません。
+    <h1>プロジェクト</h1>
+    <p class="subtitle">
+      個人で制作したプロジェクトの一覧です。WebアプリからCLIツールまで、気ままに作っています。
     </p>
+
+    <div class="controls">
+      <input
+        type="search"
+        id="search"
+        placeholder="プロジェクトを検索（名前・説明・技術名）..."
+        autocomplete="off"
+      >
+      <div class="categories" id="categories"></div>
+      <span class="count" id="count"></span>
+    </div>
+
+    <div id="content">
+      <div class="empty-state">読み込み中...</div>
+    </div>
   </main>
 
   <footer>
     &copy; 2026 Azenzazza.
   </footer>
 
+<script>
+(function () {
+  // カテゴリの表示名（英語キー → 日本語ラベル）
+  const CATEGORY_LABELS = {
+    web:     "Webアプリ",
+    cli:     "CLIツール",
+    game:    "ゲーム",
+    library: "ライブラリ",
+    bot:     "Bot",
+    other:   "その他",
+  };
+
+  // ステータスの表示クラス（日本語値 → CSSクラス）
+  const STATUS_CLASS = {
+    "公開中":   "active",
+    "開発中":   "wip",
+    "アーカイブ": "archived",
+  };
+
+  const contentEl = document.getElementById("content");
+  const categoriesEl = document.getElementById("categories");
+  const searchEl = document.getElementById("search");
+  const countEl = document.getElementById("count");
+
+  let allProjects = [];
+  let activeCategory = "all";
+  let query = "";
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function renderCategories() {
+    const used = new Set();
+    allProjects.forEach(p => {
+      if (p && p.category) used.add(String(p.category));
+    });
+
+    const known = Object.keys(CATEGORY_LABELS).filter(c => used.has(c));
+    const unknown = Array.from(used).filter(c => !(c in CATEGORY_LABELS));
+    const cats = ["all", ...known, ...unknown];
+
+    categoriesEl.innerHTML = cats.map(cat => {
+      const label = cat === "all" ? "すべて" : (CATEGORY_LABELS[cat] || cat);
+      const active = cat === activeCategory ? " active" : "";
+      return `<button class="cat-btn${active}" data-cat="${escapeHtml(cat)}">${escapeHtml(label)}</button>`;
+    }).join("");
+
+    categoriesEl.querySelectorAll(".cat-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        activeCategory = btn.dataset.cat;
+        renderCategories();
+        renderList();
+      });
+    });
+  }
+
+  function filterProjects() {
+    const q = query.trim().toLowerCase();
+    return allProjects.filter(p => {
+      if (activeCategory !== "all" && p.category !== activeCategory) return false;
+      if (!q) return true;
+      const techStr = Array.isArray(p.tech) ? p.tech.join(" ") : "";
+      const hay = [
+        p.title || "",
+        p.description || "",
+        p.slug || "",
+        techStr,
+      ].join(" ").toLowerCase();
+      return hay.includes(q);
+    });
+  }
+
+  function renderList() {
+    const list = filterProjects();
+
+    if (list.length === 0) {
+      contentEl.innerHTML = '<div class="empty-state">該当するプロジェクトがありません</div>';
+      countEl.textContent = "";
+      return;
+    }
+
+    // 更新日 → 作成日 の順で新しいものから並べる
+    list.sort((a, b) => {
+      const da = a.updated || a.created || "";
+      const db = b.updated || b.created || "";
+      return db.localeCompare(da);
+    });
+
+    contentEl.innerHTML = `<div class="grid">${list.map(p => {
+      const href = `./${p.id}-${p.slug}/`;
+      const catLabel = CATEGORY_LABELS[p.category] || p.category || "";
+      const techArr = Array.isArray(p.tech) ? p.tech : [];
+      const techHtml = techArr.map(t =>
+        `<span class="tech-tag">${escapeHtml(t)}</span>`
+      ).join("");
+      const statusLabel = p.status || "";
+      const statusClass = STATUS_CLASS[statusLabel] || "";
+      const statusHtml = statusLabel
+        ? `<span class="status-badge ${statusClass}">${escapeHtml(statusLabel)}</span>`
+        : "";
+
+      return `
+        <a class="card" href="${escapeHtml(href)}">
+          <div class="card-title">${escapeHtml(p.title)}</div>
+          <div class="card-desc">${escapeHtml(p.description)}</div>
+          <div class="tech-list">${techHtml}</div>
+          <div class="card-meta">
+            <span class="card-cat">${escapeHtml(catLabel)}</span>
+            ${statusHtml}
+            <span>${escapeHtml(p.updated || p.created || "")}</span>
+          </div>
+        </a>
+      `;
+    }).join("")}</div>`;
+
+    countEl.textContent = `${list.length} / ${allProjects.length} 件`;
+  }
+
+  async function load() {
+    try {
+      const res = await fetch("../data/projects.json", { cache: "no-cache" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      allProjects = await res.json();
+      if (!Array.isArray(allProjects)) allProjects = [];
+
+      if (allProjects.length === 0) {
+        contentEl.innerHTML = '<div class="empty-state">まだプロジェクトがありません。</div>';
+        countEl.textContent = "";
+        return;
+      }
+
+      renderCategories();
+      renderList();
+    } catch (err) {
+      contentEl.innerHTML = '<div class="empty-state">プロジェクト一覧の読み込みに失敗しました。</div>';
+      console.error(err);
+    }
+  }
+
+  searchEl.addEventListener("input", () => {
+    query = searchEl.value;
+    renderList();
+  });
+
+  load();
+})();
+</script>
 </body>
 </html>
