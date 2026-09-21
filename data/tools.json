@@ -286,5 +286,14 @@
     "category": "テキスト",
     "created": "2026-09-21",
     "path": "tools/032-string-similarity/"
+  },
+  {
+    "id": "033",
+    "slug": "text-hash-generator",
+    "title": "テキストハッシュ生成",
+    "description": "入力文字列のハッシュ値を生成",
+    "category": "計算",
+    "created": "2026-09-21",
+    "path": "tools/033-text-hash-generator/"
   }
 ]
