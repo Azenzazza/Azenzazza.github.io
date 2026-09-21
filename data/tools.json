@@ -277,5 +277,14 @@
     "category": "変換",
     "created": "2026-09-21",
     "path": "tools/031-url-domain-extractor/"
+  },
+  {
+    "id": "032",
+    "slug": "string-similarity",
+    "title": "文字列類似度計算",
+    "description": "2文字列の類似度を数値で表示",
+    "category": "テキスト",
+    "created": "2026-09-21",
+    "path": "tools/032-string-similarity/"
   }
 ]
