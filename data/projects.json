@@ -2,8 +2,8 @@
   {
     "id": "001",
     "slug": "portfolio-site",
-    "title": "ポートフォリオサイト",
-    "description": "自分の作品をまとめる個人サイト。レスポンシブ対応。",
+    "title": "個人サイト",
+    "description": "自分の作品をまとめる個人サイト。",
     "category": "web",
     "tech": ["HTML", "CSS", "JavaScript"],
     "status": "公開中",
