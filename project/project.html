@@ -173,7 +173,6 @@
       min-height: 2.4em;
     }
 
-    /* 使用技術タグ */
     .tech-list {
       display: flex;
       flex-wrap: wrap;
@@ -208,7 +207,6 @@
       font-weight: 500;
     }
 
-    /* ステータス表示 */
     .status-badge {
       padding: 3px 10px;
       border-radius: 999px;
@@ -304,8 +302,8 @@
 
   // ステータスの表示クラス（日本語値 → CSSクラス）
   const STATUS_CLASS = {
-    "公開中":   "active",
-    "開発中":   "wip",
+    "公開中":     "active",
+    "開発中":     "wip",
     "アーカイブ": "archived",
   };
 
@@ -325,6 +323,39 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;");
+  }
+
+  // JST（Asia/Tokyo）の「今日」を YYYY-MM-DD で返す
+  function jstToday() {
+    // en-CA は YYYY-MM-DD 形式で返る
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Tokyo",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(new Date());
+  }
+
+  // "today" / "yesterday" などを JST 基準で YYYY-MM-DD に変換
+  function resolveDate(value) {
+    if (!value) return "";
+    const v = String(value).trim().toLowerCase();
+
+    if (v === "today" || v === "今日") return jstToday();
+
+    if (v === "yesterday" || v === "昨日") {
+      const [y, m, d] = jstToday().split("-").map(Number);
+      // 日付だけを1日戻したいので UTC で組み立てる
+      const dt = new Date(Date.UTC(y, m - 1, d));
+      dt.setUTCDate(dt.getUTCDate() - 1);
+      const yy = dt.getUTCFullYear();
+      const mm = String(dt.getUTCMonth() + 1).padStart(2, "0");
+      const dd = String(dt.getUTCDate()).padStart(2, "0");
+      return `${yy}-${mm}-${dd}`;
+    }
+
+    // それ以外はそのまま（YYYY-MM-DD 前提）
+    return String(value);
   }
 
   function renderCategories() {
@@ -377,10 +408,10 @@
       return;
     }
 
-    // 更新日 → 作成日 の順で新しいものから並べる
+    // 更新日 → 作成日 の順で新しいものから並べる（JST基準で解決）
     list.sort((a, b) => {
-      const da = a.updated || a.created || "";
-      const db = b.updated || b.created || "";
+      const da = resolveDate(a.updated) || resolveDate(a.created) || "";
+      const db = resolveDate(b.updated) || resolveDate(b.created) || "";
       return db.localeCompare(da);
     });
 
@@ -396,6 +427,7 @@
       const statusHtml = statusLabel
         ? `<span class="status-badge ${statusClass}">${escapeHtml(statusLabel)}</span>`
         : "";
+      const dateLabel = resolveDate(p.updated) || resolveDate(p.created) || "";
 
       return `
         <a class="card" href="${escapeHtml(href)}">
@@ -405,7 +437,7 @@
           <div class="card-meta">
             <span class="card-cat">${escapeHtml(catLabel)}</span>
             ${statusHtml}
-            <span>${escapeHtml(p.updated || p.created || "")}</span>
+            <span>${escapeHtml(dateLabel)}</span>
           </div>
         </a>
       `;
