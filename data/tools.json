@@ -304,5 +304,14 @@
     "category": "画像",
     "created": "2026-09-22",
     "path": "tools/034-qr-code-generator/"
+  },
+  {
+    "id": "035",
+    "slug": "typing-speed-test",
+    "title": "タイピング速度測定",
+    "description": "入力速度と正確度を測る簡易テスト",
+    "category": "ゲーム",
+    "created": "2026-09-22",
+    "path": "tools/035-typing-speed-test/"
   }
 ]
