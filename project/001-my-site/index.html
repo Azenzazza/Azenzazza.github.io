@@ -1,1 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <link rel="icon" href="logo.png" type="image/png">
+  <link rel="stylesheet" href="main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="o59G39aapR0d6DRbt0ouA9bk2v9fEBGhT83v3LVZ2fI" />
+  <title>ホーム - Azenzazzaのサイト</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #f5f5f5;
+    }
 
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background-color: #AFE48E;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      margin-right: 16px;
+    }
+
+    .site-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    nav.navbar {
+      margin-left: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    nav.navbar a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+
+    nav.navbar a:hover {
+      text-decoration: underline;
+    }
+
+    .lang-buttons button {
+      margin-left: 8px;
+      padding: 6px 12px;
+      border: none;
+      background: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 960px;
+      margin: 40px 24px;
+      padding: 0 24px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+
+    p {
+      line-height: 1.7;
+      color: #333;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 16px 32px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #777;
+    }
+    @media (max-width: 600px) {
+      header {
+        padding: 12px 16px;
+        gap: 8px;
+      }
+      .logo {
+        width: 48px;
+        height: 48px;
+        margin-right: 12px;
+      }
+      .site-title {
+        font-size: 1.1rem;
+      }
+      nav.navbar {
+        margin-left: 0;
+        flex-wrap: wrap;
+      }
+      nav.navbar a {
+        margin: 0 8px;
+        font-size: 0.95rem;
+      }
+      main {
+        margin: 24px auto;
+        padding: 0 16px;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      .grid { grid-template-columns: 1fr; }
+      .count { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center;">
+      <img src="logo.png" alt="サイトロゴ" class="logo">
+      <div class="site-title" id="title">Azenzazzaのサイト</div>
+    </div>
+
+    <nav class="navbar">
+      <a id="nav-home" href="../../index.html">ホーム</a>
+      <a id="nav-projects" href="../project.html">プロジェクト</a>
+      <a href="../../tools/tools.html">ツール</a>
+    </nav>
+
+  </header>
+
+  <main>
+    <h1 id="hello">こんにちは、Azenzazza（アゼンザッザ）です</h1>
+    <p id="desc">
+      ここはAzenzazzaの個人サイトです。ここでは、私の作品やプロジェクトを紹介していきます。興味のある方はぜひご覧ください。<br>
+      GitHubなどにてプロジェクトをアップしていきます。リンクは下のボタンからアクセスできます。
+    </p>
+    <div class="button015">
+      <a id="github-link" href="https://github.com/Azenzazza" target="_blank">Github</a>
+      <br>
+      <a id="github-link" href="https://www.youtube.com/@Azenzazza" target="_blank">Youtube</a>
+      <br>
+      <a id="github-link" href="https://x.com/Azenzazza" target="_blank">X</a>
+      <br>
+      <a href="https://bsky.app/profile/azenzazza.bsky.social" target="_blank">Bluesky</a>
+    </div>
+    <h1 id="profile">このプロジェクト</h1>
+    <p id="profiledesc">
+      このサイト自身です<br>
+      トップページは
+    </p>
+    <p href="../../index.html">こちら</p>
+  </main>
+
+  <footer>
+    &copy; 2026 Azenzazza.
+  </footer>
+
+  </script>
+</body>
+</html>
