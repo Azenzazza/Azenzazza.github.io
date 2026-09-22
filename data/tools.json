@@ -313,5 +313,14 @@
     "category": "ゲーム",
     "created": "2026-09-22",
     "path": "tools/035-typing-speed-test/"
+  },
+  {
+    "id": "036",
+    "slug": "char-code-viewer",
+    "title": "文字コード表示ツール",
+    "description": "文字列の各文字コードを表示",
+    "category": "テキスト",
+    "created": "2026-09-22",
+    "path": "tools/036-char-code-viewer/"
   }
 ]
