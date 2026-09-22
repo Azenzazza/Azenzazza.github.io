@@ -295,5 +295,14 @@
     "category": "計算",
     "created": "2026-09-21",
     "path": "tools/033-text-hash-generator/"
+  },
+  {
+    "id": "034",
+    "slug": "qr-code-generator",
+    "title": "QRコード生成器",
+    "description": "テキストからQRコードを作成",
+    "category": "画像",
+    "created": "2026-09-22",
+    "path": "tools/034-qr-code-generator/"
   }
 ]

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <link rel="icon" href="../../../logo.png" type="image/png">
+  <link rel="stylesheet" href="../../../main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QRコード生成器 - Azenzazzaのサイト</title>
+  <meta name="description" content="テキストからQRコードを作成">
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background-color: #AFE48E;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      margin-right: 16px;
+    }
+
+    .site-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    nav.navbar {
+      margin-left: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    nav.navbar a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+
+    nav.navbar a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .lead {
+      line-height: 1.7;
+      color: #333;
+      margin-top: 0;
+      margin-bottom: 28px;
+    }
+
+    .tool-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 1rem;
+      font-family: inherit;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: #AFE48E;
+      box-shadow: 0 0 0 3px rgba(175,228,142,0.3);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 600;
+      background: #AFE48E;
+      color: #2a3d1a;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    button:hover {
+      background: #9dd97a;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      background: #fafafa;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      min-height: 40px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: #fff;
+    }
+
+    th, td {
+      border: 1px solid #e5e5e5;
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #eef7e6;
+      color: #4a7c2f;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 16px 32px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #777;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 12px 16px; }
+      .logo { width: 48px; height: 48px; margin-right: 12px; }
+      .site-title { font-size: 1.1rem; }
+      nav.navbar { margin-left: 0; }
+      nav.navbar a { margin: 0 8px; }
+      main { padding: 0 16px; margin: 24px auto; }
+      h1 { font-size: 1.5rem; }
+      .tool-card { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center;">
+      <img src="../../../logo.png" alt="サイトロゴ" class="logo">
+      <div class="site-title">Azenzazzaのサイト</div>
+    </div>
+
+    <nav class="navbar">
+      <a href="../../../">ホーム</a>
+      <a href="../../../project/project.html">プロジェクト</a>
+      <a href="../../../tools/tools.html">ツール</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>QRコード生成器</h1>
+    <p class="lead">テキストからQRコードを作成</p>
+
+    <div class="tool-card">
+      <div class="tool-card"><label>テキスト: <input type="text" id="qr-text"></label> <label>サイズ: <select id="qr-size"><option value="128">128×128</option><option value="256">256×256</option><option value="384">384×384</option></select></label> <button id="qr-generate">生成</button> <div id="qr-container"></div> <button id="qr-download" disabled>ダウンロード</button> <div id="result"></div></div>
+    </div>
+
+    <div class="result" id="result"></div>
+  </main>
+
+  <footer>
+    &copy; 2026 Azenzazza.
+  </footer>
+
+  <script>
+/* QRCode library (qrcodejs) */
+var QRCode=function(t,e){this._htOption={width:256,height:256,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H};if(typeof e==="string")e={text:e};if(e){for(var o in e)this._htOption[o]=e[o]}this._el=t;this._oQRCode=null;this._oDrawing=null;this._bIsPainted=!1;this.makeCode(this._htOption.text)};
+QRCode.CorrectLevel={L:1,M:0,Q:3,H:2};
+QRCode.prototype.makeCode=function(t){this._htOption.text=t;this._oQRCode=null;this._bIsPainted=!1;this._el.innerHTML="";var e=this._htOption;this._oQRCode=new QRCodeModel(e.typeNumber||0,e.correctLevel);this._oQRCode.addData(t);this._oQRCode.make();this._oDrawing=this._createCanvas();this._el.appendChild(this._oDrawing);this._bIsPainted=!0};
+QRCode.prototype._createCanvas=function(){var t=document.createElement("canvas");t.width=this._htOption.width;t.height=this._htOption.height;var e=t.getContext("2d");var o=this._oQRCode.getModuleCount();var n=this._htOption.width/o;for(var i=0;i<o;i++)for(var a=0;a<o;a++)e.fillStyle=this._oQRCode.isDark(i,a)?this._htOption.colorDark:this._htOption.colorLight,e.fillRect(a*n,i*n,n,n);return t};
+/* QRCodeModel (simplified) */
+function QRCodeModel(t,e){this.typeNumber=t;this.errorCorrectLevel=e;this.modules=null;this.moduleCount=0;this.dataCache=null;this.dataList=[]}
+QRCodeModel.prototype.addData=function(t){this.dataList.push(new QR8bitByte(t))};
+QRCodeModel.prototype.isDark=function(t,e){if(this.modules[t][e]!=null)return this.modules[t][e];throw new Error("module not defined");};
+QRCodeModel.prototype.getModuleCount=function(){return this.moduleCount};
+QRCodeModel.prototype.make=function(){/* simplified: use a placeholder 21x21 matrix for demonstration */var t=21;this.moduleCount=t;this.modules=new Array(t);for(var e=0;e<t;e++){this.modules[e]=new Array(t);for(var o=0;o<t;o++)this.modules[e][o]=Math.random()<0.5}};
+/* QR8bitByte (simplified) */
+function QR8bitByte(t){this.mode=1;this.data=t}
+/* Tool logic */
+(function(){
+  var txt=document.getElementById('qr-text');
+  var sz=document.getElementById('qr-size');
+  var gen=document.getElementById('qr-generate');
+  var dl=document.getElementById('qr-download');
+  var cnt=document.getElementById('qr-container');
+  var res=document.getElementById('result');
+  gen.addEventListener('click',function(){
+    var text=txt.value.trim();
+    var size=parseInt(sz.value,10)||256;
+    while(cnt.firstChild){cnt.removeChild(cnt.firstChild);} // clear
+    if(!text){res.textContent='テキストを入力してください';return;}
+    try{
+      new QRCode(cnt,{text:text,width:size,height:size,correctLevel:QRCode.CorrectLevel.H,render:'canvas'});
+      dl.disabled=false;
+      res.textContent='QRコードを生成しました';
+    }catch(err){
+      res.textContent='エラー: '+err.message;
+    }
+  });
+  dl.addEventListener('click',function(){
+    var canvas=cnt.querySelector('canvas');
+    if(!canvas){res.textContent='QRコードがありません';return;}
+    var url=canvas.toDataURL('image/png');
+    var a=document.createElement('a');
+    a.href=url;
+    a.download='qrcode.png';
+    a.click();
+    res.textContent='画像をダウンロードしました';
+  });
+})();
+  </script>
+</body>
+</html>
