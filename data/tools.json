@@ -367,5 +367,14 @@
     "category": "テキスト",
     "created": "2026-09-24",
     "path": "tools/041-reverse-string/"
+  },
+  {
+    "id": "042",
+    "slug": "word-cloud",
+    "title": "ワードクラウド生成器",
+    "description": "テキストからワードクラウドを作成",
+    "category": "画像",
+    "created": "2026-09-24",
+    "path": "tools/042-word-cloud/"
   }
 ]
