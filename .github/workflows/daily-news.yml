@@ -1,0 +1,34 @@
+name: Daily News
+
+on:
+  schedule:
+    - cron: '0 22 * * *'   # JST 07:00
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: pip install -r scripts/requirements.txt
+
+      - name: Generate news
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: python scripts/news.py
+
+      - name: Commit & push
+        run: |
+          git config user.name "ai-bot"
+          git config user.email "bot@azenzazza.github.io"
+          git add news/
+          git diff --staged --quiet || git commit -m "Update news $(date -u +%F)"
+          git push
