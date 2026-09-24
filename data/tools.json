@@ -349,5 +349,14 @@
     "category": "変換",
     "created": "2026-09-23",
     "path": "tools/039-text-to-braille/"
+  },
+  {
+    "id": "040",
+    "slug": "morse-code",
+    "title": "モールス符号変換ツール",
+    "description": "文字列をモールス符号に変換",
+    "category": "変換",
+    "created": "2026-09-24",
+    "path": "tools/040-morse-code/"
   }
 ]
