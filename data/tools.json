@@ -358,5 +358,14 @@
     "category": "変換",
     "created": "2026-09-24",
     "path": "tools/040-morse-code/"
+  },
+  {
+    "id": "041",
+    "slug": "reverse-string",
+    "title": "文字列逆順ツール",
+    "description": "入力文字列を逆順に変換します",
+    "category": "テキスト",
+    "created": "2026-09-24",
+    "path": "tools/041-reverse-string/"
   }
 ]
