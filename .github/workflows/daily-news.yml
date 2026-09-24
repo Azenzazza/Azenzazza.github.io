@@ -2,7 +2,7 @@ name: Daily News
 
 on:
   schedule:
-    - cron: '0 22 * * *'   # JST 07:00
+    - cron: '0 9 * * *' 
   workflow_dispatch:
 
 jobs:
