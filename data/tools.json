@@ -376,5 +376,14 @@
     "category": "画像",
     "created": "2026-09-24",
     "path": "tools/042-word-cloud/"
+  },
+  {
+    "id": "043",
+    "slug": "reading-score",
+    "title": "テキスト可読性スコア計算",
+    "description": "文章の可読性を数値で評価します",
+    "category": "計算",
+    "created": "2026-09-25",
+    "path": "tools/043-reading-score/"
   }
 ]
