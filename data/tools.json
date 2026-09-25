@@ -394,5 +394,14 @@
     "category": "日付",
     "created": "2026-09-25",
     "path": "tools/044-simple-calendar/"
+  },
+  {
+    "id": "045",
+    "slug": "text-to-speech",
+    "title": "文字を音声で読む",
+    "description": "テキストを音声で読み上げます",
+    "category": "テキスト",
+    "created": "2026-09-25",
+    "path": "tools/045-text-to-speech/"
   }
 ]

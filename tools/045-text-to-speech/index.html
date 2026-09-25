@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <link rel="icon" href="../../../logo.png" type="image/png">
+  <link rel="stylesheet" href="../../../main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文字を音声で読む - Azenzazzaのサイト</title>
+  <meta name="description" content="テキストを音声で読み上げます">
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background-color: #AFE48E;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      margin-right: 16px;
+    }
+
+    .site-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    nav.navbar {
+      margin-left: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    nav.navbar a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+
+    nav.navbar a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .lead {
+      line-height: 1.7;
+      color: #333;
+      margin-top: 0;
+      margin-bottom: 28px;
+    }
+
+    .tool-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 1rem;
+      font-family: inherit;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: #AFE48E;
+      box-shadow: 0 0 0 3px rgba(175,228,142,0.3);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 600;
+      background: #AFE48E;
+      color: #2a3d1a;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    button:hover {
+      background: #9dd97a;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      background: #fafafa;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      min-height: 40px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: #fff;
+    }
+
+    th, td {
+      border: 1px solid #e5e5e5;
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #eef7e6;
+      color: #4a7c2f;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 16px 32px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #777;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 12px 16px; }
+      .logo { width: 48px; height: 48px; margin-right: 12px; }
+      .site-title { font-size: 1.1rem; }
+      nav.navbar { margin-left: 0; }
+      nav.navbar a { margin: 0 8px; }
+      main { padding: 0 16px; margin: 24px auto; }
+      h1 { font-size: 1.5rem; }
+      .tool-card { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center;">
+      <img src="../../../logo.png" alt="サイトロゴ" class="logo">
+      <div class="site-title">Azenzazzaのサイト</div>
+    </div>
+
+    <nav class="navbar">
+      <a href="../../../">ホーム</a>
+      <a href="../../../project/project.html">プロジェクト</a>
+      <a href="../../../tools/tools.html">ツール</a>
+      <a href="../../../news/index.html">ニュース</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>文字を音声で読む</h1>
+    <p class="lead">テキストを音声で読み上げます</p>
+
+    <div class="tool-card">
+      <div class="tool-card"><textarea id="tts-text" rows="4" placeholder="テキストを入力してください"></textarea><div><label>音量: <input type="range" id="tts-volume" min="0" max="1" step="0.1" value="1"></label></div><div><label>速度: <input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1"></label></div><div><label>声: <select id="tts-voice"></select></label></div><button id="tts-toggle">再生</button></div>
+    </div>
+
+    <div class="result" id="result"></div>
+  </main>
+
+  <footer>
+    &copy; 2026 Azenzazza.
+  </footer>
+
+  <script>
+document.addEventListener('DOMContentLoaded',function(){const txt=document.getElementById('tts-text');const vol=document.getElementById('tts-volume');const rate=document.getElementById('tts-rate');const voiceSel=document.getElementById('tts-voice');const btn=document.getElementById('tts-toggle');const result=document.getElementById('result');let utter=null;let speaking=false;function populateVoices(){const voices=speechSynthesis.getVoices();voiceSel.innerHTML='';voices.forEach(v=>{const opt=document.createElement('option');opt.value=v.name;opt.textContent=v.name;voiceSel.appendChild(opt);});}if(speechSynthesis.onvoiceschanged!==undefined){speechSynthesis.addEventListener('voiceschanged',populateVoices);}populateVoices();function speak(){if(speaking){speechSynthesis.cancel();speaking=false;btn.textContent='再生';result.textContent='停止';return;}const text=txt.value.trim();if(!text){result.textContent='テキストがありません';return;}utter=new SpeechSynthesisUtterance(text);utter.volume=parseFloat(vol.value);utter.rate=parseFloat(rate.value);const selectedVoice=voiceSel.value;const voice=speechSynthesis.getVoices().find(v=>v.name===selectedVoice);if(voice){utter.voice=voice;}utter.onend=function(){speaking=false;btn.textContent='再生';result.textContent='完了';};utter.onerror=function(e){speaking=false;btn.textContent='再生';result.textContent='エラー';};speechSynthesis.speak(utter);speaking=true;btn.textContent='停止';result.textContent='再生中';}btn.addEventListener('click',speak);vol.addEventListener('input',function(){if(utter){utter.volume=parseFloat(this.value);}});rate.addEventListener('input',function(){if(utter){utter.rate=parseFloat(this.value);}});voiceSel.addEventListener('change',function(){if(utter){const v=speechSynthesis.getVoices().find(v=>v.name===this.value);if(v){utter.voice=v;}}});});
+  </script>
+</body>
+</html>
