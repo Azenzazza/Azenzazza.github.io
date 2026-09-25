@@ -385,5 +385,14 @@
     "category": "計算",
     "created": "2026-09-25",
     "path": "tools/043-reading-score/"
+  },
+  {
+    "id": "044",
+    "slug": "simple-calendar",
+    "title": "簡易カレンダー",
+    "description": "月表示で日付を確認",
+    "category": "日付",
+    "created": "2026-09-25",
+    "path": "tools/044-simple-calendar/"
   }
 ]
