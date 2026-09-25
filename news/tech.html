@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIエージェント開発の最新動向とツール比較 - Azenzazzaのサイト</title>
-  <meta name="description" content="複数の記事でAIエージェントとLLMを組み合わせた開発手法・セキュリティ・実用例が増加中で、技術者にとって実装指針と課題を示す価値が高い。">
+  <title>会議・調査・資料作成をAgentに任せる：Microsoft環境で始めるプロジェクトLLM Wiki - Azenzazzaのサイト</title>
+  <meta name="description" content="近年のAIエージェント活用が急速に進展しており、会議や資料作成など日常業務を自動化するケースが増えている。本記事はMicrosoft環境での実装例を示し、実務に直結する実践的知見を提供する点が読者価値を高める。">
   <style>
     body {
       margin: 0;
@@ -185,58 +185,48 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年09月24日</p>
-    <h1>AIエージェント開発の最新動向とツール比較</h1>
+    <p class="news-date">2026年09月25日</p>
+    <h1>会議・調査・資料作成をAgentに任せる：Microsoft環境で始めるプロジェクトLLM Wiki</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>AIエージェントと大規模言語モデル（LLM）を組み合わせた開発手法が急速に広がり、セキュリティや実装フレームワークの選択が技術者の重要課題となっている。本稿では、2026年に公開された「LLM Wiki」やAWS DevOps Agent の堅牢性、Go 言語向けフレームワーク ADK とライブラリ Genkit の比較、さらに Claude Opus 5.5 の動画生成活用例と MCP に伴う情報漏洩リスクを総合的に整理し、最新動向と実装指針を提示する。</p>
+<p>AIエージェントによる業務自動化が加速する中、Microsoft環境で「LLM Wiki」を活用した実装例が注目を集めている。会議の要点抽出や調査、資料作成といった日常業務をエージェントに委任することで、ヒューマンエラーの削減と生産性向上が期待できる。本稿では、最新のAIエージェント技術と実装上の留意点を具体的に解説する。</p>
 
 <h2>背景</h2>
-<p>AI 戦国時代と呼ばれる現在、企業は業務ごとの垂直型 AI（Vertical AI）を模索している。特に、従来ヒトが担ってきた会議資料作成やプロジェクト管理といったビジネスプロセスを「エージェントネイティブ」へ転換する動きが顕著だ。松尾研究所の大岡シニアデータサイエンティストは、2026 年 4 月に Andrej Karpathy が発表した「LLM Wiki」を例に、原文・会話履歴をそのまま保存しつつ LLM が知識を自動整理・更新する仕組みが、プロジェクトワークへの垂直型 AI の有力候補になると指摘している。</p>
-<p>同時期に、クラウド基盤の自動化を担う AWS DevOps Agent がセキュリティ機能「Elevated Role」や「Directed Actions」を導入し、権限昇格や操作指示の安全性が議論の焦点となっている。さらに、AI エージェントを Go 言語で実装する際の選択肢として、エージェント全体を管理するフレームワーク ADK と、モデル呼び出しを簡便化するライブラリ Genkit が対立的に評価されている。</p>
-<p>こうした技術的背景に加え、Claude Opus 5.5 が自然言語プロンプトだけで数分規模の解説アニメーションを生成できることや、MCP（Model Context Protocol）利用時に情報漏洩が起こり得るリスクが指摘され、実装者は機能性と安全性の両立を迫られている。</p>
+<p>近年、ChatGPTやClaudeといった大規模言語モデル（LLM）の普及に伴い、AIエージェントを業務フローに組み込む試みが急増している。特に「Vertical AI」と呼ばれる、特定業界・業務に特化したAI活用が注目され、エージェントが人間の意思決定を支援する形が主流となってきた。2026年4月にAndrej Karpathy氏が発表した「LLM Wiki」は、会話や資料の原文をそのまま保存し、LLMが継続的に知識を整理・更新する仕組みとして、プロジェクトワークへの適用が期待されている（Zenn）。同時に、AIが外部パッケージを自動で追加するリスクや、MCP（Model Context Protocol）を介した情報漏洩の危険性も指摘されており、実装時のガバナンスが重要視されている（Qiita）。このような背景のもと、Microsoft製品群（Teams、SharePoint、Power Automate）とLLM Wikiを組み合わせた実証プロジェクトが進行中である。</p>
 
 <h2>詳細</h2>
-<h3>LLM Wiki とプロジェクトワークへの適用</h3>
-<p>大岡氏は、LLM Wiki が「資料や会話の原文はそのまま保管し、LLM がそこから知識を整理・更新し続ける」仕組みとして、ビジネス職のプロジェクトワークに対する垂直型 AI の解決策になると述べている。実際に 4 か月間複数プロジェクトで試験運用した結果、従来の手作業での議事録整理やタスク抽出が自動化され、プロジェクトの進捗可視化が迅速化したと報告されている。</p>
+<h3>1. エージェントの役割分担と型安全な判定（Jev）</h3>
+<p>株式会社イエソドが公開した「Jev」は、LLMとは異なり質問に対して確率スコアのみを返す「System One Model」だ。型付きの問いを投げ、0.93 などの数値で結果を受け取ることで、エージェント側のロジジックが判定を行う。Jev単体では処理を完結できないが、判定結果を基に「問い合わせをエスカレーションするか」をコード側で決定できるため、社内問い合わせの自動振り分けに有効とされている（Zenn）。</p>
 
-<h3>AWS DevOps Agent のセキュリティ機能</h3>
-<p>西川氏は、AWS DevOps Agent の「Elevated Role」や「Directed Actions」が新たに提供されたことに注目し、これらは「権限昇格を限定的に許可し、特定のアクションだけを実行させる」仕組みとして設計されていると説明している。事前に概念を把握しておかないと、設定ミスにより過剰な権限が付与される危険性があると警告し、実装時には公式ドキュメントの熟読が必須であると指摘している。</p>
+<h3>2. 依存追加の安全策（Claude Code Hook）</h3>
+<p>Claude Codeでコード生成を自動化する際、外部ライブラリの追加が自動で行われるリスクが指摘されている。これに対し、依存追加前に「調査」→「ユーザ確認」のフローを挟むフックを実装することで、サプライチェーン攻撃への対策を講じている（Zenn）。このアプローチは、AIが提案した変更をそのまま受け入れず、必ず人間のレビューを入れる点で、LLM Wikiと組み合わせたプロジェクトでも同様の安全策が適用可能である。</p>
 
-<h3>Go 言語でのエージェント実装：ADK vs Genkit</h3>
-<p>ADK は「エージェントを動かす仕組みごと用意してくれる」フレームワークであり、エージェントの並列・順序・親子構造を宣言的に記述できる点が大きな特徴だ。一方、Genkit は「モデル呼び出しを便利にする」ライブラリで、エージェントの組み立ては errgroup と関数呼び出しで自前実装する必要がある。</p>
+<h3>3. MCPによる情報漏洩リスクと事前チェック</h3>
+<p>MCPを利用すると、AIエージェントが外部サーバーのツールを呼び出すことができるが、これが情報漏洩の経路になるケースが報告されている。危険パターンは「認証情報の自動取得」「データ転送の暗号化欠如」など4つに分類され、事前に確認すべき項目は7つ提示されている（Qiita）。Microsoft環境でLLM Wikiを導入する際は、MCPの設定と権限管理を徹底し、エージェントがアクセスできるデータ範囲を最小化することが必須となる。</p>
+
+<h3>4. 「Skills」で業務再現性を高める</h3>
+<p>AIエージェントに業務手順や知見を「Skills」として登録すれば、特定の人だけができた作業を組織全体に拡散できるという考え方が提唱されている（Qiita）。LLM Wikiが蓄積した会議記録や調査結果を「Skills」の形で抽出し、Power Automateのフローに組み込むことで、会議要約や資料作成を自動化しつつ、誰でも同等の成果物を生成できるようになる。</p>
+
+<h3>5. Microsoft環境での実装フロー</h3>
 <ul>
-<li><strong>組み立ての容易さ</strong>：ADK は宣言のみで階層構造を表現でき、デバッグ時の可視化 UI がエージェントと State の変化を示す。Genkit は処理区切り（span）を UI に表示するが、階層管理は手動。</li>
-<li><strong>リトライ・ループ制御</strong>：ADK にはデフォルトのループ上限やリトライ機構がなく、開発者が明示的に実装する必要がある。Genkit も同様に自前実装が前提。</li>
-<li><strong>State 共有</strong>：ADK の Go 実装では、呼び出し元が State を直接書き換えることができ、ミューテーションが容易だが、意図しない副作用に注意が必要。</li>
+<li>Teams の会議録音を自動で文字起こしし、LLM Wiki に保存。</li>
+<li>保存されたテキストをJevで型安全に評価し、議題ごとのタスク化を判定。</li>
+<li>Claude Code Hook により、必要な外部パッケージの追加は人間確認を経て実行。</li>
+<li>MCP の権限を最小化しつつ、Power Automate で資料テンプレートに自動流し込み。</li>
+<li>完成した資料はSharePoint に格納し、全員が「Skills」として再利用可能に。</li>
 </ul>
 
-<h3>Claude Opus 5.5 による動画生成活用例</h3>
-<p>Claude Opus 5.5 は、英語プロンプトをそのまま投入するだけで、2 分 10 秒規模の解説アニメーション動画を自動生成できる。実例として「Jev」の仕組みを説明する動画が作成され、プロンプト作成は ChatGPT を利用して自然言語で指示を生成し、Opus 5.5 に渡すという 3 ステップのワークフローが提示されている。この手軽さは、技術ドキュメントや教育コンテンツの迅速な可視化に有用である。</p>
-
-<h3>MCP 利用時の情報漏洩リスク</h3>
-<p>Qiita の記事では、MCP（Model Context Protocol）を介して AI エージェントがサーバー上のツールを呼び出す際に、情報漏洩が起こり得る 4 つのパターンと、事前に確認すべき 7 つのチェック項目が整理されている。特に、サーバー側の認証設定やデータ転送の暗号化が不十分な場合、機密情報が外部に流出する可能性があると指摘されている。</p>
-
 <h2>影響・展望</h2>
-<p>これらの動向は、AI エージェント開発において「機能性」と「安全性」の二軸で選択肢が分散していることを示す。LLM Wiki のように知識を自律的に更新できるプラットフォームは、垂直型 AI の実装コストを削減し、業務効率化を加速させる可能性がある。一方、AWS DevOps Agent の新機能や MCP のリスクは、クラウド環境でのエージェント運用におけるセキュリティ意識の向上を促す。</p>
-<p>Go エージェント開発では、ADK の宣言的構築と Genkit の軽量呼び出しという二つの設計哲学が共存し、プロジェクトの規模やチームの熟練度に応じた選択が求められるだろう。さらに、Claude Opus 5.5 の動画生成能力は、技術情報の可視化手段として新たな価値を提供し、教育・マーケティング分野への応用が期待される。</p>
-<p>今後は、エージェントの自律性とセキュリティガバナンスを統合したプラットフォームの登場や、MCP の安全な実装ガイドラインの標準化が進むとみられる。技術者は、各ツールの特性とリスクを正確に把握し、プロジェクト要件に最適なエージェント構成を選択することが重要になる。</p>
+<p>AIエージェントが会議要点抽出や調査、資料作成までを一貫して担うことで、従来は数時間かかっていた作業が数分に短縮される可能性がある。特に大企業のプロジェクトチームでは、情報共有の速度が向上し、意思決定サイクルが加速するとみられる。一方で、Jev のような型安全判定や Claude Code のフック、MCP のセキュリティチェックといったガバナンス層が不可欠であり、導入企業は「AI × 人間」のハイブリッドプロセスを設計する必要がある。今後、LLM Wiki の知識更新機能が成熟すれば、エージェントが自律的に最新情報を取り込み、さらに高度な業務自動化が実現できると予測される。</p>
 
 <h2>まとめ</h2>
-<p>AI エージェントと LLM の融合は、垂直型 AI の実装を加速させると同時に、セキュリティやフレームワーク選択の課題を浮き彫りにしている。LLM Wiki、AWS DevOps Agent の新機能、ADK と Genkit の設計差異、Claude Opus 5.5 の動画生成、MCP の情報漏洩リスクを総合的に理解し、適切なツールとガバナンスを組み合わせることが、2026 年以降の AI エージェント開発の鍵となるだろう。</p>
-
-<h2>参考文献</h2>
-<ul>
-<li>会議・調査・資料作成をAgentに任せる：Microsoft環境で始めるプロジェクトLLM Wiki</li>
-<li>AWS DevOps Agent の堅牢性</li>
-<li>GoでAIエージェントを作るならGenkitかADKか：Genkitから作り直して分かったこと</li>
-<li>Opus 5.5にプロンプトを
+<p>Microsoft環境でLLM Wiki を核に据えたAIエージェント活用は、会議・調査・資料作成という日常業務を自動化し、生産性と情報セキュリティの両立を目指す実装例として注目されている。Jev の型安全判定、Claude Code の安全フック、MCP のリスク管理といった技術的要素を組み合わせ、業務プロセス全体をエージェントネイティブに再設計することが、今後のVertical AI の鍵となるだろう。</p>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/mkj/articles/agent-native-project-work-with-llm-wiki" target="_blank" rel="noopener">会議・調査・資料作成をAgentに任せる：Microsoft環境で始めるプロジェクトLLM Wiki</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/cscloud_blog/articles/9968d12b332c03" target="_blank" rel="noopener">AWS DevOps Agent の堅牢性</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/gopher/articles/adk-vs-genkit-design-philosophy" target="_blank" rel="noopener">GoでAIエージェントを作るならGenkitかADKか：Genkitから作り直して分かったこと</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/acntechjp/articles/178e40be12d347" target="_blank" rel="noopener">Opus 5.5にプロンプトを渡したら、解説アニメーション動画ができた</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/songchong/items/89175eaa7a30f71d0351?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">MCP サーバーと繋いだだけで情報漏洩？ 危険の4パターンと事前に確認すべき7つのことをまとめてみた</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/yesodco/articles/yesod-jev-typesafe-inquiry-triage" target="_blank" rel="noopener">文章を返さないAI「Jev」を試してみた ── 社内問い合わせのエスカレーション先は判定できるか</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/sprix_it/articles/f3ef77c1d46554" target="_blank" rel="noopener">Claude Codeによる依存追加・更新に「調べてからユーザに聞いて」を挟むHookの紹介</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/mkj/articles/agent-native-project-work-with-llm-wiki" target="_blank" rel="noopener">会議・調査・資料作成をAgentに任せる：Microsoft環境で始めるプロジェクトLLM Wiki</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/songchong/items/89175eaa7a30f71d0351?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">MCP サーバーと繋いだだけで情報漏洩？ 危険の4パターンと事前に確認すべき7つのことをまとめてみた</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/Takashi_Masumori/items/4fbf6144f4cab3f00123?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">その仕事、本当に「Skills」で再現できるのか考えてみる</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
