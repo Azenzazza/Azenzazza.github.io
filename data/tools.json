@@ -421,5 +421,14 @@
     "category": "変換",
     "created": "2026-09-26",
     "path": "tools/047-newline-converter/"
+  },
+  {
+    "id": "048",
+    "slug": "ascii-art",
+    "title": "画像→ASCIIアート",
+    "description": "画像をASCII文字に変換します",
+    "category": "画像",
+    "created": "2026-09-26",
+    "path": "tools/048-ascii-art/"
   }
 ]
