@@ -412,5 +412,14 @@
     "category": "テキスト",
     "created": "2026-09-26",
     "path": "tools/046-char-count/"
+  },
+  {
+    "id": "047",
+    "slug": "newline-converter",
+    "title": "改行コード変換",
+    "description": "Windows/Unix/Mac の改行を変換",
+    "category": "変換",
+    "created": "2026-09-26",
+    "path": "tools/047-newline-converter/"
   }
 ]
