@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>会議・調査・資料作成をAgentに任せる：Microsoft環境で始めるプロジェクトLLM Wiki - Azenzazzaのサイト</title>
-  <meta name="description" content="近年のAIエージェント活用が急速に進展しており、会議や資料作成など日常業務を自動化するケースが増えている。本記事はMicrosoft環境での実装例を示し、実務に直結する実践的知見を提供する点が読者価値を高める。">
+  <title>AIに書かせても速くならないのは、AIを「手足」として使っているから - Azenzazzaのサイト</title>
+  <meta name="description" content="AIエージェントの導入で開発プロセスの自動化・効率化が進む一方、設計や判断点の重要性が浮き彫りになる。複数記事で実践例や課題が共有されているため、読者にとって実用的かつ興味深いテーマとなる。">
   <style>
     body {
       margin: 0;
@@ -185,48 +185,61 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年09月25日</p>
-    <h1>会議・調査・資料作成をAgentに任せる：Microsoft環境で始めるプロジェクトLLM Wiki</h1>
+    <p class="news-date">2026年09月26日</p>
+    <h1>AIに書かせても速くならないのは、AIを「手足」として使っているから</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>AIエージェントによる業務自動化が加速する中、Microsoft環境で「LLM Wiki」を活用した実装例が注目を集めている。会議の要点抽出や調査、資料作成といった日常業務をエージェントに委任することで、ヒューマンエラーの削減と生産性向上が期待できる。本稿では、最新のAIエージェント技術と実装上の留意点を具体的に解説する。</p>
+<p>AI エージェントにコードを書かせても、開発スピードが上がらないと嘆く声が増えている。実際の原因は、AI を「手足」だけに使い、人が本来担う設計や判断を放棄している点にある。AI に計画・実装・検証・修正を自律的に回す「ループエンジニアリング」や、Jev のような型付き出力モデルの活用事例を踏まえ、開発現場で有効に機能させるための5つの判断ポイントと半自動ループの作り方を解説する。</p>
 
 <h2>背景</h2>
-<p>近年、ChatGPTやClaudeといった大規模言語モデル（LLM）の普及に伴い、AIエージェントを業務フローに組み込む試みが急増している。特に「Vertical AI」と呼ばれる、特定業界・業務に特化したAI活用が注目され、エージェントが人間の意思決定を支援する形が主流となってきた。2026年4月にAndrej Karpathy氏が発表した「LLM Wiki」は、会話や資料の原文をそのまま保存し、LLMが継続的に知識を整理・更新する仕組みとして、プロジェクトワークへの適用が期待されている（Zenn）。同時に、AIが外部パッケージを自動で追加するリスクや、MCP（Model Context Protocol）を介した情報漏洩の危険性も指摘されており、実装時のガバナンスが重要視されている（Qiita）。このような背景のもと、Microsoft製品群（Teams、SharePoint、Power Automate）とLLM Wikiを組み合わせた実証プロジェクトが進行中である。</p>
+<p>大規模言語モデル（LLM）をベースにした AI エージェントは、コード生成やインフラ構成図作成、テスト自動化まで幅広いタスクを瞬時にこなすことができると期待されてきた。実際に、Claude や Codex が生成した構成図は「AI感」のあるデザインになりがちで、手直しが必要になるケースが報告されている。また、Jenkins の PR レビューに AI の APPROVE を組み込み、テストやセキュリティスキャンを自動で走らせる試みや、GitHub Copilot CLI と連携した自己修復パイプラインも登場した。</p>
+<p>しかし、これらの取り組みは「AI が書いたらすぐに動く」という前提で導入されがちで、実際には AI が仕様を勝手に解釈したり、出力が期待とずれたりすることが多い。Zenn の記事では、AI にコードを書かせても確認と手戻りに時間が取られ、開発が速くならない現象が指摘されている。そこで注目されたのが「ループエンジニアリング」―― AI に計画→実装→検証→修正のサイクルを回させ、人はそのループと判断点を設計する役割にシフトする考え方だ。</p>
 
 <h2>詳細</h2>
-<h3>1. エージェントの役割分担と型安全な判定（Jev）</h3>
-<p>株式会社イエソドが公開した「Jev」は、LLMとは異なり質問に対して確率スコアのみを返す「System One Model」だ。型付きの問いを投げ、0.93 などの数値で結果を受け取ることで、エージェント側のロジジックが判定を行う。Jev単体では処理を完結できないが、判定結果を基に「問い合わせをエスカレーションするか」をコード側で決定できるため、社内問い合わせの自動振り分けに有効とされている（Zenn）。</p>
-
-<h3>2. 依存追加の安全策（Claude Code Hook）</h3>
-<p>Claude Codeでコード生成を自動化する際、外部ライブラリの追加が自動で行われるリスクが指摘されている。これに対し、依存追加前に「調査」→「ユーザ確認」のフローを挟むフックを実装することで、サプライチェーン攻撃への対策を講じている（Zenn）。このアプローチは、AIが提案した変更をそのまま受け入れず、必ず人間のレビューを入れる点で、LLM Wikiと組み合わせたプロジェクトでも同様の安全策が適用可能である。</p>
-
-<h3>3. MCPによる情報漏洩リスクと事前チェック</h3>
-<p>MCPを利用すると、AIエージェントが外部サーバーのツールを呼び出すことができるが、これが情報漏洩の経路になるケースが報告されている。危険パターンは「認証情報の自動取得」「データ転送の暗号化欠如」など4つに分類され、事前に確認すべき項目は7つ提示されている（Qiita）。Microsoft環境でLLM Wikiを導入する際は、MCPの設定と権限管理を徹底し、エージェントがアクセスできるデータ範囲を最小化することが必須となる。</p>
-
-<h3>4. 「Skills」で業務再現性を高める</h3>
-<p>AIエージェントに業務手順や知見を「Skills」として登録すれば、特定の人だけができた作業を組織全体に拡散できるという考え方が提唱されている（Qiita）。LLM Wikiが蓄積した会議記録や調査結果を「Skills」の形で抽出し、Power Automateのフローに組み込むことで、会議要約や資料作成を自動化しつつ、誰でも同等の成果物を生成できるようになる。</p>
-
-<h3>5. Microsoft環境での実装フロー</h3>
+<h3>AI を「手足」ではなく「パートナー」に変える5つの判断ポイント</h3>
 <ul>
-<li>Teams の会議録音を自動で文字起こしし、LLM Wiki に保存。</li>
-<li>保存されたテキストをJevで型安全に評価し、議題ごとのタスク化を判定。</li>
-<li>Claude Code Hook により、必要な外部パッケージの追加は人間確認を経て実行。</li>
-<li>MCP の権限を最小化しつつ、Power Automate で資料テンプレートに自動流し込み。</li>
-<li>完成した資料はSharePoint に格納し、全員が「Skills」として再利用可能に。</li>
+<li><strong>目的の明確化</strong>：AI に何をやらせるかを具体的に定義し、成功基準を数値化する。</li>
+<li><strong>入力の粒度調整</strong>：AI が解釈しやすいように、要件や制約を細分化して提示する。</li>
+<li><strong>出力形式の統一</strong>：Jev のように型付きスコアだけを返すモデルを利用し、結果の解釈をコード側で一元化する。</li>
+<li><strong>検証基準の自動化</strong>：テストやセキュリティスキャンを CI に組み込み、AI の出力を即座に評価できる環境を整える。</li>
+<li><strong>修正フローの設計</strong>：AI が生成したコードに対して、どのようにフィードバックし、次のサイクルへ反映させるかを事前に決めておく。</li>
 </ul>
 
+<h3>半自動ループの作り方</h3>
+<p>上記判断ポイントを踏まえて、実務で使えるループを構築する手順は次のとおりである。</p>
+<ol>
+<li>「計画」フェーズで、タスクごとに <strong>入力テンプレート</strong> と <strong>成功基準</strong>（例：テストカバレッジ80%以上）を用意する。</li>
+<li>「実装」フェーズでは、AI エージェントにテンプレートを渡しコード生成を実行。Jev のようにスコアだけを返すモデルを組み合わせ、結果を数値で取得する。</li>
+<li>「検証」フェーズで、CI ツール（例：Jenkins）にテスト・セキュリティスキャンを自動走査させ、スコアとテスト結果を比較する。</li>
+<li>「修正」フェーズでは、検証結果が基準未達の場合に、どの部分を再生成すべきかを判断点として記録し、再度 AI に指示を出す。</li>
+<li>このサイクルを一定回数（例：3回）繰り返すことで、AI が人手を介さずに自己改善できる「半自動ループ」が完成する。</li>
+</ol>
+
+<h3>実践例と課題</h3>
+<p>Jev を社内問い合わせのエスカレーション判定に使った事例では、モデルは「0.93」のような確率スコアのみを返し、実際の処理は呼び出し側のコードが行う構造になっている。これにより、AI の出力を直接業務ロジックに組み込む際の安全性が確保できる。</p>
+<p>一方、AWS 構成図を AI に描かせた試みでは、アイコンの丸みやレイアウトが「AI感」すぎて、実務で使うには手直しが必要だった。Jenkins の PR レビューで AI の APPROVE を機械的に覆す仕組みは、AI の判断を盲目的に受け入れないガードレールとして機能している。</p>
+
 <h2>影響・展望</h2>
-<p>AIエージェントが会議要点抽出や調査、資料作成までを一貫して担うことで、従来は数時間かかっていた作業が数分に短縮される可能性がある。特に大企業のプロジェクトチームでは、情報共有の速度が向上し、意思決定サイクルが加速するとみられる。一方で、Jev のような型安全判定や Claude Code のフック、MCP のセキュリティチェックといったガバナンス層が不可欠であり、導入企業は「AI × 人間」のハイブリッドプロセスを設計する必要がある。今後、LLM Wiki の知識更新機能が成熟すれば、エージェントが自律的に最新情報を取り込み、さらに高度な業務自動化が実現できると予測される。</p>
+<p>AI エージェントを「手足」から「パートナー」へ位置付けることで、開発プロセス全体の自動化が加速し、人的リソースは設計や判断に集中できるようになる。特に、ループエンジニアリングを取り入れた半自動化は、短期的には CI/CD の高速化、長期的には開発チームのスキルシフトを促す可能性がある。</p>
+<p>しかし、AI が仕様を勝手に解釈するリスクや、出力の品質保証が不十分なまま本番に流用される危険性は残っている。今後は、判断ポイントの標準化や型付き出力モデルの普及が進むことで、AI と人間の協働がより安全かつ効率的になると見込まれる。</p>
 
 <h2>まとめ</h2>
-<p>Microsoft環境でLLM Wiki を核に据えたAIエージェント活用は、会議・調査・資料作成という日常業務を自動化し、生産性と情報セキュリティの両立を目指す実装例として注目されている。Jev の型安全判定、Claude Code の安全フック、MCP のリスク管理といった技術的要素を組み合わせ、業務プロセス全体をエージェントネイティブに再設計することが、今後のVertical AI の鍵となるだろう。</p>
+<p>AI エージェントを単なるコード生成ツールとして扱うと、確認作業に時間が取られ開発は速くならない。目的・入力・出力・検証・修正の5つの判断ポイントを設計し、計画→実装→検証→修正のループを半自動化すれば、AI を「手足」から「パートナー」へ昇格させ、開発効率の本質的向上が期待できる。</p>
+
+<p>【参考文献】</p>
+<ul>
+<li>AIに書かせても速くならないのは、AIを「手足」として使っているから（Zenn）</li>
+<li>Jevにゲームをやらせるな！LLMを蒸留してみよう！（Zenn）</li>
+<li>文章を返さないAI「Jev」を試してみた（Zenn）</li>
+<li>JenkinsのPRレビューでテストとセキュリティスキャンも回す ― AIのAPPROVEを機械的に覆すMineWatchのCI（Qiita）</li>
+<li>AI感のないAWS構成図をAIエージェントに描かせたい！（Qiita）</li>
+</ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/yesodco/articles/yesod-jev-typesafe-inquiry-triage" target="_blank" rel="noopener">文章を返さないAI「Jev」を試してみた ── 社内問い合わせのエスカレーション先は判定できるか</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/sprix_it/articles/f3ef77c1d46554" target="_blank" rel="noopener">Claude Codeによる依存追加・更新に「調べてからユーザに聞いて」を挟むHookの紹介</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/mkj/articles/agent-native-project-work-with-llm-wiki" target="_blank" rel="noopener">会議・調査・資料作成をAgentに任せる：Microsoft環境で始めるプロジェクトLLM Wiki</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/songchong/items/89175eaa7a30f71d0351?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">MCP サーバーと繋いだだけで情報漏洩？ 危険の4パターンと事前に確認すべき7つのことをまとめてみた</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/Takashi_Masumori/items/4fbf6144f4cab3f00123?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">その仕事、本当に「Skills」で再現できるのか考えてみる</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/dotdtech_blog/articles/65d51bc72d7ee9" target="_blank" rel="noopener">AIに書かせても速くならないのは、AIを「手足」として使っているから。人が押さえるべき5つの判断ポイントと半自動ループの作り方</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/nwn/articles/e49154653ecea9" target="_blank" rel="noopener">Jevにゲームをやらせるな！LLMを蒸留してみよう！</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/yesodco/articles/yesod-jev-typesafe-inquiry-triage" target="_blank" rel="noopener">文章を返さないAI「Jev」を試してみた ── 社内問い合わせのエスカレーション先は判定できるか</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/jqit-yukiono/items/8675266928f574677d9e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">JenkinsのPRレビューでテストとセキュリティスキャンも回す ― AIのAPPROVEを機械的に覆すMineWatchのCI</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/sagochiko/items/ef77b084ff2dee1f859c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI感のないAWS構成図をAIエージェントに描かせたい！</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
