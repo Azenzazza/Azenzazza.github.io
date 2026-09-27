@@ -439,5 +439,14 @@
     "category": "テキスト",
     "created": "2026-09-27",
     "path": "tools/049-code-formatter/"
+  },
+  {
+    "id": "050",
+    "slug": "palette-generator",
+    "title": "画像カラーパレット生成",
+    "description": "画像から色パレットを抽出",
+    "category": "画像",
+    "created": "2026-09-27",
+    "path": "tools/050-palette-generator/"
   }
 ]
