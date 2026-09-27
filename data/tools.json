@@ -448,5 +448,14 @@
     "category": "画像",
     "created": "2026-09-27",
     "path": "tools/050-palette-generator/"
+  },
+  {
+    "id": "051",
+    "slug": "unicode-normalization",
+    "title": "Unicode正規化ツール",
+    "description": "文字列をNFC/NFD/NFKC/NFKDに変換",
+    "category": "変換",
+    "created": "2026-09-27",
+    "path": "tools/051-unicode-normalization/"
   }
 ]
