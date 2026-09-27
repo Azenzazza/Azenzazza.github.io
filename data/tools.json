@@ -430,5 +430,14 @@
     "category": "画像",
     "created": "2026-09-26",
     "path": "tools/048-ascii-art/"
+  },
+  {
+    "id": "049",
+    "slug": "code-formatter",
+    "title": "コード整形ツール",
+    "description": "コードを整形して読みやすく",
+    "category": "テキスト",
+    "created": "2026-09-27",
+    "path": "tools/049-code-formatter/"
   }
 ]
