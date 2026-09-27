@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIに書かせても速くならないのは、AIを「手足」として使っているから - Azenzazzaのサイト</title>
-  <meta name="description" content="AIエージェントの導入で開発プロセスの自動化・効率化が進む一方、設計や判断点の重要性が浮き彫りになる。複数記事で実践例や課題が共有されているため、読者にとって実用的かつ興味深いテーマとなる。">
+  <title>Jevにゲームをやらせるな！LLMを蒸留してみよう！ - Azenzazzaのサイト</title>
+  <meta name="description" content="近年AI開発支援ツールが急速に進化し、CopilotやJev、AI生成スライドなど多様な用途が登場。導入メリットと安全性・料金課題が議論されており、技術者にとって重要なテーマです。">
   <style>
     body {
       margin: 0;
@@ -185,61 +185,43 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年09月26日</p>
-    <h1>AIに書かせても速くならないのは、AIを「手足」として使っているから</h1>
+    <p class="news-date">2026年09月27日</p>
+    <h1>Jevにゲームをやらせるな！LLMを蒸留してみよう！</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>AI エージェントにコードを書かせても、開発スピードが上がらないと嘆く声が増えている。実際の原因は、AI を「手足」だけに使い、人が本来担う設計や判断を放棄している点にある。AI に計画・実装・検証・修正を自律的に回す「ループエンジニアリング」や、Jev のような型付き出力モデルの活用事例を踏まえ、開発現場で有効に機能させるための5つの判断ポイントと半自動ループの作り方を解説する。</p>
+<p>AI開発支援ツールが急速に多様化する中、LLMを蒸留して高速・低コストなモデルを実装する手法と、Microsoft Copilot の新料金体系が業界に与える波紋が注目を集めている。特に「Jev」にゲームプレイを任せる実験や、型付き問い合わせに数値スコアだけを返す特徴は、実装側のロジック設計を再考させる契機となっている。</p>
 
 <h2>背景</h2>
-<p>大規模言語モデル（LLM）をベースにした AI エージェントは、コード生成やインフラ構成図作成、テスト自動化まで幅広いタスクを瞬時にこなすことができると期待されてきた。実際に、Claude や Codex が生成した構成図は「AI感」のあるデザインになりがちで、手直しが必要になるケースが報告されている。また、Jenkins の PR レビューに AI の APPROVE を組み込み、テストやセキュリティスキャンを自動で走らせる試みや、GitHub Copilot CLI と連携した自己修復パイプラインも登場した。</p>
-<p>しかし、これらの取り組みは「AI が書いたらすぐに動く」という前提で導入されがちで、実際には AI が仕様を勝手に解釈したり、出力が期待とずれたりすることが多い。Zenn の記事では、AI にコードを書かせても確認と手戻りに時間が取られ、開発が速くならない現象が指摘されている。そこで注目されたのが「ループエンジニアリング」―― AI に計画→実装→検証→修正のサイクルを回させ、人はそのループと判断点を設計する役割にシフトする考え方だ。</p>
+<p>近年、コード補完やドキュメント生成を支援するツールとして Copilot 系列が広く普及し、同時に「System One Model」と呼ばれる Jev のように、LLM の出力形式を数値化して返す新種のサービスが登場した。Jev のデモでは 100ms 前後のレイテンシで DOOM をプレイさせる実演が行われ、リアルタイム制御への適用可能性が強調された。一方で、ゲームのように自然言語以外の入力が中心となる領域では、決定木など古典的手法で代替できるという指摘も出ており、LLM の活用価値とコスト構造が議論されている。</p>
 
 <h2>詳細</h2>
-<h3>AI を「手足」ではなく「パートナー」に変える5つの判断ポイント</h3>
-<ul>
-<li><strong>目的の明確化</strong>：AI に何をやらせるかを具体的に定義し、成功基準を数値化する。</li>
-<li><strong>入力の粒度調整</strong>：AI が解釈しやすいように、要件や制約を細分化して提示する。</li>
-<li><strong>出力形式の統一</strong>：Jev のように型付きスコアだけを返すモデルを利用し、結果の解釈をコード側で一元化する。</li>
-<li><strong>検証基準の自動化</strong>：テストやセキュリティスキャンを CI に組み込み、AI の出力を即座に評価できる環境を整える。</li>
-<li><strong>修正フローの設計</strong>：AI が生成したコードに対して、どのようにフィードバックし、次のサイクルへ反映させるかを事前に決めておく。</li>
-</ul>
-
-<h3>半自動ループの作り方</h3>
-<p>上記判断ポイントを踏まえて、実務で使えるループを構築する手順は次のとおりである。</p>
-<ol>
-<li>「計画」フェーズで、タスクごとに <strong>入力テンプレート</strong> と <strong>成功基準</strong>（例：テストカバレッジ80%以上）を用意する。</li>
-<li>「実装」フェーズでは、AI エージェントにテンプレートを渡しコード生成を実行。Jev のようにスコアだけを返すモデルを組み合わせ、結果を数値で取得する。</li>
-<li>「検証」フェーズで、CI ツール（例：Jenkins）にテスト・セキュリティスキャンを自動走査させ、スコアとテスト結果を比較する。</li>
-<li>「修正」フェーズでは、検証結果が基準未達の場合に、どの部分を再生成すべきかを判断点として記録し、再度 AI に指示を出す。</li>
-<li>このサイクルを一定回数（例：3回）繰り返すことで、AI が人手を介さずに自己改善できる「半自動ループ」が完成する。</li>
-</ol>
-
-<h3>実践例と課題</h3>
-<p>Jev を社内問い合わせのエスカレーション判定に使った事例では、モデルは「0.93」のような確率スコアのみを返し、実際の処理は呼び出し側のコードが行う構造になっている。これにより、AI の出力を直接業務ロジックに組み込む際の安全性が確保できる。</p>
-<p>一方、AWS 構成図を AI に描かせた試みでは、アイコンの丸みやレイアウトが「AI感」すぎて、実務で使うには手直しが必要だった。Jenkins の PR レビューで AI の APPROVE を機械的に覆す仕組みは、AI の判断を盲目的に受け入れないガードレールとして機能している。</p>
+<p>まず、Jev の公式デモは「DOOM」をリアルタイムで操作させ、約 100ms の応答時間で画面上のアクションを決定できる点を示した（<a href="https://x.com/CompleteSkeptic/status/2099925687465570372">Twitter</a>）。この高速性は、ゲームだけでなくロボティクスやインタラクティブ UI など、遅延が許容されないシステムへの応用が期待できる。</p>
+<p>しかし、同じく X 上では「Jev にゲームをプレイさせた」投稿が多数見受けられ、実際にゲームロジックが自然言語で記述されていないことから、古典的な決定木やルールベースシステムで置き換えられる可能性が指摘されている。さらに、LLM を蒸留（Distillation）することで、Jev よりも高速・安価・高精度なモデルを構築できると論じられている。</p>
+<p>別記事では、株式会社イエソドのバックエンドエンジニアが Jev の実装体験を報告している。Jev は「System One Model」と称し、入力テキストに対し「0.93」のような数値スコアだけを返す。文章を生成しないため、単体では何も起こらず、返されたスコアを基に「この問い合わせはエスカレーションすべきか」などの判断を行うロジックは、呼び出し側のコードで実装する必要がある。</p>
+<p>この特性は、型安全な問い合わせトリアージといった業務フローに適合しやすいが、逆に出力が抽象的であるため、開発者がスコアの意味付けや閾値設定に余分な労力を要するという課題も残る。</p>
+<p>一方、Microsoft が 2026 年 9 月 25 日に発表した新しい Copilot は、Home・Code・Autopilot の三本柱で機能を再編し、料金体系を「ユーザー単位のライセンス」と「利用量に応じた課金」の二本立てに整理した。大企業での広範な導入を想定したこの構造は、利用規模に応じたコスト最適化を可能にする一方で、利用量ベースの課金が予測困難な支出増加リスクを孕んでいる。</p>
+<p>以上の事例から、AI 開発支援ツールは「高速応答」「数値化出力」「柔軟な課金」の三軸で進化しているが、実装負荷やコスト透明性といった課題が同時に浮き彫りになっている。</p>
 
 <h2>影響・展望</h2>
-<p>AI エージェントを「手足」から「パートナー」へ位置付けることで、開発プロセス全体の自動化が加速し、人的リソースは設計や判断に集中できるようになる。特に、ループエンジニアリングを取り入れた半自動化は、短期的には CI/CD の高速化、長期的には開発チームのスキルシフトを促す可能性がある。</p>
-<p>しかし、AI が仕様を勝手に解釈するリスクや、出力の品質保証が不十分なまま本番に流用される危険性は残っている。今後は、判断ポイントの標準化や型付き出力モデルの普及が進むことで、AI と人間の協働がより安全かつ効率的になると見込まれる。</p>
+<p>Jev のようにスコアだけを返すモデルは、業務プロセスに直接組み込むことで自動化の精度向上が期待できるが、開発者が適切な閾値設定や例外処理を実装しなければ誤判断のリスクが残る。LLM の蒸留技術が成熟すれば、同等の精度を保ちつつレイテンシとコストを大幅に削減でき、リアルタイム制御領域での採用が加速する可能性がある。</p>
+<p>Copilot の新料金体系は、エンタープライズ向けにスケーラビリティを提供する一方で、利用量の急増が予算超過につながる懸念がある。企業は「ユーザー単位のライセンス」か「利用量課金」かを選択する際、開発チームの利用パターンを詳細に分析し、最適なプランを策定する必要がある。</p>
+<p>総じて、AI 開発支援ツールは「高速化」「コスト削減」「安全性」の三本柱で競争が激化しており、ツール選定時には性能だけでなく、実装負荷や課金モデルの透明性を総合的に評価することが求められる。</p>
 
 <h2>まとめ</h2>
-<p>AI エージェントを単なるコード生成ツールとして扱うと、確認作業に時間が取られ開発は速くならない。目的・入力・出力・検証・修正の5つの判断ポイントを設計し、計画→実装→検証→修正のループを半自動化すれば、AI を「手足」から「パートナー」へ昇格させ、開発効率の本質的向上が期待できる。</p>
+<p>Jev の高速リアルタイム制御実証と数値スコア返却という新しい出力形態、そして Copilot の二本立て料金体系は、AI 開発支援ツールの進化と同時に実装コスト・安全性の課題を顕在化させている。開発者は LLM の蒸留や適切な課金モデル選択を通じて、効率と信頼性の両立を図る必要がある。</p>
 
-<p>【参考文献】</p>
 <ul>
-<li>AIに書かせても速くならないのは、AIを「手足」として使っているから（Zenn）</li>
-<li>Jevにゲームをやらせるな！LLMを蒸留してみよう！（Zenn）</li>
-<li>文章を返さないAI「Jev」を試してみた（Zenn）</li>
-<li>JenkinsのPRレビューでテストとセキュリティスキャンも回す ― AIのAPPROVEを機械的に覆すMineWatchのCI（Qiita）</li>
-<li>AI感のないAWS構成図をAIエージェントに描かせたい！（Qiita）</li>
+<li>https://zenn.dev/nwn/articles/e49154653ecea9</li>
+<li>https://zenn.dev/yesodco/articles/yesod-jev-typesafe-inquiry-triage</li>
+<li>https://qiita.com/Takashi_Masumori/items/6f65c23e580dd454d4c7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items</li>
+<li>https://qiita.com/yoshioterada/items/7123aef3db7d1ba91fc3?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items</li>
 </ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/dotdtech_blog/articles/65d51bc72d7ee9" target="_blank" rel="noopener">AIに書かせても速くならないのは、AIを「手足」として使っているから。人が押さえるべき5つの判断ポイントと半自動ループの作り方</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/nwn/articles/e49154653ecea9" target="_blank" rel="noopener">Jevにゲームをやらせるな！LLMを蒸留してみよう！</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/yesodco/articles/yesod-jev-typesafe-inquiry-triage" target="_blank" rel="noopener">文章を返さないAI「Jev」を試してみた ── 社内問い合わせのエスカレーション先は判定できるか</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/jqit-yukiono/items/8675266928f574677d9e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">JenkinsのPRレビューでテストとセキュリティスキャンも回す ― AIのAPPROVEを機械的に覆すMineWatchのCI</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/sagochiko/items/ef77b084ff2dee1f859c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI感のないAWS構成図をAIエージェントに描かせたい！</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/nwn/articles/e49154653ecea9" target="_blank" rel="noopener">Jevにゲームをやらせるな！LLMを蒸留してみよう！</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/yesodco/articles/yesod-jev-typesafe-inquiry-triage" target="_blank" rel="noopener">文章を返さないAI「Jev」を試してみた ── 社内問い合わせのエスカレーション先は判定できるか</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/Takashi_Masumori/items/6f65c23e580dd454d4c7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">新しい Copilot（Home・Code・Autopilot）と料金体系を整理し、大企業で広く展開する際の課題を考えてみる</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/yoshioterada/items/7123aef3db7d1ba91fc3?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">2026年9月25日に発表された新しい Microsoft Copilot についての整理</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
