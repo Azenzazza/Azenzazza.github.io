@@ -475,5 +475,14 @@
     "category": "画像",
     "created": "2026-09-28",
     "path": "tools/053-pixel-color-picker/"
+  },
+  {
+    "id": "054",
+    "slug": "url-structure-analyzer",
+    "title": "URL構造解析ツール",
+    "description": "URLを分解し、構成要素を表示",
+    "category": "変換",
+    "created": "2026-09-28",
+    "path": "tools/054-url-structure-analyzer/"
   }
 ]
