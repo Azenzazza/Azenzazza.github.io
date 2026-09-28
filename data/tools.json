@@ -466,5 +466,14 @@
     "category": "時間",
     "created": "2026-09-28",
     "path": "tools/052-pomodoro-timer/"
+  },
+  {
+    "id": "053",
+    "slug": "pixel-color-picker",
+    "title": "ピクセルカラー取得ツール",
+    "description": "画像上でクリックするとRGB・HEXを表示",
+    "category": "画像",
+    "created": "2026-09-28",
+    "path": "tools/053-pixel-color-picker/"
   }
 ]
