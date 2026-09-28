@@ -457,5 +457,14 @@
     "category": "変換",
     "created": "2026-09-27",
     "path": "tools/051-unicode-normalization/"
+  },
+  {
+    "id": "052",
+    "slug": "pomodoro-timer",
+    "title": "ポモドーロタイマー",
+    "description": "25分作業・5分休憩を自動で切り替える簡易タイマー",
+    "category": "時間",
+    "created": "2026-09-28",
+    "path": "tools/052-pomodoro-timer/"
   }
 ]
