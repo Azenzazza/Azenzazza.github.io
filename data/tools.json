@@ -502,5 +502,14 @@
     "category": "変換",
     "created": "2026-09-29",
     "path": "tools/056-html-to-markdown/"
+  },
+  {
+    "id": "057",
+    "slug": "html-minifier",
+    "title": "HTMLミニファイア",
+    "description": "HTMLを簡易ミニファイ",
+    "category": "変換",
+    "created": "2026-09-29",
+    "path": "tools/057-html-minifier/"
   }
 ]
