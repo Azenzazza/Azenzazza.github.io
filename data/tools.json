@@ -484,5 +484,14 @@
     "category": "変換",
     "created": "2026-09-28",
     "path": "tools/054-url-structure-analyzer/"
+  },
+  {
+    "id": "055",
+    "slug": "email-extractor",
+    "title": "メールアドレス抽出ツール",
+    "description": "テキストからメールアドレスを抽出し一覧表示",
+    "category": "変換",
+    "created": "2026-09-29",
+    "path": "tools/055-email-extractor/"
   }
 ]
