@@ -529,5 +529,14 @@
     "category": "変換",
     "created": "2026-09-30",
     "path": "tools/059-markdown-toc/"
+  },
+  {
+    "id": "060",
+    "slug": "image-watermark",
+    "title": "画像に文字水印を追加",
+    "description": "画像にテキスト水印を簡単に付けるツール",
+    "category": "画像",
+    "created": "2026-09-30",
+    "path": "tools/060-image-watermark/"
   }
 ]

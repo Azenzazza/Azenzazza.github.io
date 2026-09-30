@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <link rel="icon" href="../../../logo.png" type="image/png">
+  <link rel="stylesheet" href="../../../main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>画像に文字水印を追加 - Azenzazzaのサイト</title>
+  <meta name="description" content="画像にテキスト水印を簡単に付けるツール">
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background-color: #AFE48E;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      margin-right: 16px;
+    }
+
+    .site-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    nav.navbar {
+      margin-left: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    nav.navbar a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+
+    nav.navbar a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .lead {
+      line-height: 1.7;
+      color: #333;
+      margin-top: 0;
+      margin-bottom: 28px;
+    }
+
+    .tool-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 1rem;
+      font-family: inherit;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: #AFE48E;
+      box-shadow: 0 0 0 3px rgba(175,228,142,0.3);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 600;
+      background: #AFE48E;
+      color: #2a3d1a;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    button:hover {
+      background: #9dd97a;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      background: #fafafa;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      min-height: 40px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: #fff;
+    }
+
+    th, td {
+      border: 1px solid #e5e5e5;
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #eef7e6;
+      color: #4a7c2f;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 16px 32px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #777;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 12px 16px; }
+      .logo { width: 48px; height: 48px; margin-right: 12px; }
+      .site-title { font-size: 1.1rem; }
+      nav.navbar { margin-left: 0; }
+      nav.navbar a { margin: 0 8px; }
+      main { padding: 0 16px; margin: 24px auto; }
+      h1 { font-size: 1.5rem; }
+      .tool-card { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center;">
+      <img src="../../../logo.png" alt="サイトロゴ" class="logo">
+      <div class="site-title">Azenzazzaのサイト</div>
+    </div>
+
+    <nav class="navbar">
+      <a href="../../../">ホーム</a>
+      <a href="../../../project/project.html">プロジェクト</a>
+      <a href="../../../tools/tools.html">ツール</a>
+      <a href="../../../news/index.html">ニュース</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>画像に文字水印を追加</h1>
+    <p class="lead">画像にテキスト水印を簡単に付けるツール</p>
+
+    <div class="tool-card">
+      <input type="file" id="fileInput" accept="image/*" style="display:none"><label for="fileInput" id="dropArea" style="border:2px dashed #ccc;display:inline-block;padding:20px;cursor:pointer">画像をここにドラッグ＆ドロップまたはクリックして選択</label><br><canvas id="canvas" style="max-width:100%;border:1px solid #000;margin-top:10px"></canvas><br><label>テキスト: <input type="text" id="textInput" placeholder="Watermark"></label><br><label>フォントサイズ: <input type="number" id="fontSizeInput" value="30" min="10"></label><br><label>色: <input type="color" id="colorInput" value="#ffffff"></label><br><label>位置: <select id="positionSelect"><option value="top-left">左上</option><option value="top-right">右上</option><option value="bottom-left">左下</option><option value="bottom-right">右下</option><option value="center">中央</option></select></label><br><button id="downloadBtn">ダウンロード (PNG)</button>
+    </div>
+
+    <div class="result" id="result"></div>
+  </main>
+
+  <footer>
+    &copy; 2026 Azenzazza.
+  </footer>
+
+  <script>
+document.addEventListener('DOMContentLoaded',function(){const fileInput=document.getElementById('fileInput');const dropArea=document.getElementById('dropArea');const canvas=document.getElementById('canvas');const ctx=canvas.getContext('2d');const textInput=document.getElementById('textInput');const fontSizeInput=document.getElementById('fontSizeInput');const colorInput=document.getElementById('colorInput');const positionSelect=document.getElementById('positionSelect');const downloadBtn=document.getElementById('downloadBtn');let img=null;function draw(){if(!img){ctx.clearRect(0,0,canvas.width,canvas.height);return;}canvas.width=img.width;canvas.height=img.height;ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0);const text=textInput.value;if(text){ctx.font=fontSizeInput.value+'px sans-serif';ctx.fillStyle=colorInput.value;ctx.textBaseline='top';let x=0,y=0;const metrics=ctx.measureText(text);const textWidth=metrics.width;const textHeight=parseInt(fontSizeInput.value,10);switch(positionSelect.value){case'top-left':x=10;y=10;break;case'top-right':x=canvas.width-textWidth-10;y=10;break;case'bottom-left':x=10;y=canvas.height-textHeight-10;break;case'bottom-right':x=canvas.width-textWidth-10;y=canvas.height-textHeight-10;break;case'center':x=(canvas.width-textWidth)/2;y=(canvas.height-textHeight)/2;break;}ctx.fillText(text,x,y);}}function handleFile(file){const reader=new FileReader();reader.onload=function(e){img=new Image();img.onload=function(){draw();};img.src=e.target.result;};reader.readAsDataURL(file);}dropArea.addEventListener('dragover',function(e){e.preventDefault();e.dataTransfer.dropEffect='copy';});dropArea.addEventListener('drop',function(e){e.preventDefault();if(e.dataTransfer.files.length){handleFile(e.dataTransfer.files[0]);}});dropArea.addEventListener('click',function(){fileInput.click();});fileInput.addEventListener('change',function(){if(fileInput.files.length){handleFile(fileInput.files[0]);}});[textInput,fontSizeInput,colorInput,positionSelect].forEach(function(el){el.addEventListener('input',draw);});downloadBtn.addEventListener('click',function(){if(!img){document.getElementById('result').textContent='画像が読み込まれていません';return;}const link=document.createElement('a');link.download='watermarked.png';link.href=canvas.toDataURL('image/png');link.click();});});
+  </script>
+</body>
+</html>
