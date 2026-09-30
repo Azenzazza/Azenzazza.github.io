@@ -520,5 +520,14 @@
     "category": "変換",
     "created": "2026-09-30",
     "path": "tools/058-hex-encode-decode/"
+  },
+  {
+    "id": "059",
+    "slug": "markdown-toc",
+    "title": "マークダウン目次生成",
+    "description": "見出しから目次を作るツール",
+    "category": "変換",
+    "created": "2026-09-30",
+    "path": "tools/059-markdown-toc/"
   }
 ]
