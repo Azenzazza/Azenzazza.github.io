@@ -511,5 +511,14 @@
     "category": "変換",
     "created": "2026-09-29",
     "path": "tools/057-html-minifier/"
+  },
+  {
+    "id": "058",
+    "slug": "hex-encode-decode",
+    "title": "Hexエンコード/デコードツール",
+    "description": "文字列をHexで変換・復号",
+    "category": "変換",
+    "created": "2026-09-30",
+    "path": "tools/058-hex-encode-decode/"
   }
 ]
