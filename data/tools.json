@@ -556,5 +556,14 @@
     "category": "生活",
     "created": "2026-10-01",
     "path": "tools/062-audio-recorder/"
+  },
+  {
+    "id": "063",
+    "slug": "audio-speed",
+    "title": "音声再生速度調整ツール",
+    "description": "音声ファイルの再生速度を変更できるツール",
+    "category": "音声",
+    "created": "2026-10-01",
+    "path": "tools/063-audio-speed/"
   }
 ]
