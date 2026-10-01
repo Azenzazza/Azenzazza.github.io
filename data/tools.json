@@ -547,5 +547,14 @@
     "category": "画像",
     "created": "2026-10-01",
     "path": "tools/061-image-outline/"
+  },
+  {
+    "id": "062",
+    "slug": "audio-recorder",
+    "title": "音声録音ツール",
+    "description": "ブラウザで音声を録音し、再生・ダウンロードできる",
+    "category": "生活",
+    "created": "2026-10-01",
+    "path": "tools/062-audio-recorder/"
   }
 ]
