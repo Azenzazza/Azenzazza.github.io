@@ -538,5 +538,14 @@
     "category": "画像",
     "created": "2026-09-30",
     "path": "tools/060-image-watermark/"
+  },
+  {
+    "id": "061",
+    "slug": "image-outline",
+    "title": "画像縁取りツール",
+    "description": "画像に縁取りを追加するツール",
+    "category": "画像",
+    "created": "2026-10-01",
+    "path": "tools/061-image-outline/"
   }
 ]
