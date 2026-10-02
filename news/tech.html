@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpenAI DevDay 2026 発表まとめ - Azenzazzaのサイト</title>
-  <meta name="description" content="OpenAI DevDayで登場したGPT‑6.1や24時間稼働エージェントなど、AI開発・運用の新境地が示された点が、AI活用を検討する技術者にとって最重要情報です。">
+  <title>Claude Code使用量の実測と料金表の不一致 - Azenzazzaのサイト</title>
+  <meta name="description" content="AIコード生成ツールが増える中、実際の使用量測定や品質評価手法は未整備。複数記事で測定方法や観測、改善策が議論され、開発者に即活用できる知見を提供する。">
   <style>
     body {
       margin: 0;
@@ -185,44 +185,56 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年10月01日</p>
-    <h1>OpenAI DevDay 2026 発表まとめ</h1>
+    <p class="news-date">2026年10月03日</p>
+    <h1>Claude Code使用量の実測と料金表の不一致</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>サンフランシスコで開催された <strong>OpenAI DevDay 2026</strong> では、次世代言語モデル <strong>GPT‑6.1</strong> の登場や、24時間常時稼働可能なエージェント <strong>dots</strong> の発表など、AI 開発・運用の新たな標準が提示された。AI を本格導入しようとする技術者にとって、必見の情報が凝縮された本イベントのハイライトをまとめる。</p>
+<p>AIコード生成ツール「Claude Code」の使用量測定で、実測されたトークン重みが公式の料金表と食い違うことが判明した。5時間ごとにリセットされるセッション制限と週単位の使用制限という二重の枠組みの中で、キャッシュ再読込みやヘッドレス実行も使用量に含まれることが明らかになり、開発者はコスト予測と品質保証の手法を再考せざるを得なくなった。</p>
 
 <h2>背景</h2>
-<p>近年、生成系 AI の性能向上は指数関数的に進んでおり、開発フローの自動化や業務効率化が急速に進展している。Zenn に掲載された「AI 駆動開発で『設計』はどこに書くのか」や、生命科学分野への AI 活用ハンドブックでも、AI がコード生成や実験データ解析に浸透しつつあることが指摘されている。こうした流れの中で、OpenAI は毎年開催する DevDay を通じて、開発者コミュニティへ最新テクノロジーを直接提供してきた。本年の DevDay は、特に「低コストでハイパフォーマンスを実現するモデル」と「人手を介さずに稼働し続けるエージェント」という二本柱が注目された。</p>
+<p>近年、Claude CodeをはじめとするAIコード生成エージェントが開発現場に急速に浸透し、プロジェクトの生産性向上が期待されている。一方で、利用料金は「使用した分だけ消費する」方式で提供されており、具体的な消費量の算出方法は公開されていない。開発者は、プラン別に設定された「5時間のセッション制限」と「週間使用制限」の二層構造を前提に、実際にどのようにトークンがカウントされるかを把握できず、コスト見積もりに不透明感が残っていた。</p>
+<p>この不透明性は、AIエージェントの品質保証にも影響を与える。AIエージェントが生成したコードの品質を評価するには、オブザーバビリティ（観測可能性）を確保し、評価ループを回す手法が必要とされている（<a href="https://zenn.dev/ymotongpoo/articles/20261001-agent-eval-loop">Zenn: オブザーバビリティのAIエージェントをどう評価するか</a>）。また、バックエンドの自動テスト戦略がユニットテスト中心からAPIテスト中心へシフトした事例（<a href="https://zenn.dev/canary_techblog/articles/348d976da70857">Zenn: 新規プロダクトのバックエンド自動テスト戦略</a>）は、AIが生成したコードの統合的な品質評価の重要性を示唆している。</p>
 
 <h2>詳細</h2>
-<h3>GPT‑6.1 Sol：低コストで Astra クラスの性能</h3>
-<p>OpenAI は、従来の GPT‑6 Astra に匹敵する性能を持ちながら、はるかに低い運用コストで利用できる <strong>GPT‑6.1 Sol</strong> を公開した。Sol は「Astra に近い性能」と表現され、特にトークンあたりの処理費用が従来モデルの約30％に削減されたと発表されている。これにより、スタートアップから大企業まで、幅広いユースケースでの導入ハードルが下がると期待される。</p>
+<h3>実測実験の概要</h3>
+<p>筆者はClaude CodeのProおよびMaxプランで、使用量制限の枠がどのように減少するかを条件を揃えた実験で測定した。実験では、以下の二つの制限を対象にした。</p>
+<ul>
+<li>5時間ごとにリセットされる「5時間のセッション制限」</li>
+<li>週単位でリセットされる「週間使用制限」</li>
+</ul>
+<p>実験に使用したのは、Claude CodeのCLIオプション<code>claude -p</code>やAgent SDKを介したヘッドレス実行である。</p>
 
-<h3>Ultrafast：高速トークン生成エンジン</h3>
-<p>同時に発表された <strong>Ultrafast</strong> は、トークン生成速度を大幅に向上させるエンジンである。具体的な数値は明示されていないが、従来モデルの数倍速い生成が可能になるとされ、リアルタイム対話や大規模データ処理におけるレイテンシ削減が見込まれる。</p>
+<h3>キャッシュ再読込み（cache read）の扱い</h3>
+<p>従来、キャッシュからの再読込みは「使用量」に含まれないと想定されていたが、実測ではトークンが消費されることが確認された。ただし、その重みは<input>トークンの<span class="strong">1/40（0.025倍）</span>である。すなわち、キャッシュ再読込みが大量に発生すると、見かけ上の使用量は増加するが、実際の料金計算に与えるインパクトは限定的である。</p>
 
-<h3>24 時間稼働エージェント dots</h3>
-<p>今回の DevDay で最大の話題となったのが、<strong>dots</strong> と呼ばれる 24 時間常時稼働エージェントだ。dots は、ユーザーが設定したタスクを自律的に実行し、必要に応じて外部ツールや API を呼び出すことができる。たとえば、メールの自動返信やスケジュール管理、コードレビューの自動化といった業務を、ヒューマンインタラクションなしで継続的に処理できる。</p>
+<h3>ヘッドレス実行のコスト</h3>
+<p>ヘッドレスモード（<code>claude -p</code>やAgent SDK）でも、標準入力・出力のトークンが使用量にカウントされる。これにより、スクリプトやCIパイプラインで自動化されたコード生成を行う場合、意図せぬ使用量増加が起こり得る。</p>
 
-<h3>Codex の拡張と CLI 強化</h3>
-<p>開発者向けツールとしては、<strong>Codex</strong> のクラウド環境とコマンドラインインターフェース（CLI）が大幅に強化された。コードレビュー機能が追加され、プルリクエストの自動評価やリファクタリング提案が可能になる。これにより、AI が生成したコードの品質保証が容易になり、開発サイクルの短縮が期待できる。</p>
+<h3>実測と料金表の不一致</h3>
+<p>公式のAPI料金表は、入力トークンと出力トークンの重みを一定と仮定しているが、実測では「Max 20x」のプランにおいて、実際のトークン重みが表記と異なることが判明した。具体的な数値は公開されていないが、使用量制限の減少速度が想定より速く、結果として利用者は予算オーバーのリスクを抱える可能性がある。</p>
 
-<h3>Agents API と Computer Use の統合</h3>
-<p>OpenAI は <strong>Agents API</strong> に、コンピュータ操作を自動化する「Computer Use」機能を組み込んだ。これにより、エージェントは GUI 操作やファイル操作といった人間的な作業をプログラム上で実行できるようになる。実務でのシナリオとしては、データ収集の自動化やレポート生成、テスト環境の構築などが挙げられ、業務フロー全体の自律化が加速する見込みだ。</p>
+<h3>品質保証への波及効果</h3>
+<p>使用量測定の不透明性は、AIエージェントの品質評価にも波及する。オブザーバビリティを確保し、評価ループを構築する手法（<a href="https://zenn.dev/ymotongpoo/articles/20261001-agent-eval-loop">Zenn: オブザーバビリティのAIエージェントをどう評価するか</a>）では、生成コードの正確性だけでなく、実行コストやリソース消費も指標に含める必要がある。さらに、APIテスト中心の自動テスト戦略（<a href="https://zenn.dev/canary_techblog/articles/348d976da70857">Zenn: 新規プロダクトのバックエンド自動テスト戦略</a>）は、AIが生成したエンドポイントの挙動を実際に呼び出して検証することで、使用量と品質の両面を同時に評価できる。</p>
 
 <h2>影響・展望</h2>
-<p>今回の発表は、AI 開発のコスト構造と運用モデルに根本的な変化をもたらす可能性がある。GPT‑6.1 Sol の低コスト化は、従来は予算が障壁となっていた大規模言語モデルの導入を促進し、特に中小企業や研究機関での活用が広がるとみられる。24 時間稼働エージェント dots は、人的リソースが限られる組織において、定型業務の自動化を実現し、エンジニアはより創造的なタスクへシフトできる環境を提供する。</p>
-<p>さらに、Codex の強化と Agents API の統合は、AI と人間の協働プロセスを深化させ、コード品質やデプロイ速度の向上に直結する。これらの技術は、Zenn の「AI 駆動開発で『設計』はどこに書くのか」や、生命科学分野での AI 活用ハンドブックが示すように、専門領域を問わず「AI が実務を代行する」段階へと移行する足掛かりとなる。</p>
-<p>今後は、GPT‑6.1 系列のモデルがさらに最適化され、Ultrafast のような高速エンジンが標準化されることで、リアルタイムアプリケーションやエッジデバイスへの組み込みが進むと予想される。また、エージェントの安全性や透明性に関するガイドラインの整備が同時に求められ、業界全体でのベストプラクティスが形成されることが期待される。</p>
+<p>今回の実測結果は、開発者がClaude Codeのコストを正確に予測できない状況を浮き彫りにした。今後は、ベンダー側が使用量計算式を公開し、料金表と実測が一致するよう透明性を高めることが求められる。加えて、AIコード生成ツール全般に対して、使用量と品質を同時にモニタリングするオブザーバビリティ基盤の整備が急務となるだろう。GitHub Copilot SDKが提供するランタイムとエージェントループ（<a href="https://qiita.com/chomado/items/8830d0e9f4b75a7ea2a5">Qiita: GitHub Copilot SDK のランタイムとエージェントループについて</a>）のように、実行環境と評価ループを統合したフレームワークが標準化すれば、使用量と品質の両方を一元管理できる可能性がある。</p>
 
 <h2>まとめ</h2>
-<p>OpenAI DevDay 2026 は、低コスト高性能モデル「GPT‑6.1 Sol」や 24 時間稼働エージェント「dots」など、AI 開発・運用の新境地を示した。これらの技術は、開発コストの削減と業務自律化を同時に実現し、技術者が本質的な価値創造に集中できる環境を提供する。今後の AI 活用戦略を練る上で、必ず押さえておきたい重要情報である。</p>
+<p>Claude Codeの実測では、キャッシュ再読込みやヘッドレス実行が想定外の使用量に寄与し、公式料金表と食い違うことが確認された。これにより、AIコード生成のコスト見積もりと品質保証の手法が再評価され、オブザーバビリティとAPIテスト中心の評価ループが今後の標準となる見通しである。</p>
+
+<ul>
+<li>Zenn: Claude Code の使用量はどう数えられているのか ── Max 20x で実測した重みは API 料金表と違った</li>
+<li>Zenn: オブザーバビリティのAIエージェントをどう評価するか</li>
+<li>Zenn: AI‑Slopな日本語を構造レベルで読みやすくするSkill『yomiyasu（よみやす）』を作りました</li>
+<li>Zenn: 新規プロダクトのバックエンド自動テスト戦略 ─UT 中心から API テスト中心へ─</li>
+<li>Qiita: GitHub Copilot SDK のランタイムとエージェントループについて</li>
+</ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/schroneko/articles/openai-devday-2026" target="_blank" rel="noopener">OpenAI DevDay 2026 発表まとめ</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/labcode/books/c4f81b6a2d9e37" target="_blank" rel="noopener">生命科学研究 × AI 活用ハンドブック</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/softbank/articles/6f98cf7c4ebfd3" target="_blank" rel="noopener">AI 駆動開発で「設計」はどこに書くのか ― 振る舞いをテストで検証できる「仕様」にしてみる</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/moritalous/items/1b6a05842724fc1fff66?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">BedrockのClaudeに暗黙的なプロンプトキャッシュが登場！！とドキュメントにある（暗黙的とは？）</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/tksfjt1024/articles/25c0ab111c277c" target="_blank" rel="noopener">Claude Code の使用量はどう数えられているのか ── Max 20x で実測した重みは API 料金表と違った</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/ymotongpoo/articles/20261001-agent-eval-loop" target="_blank" rel="noopener">オブザーバビリティのAIエージェントをどう評価するか</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/algoartis/articles/0b1c731881b25c" target="_blank" rel="noopener">AI-Slopな日本語を構造レベルで読みやすくするSkill『yomiyasu（よみやす）』を作りました</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/canary_techblog/articles/348d976da70857" target="_blank" rel="noopener">新規プロダクトのバックエンド自動テスト戦略 ─UT 中心から API テスト中心へ─</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/chomado/items/8830d0e9f4b75a7ea2a5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">GitHub Copilot SDK のランタイムとエージェントループについて</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
