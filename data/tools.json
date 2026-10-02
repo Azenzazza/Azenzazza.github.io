@@ -574,5 +574,14 @@
     "category": "テキスト",
     "created": "2026-10-02",
     "path": "tools/064-punctuation-stats/"
+  },
+  {
+    "id": "065",
+    "slug": "pixel-drawer",
+    "title": "ピクセルドロー",
+    "description": "16色でピクセルアートを描く簡易エディタ",
+    "category": "画像",
+    "created": "2026-10-02",
+    "path": "tools/065-pixel-drawer/"
   }
 ]
