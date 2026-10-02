@@ -583,5 +583,14 @@
     "category": "画像",
     "created": "2026-10-02",
     "path": "tools/065-pixel-drawer/"
+  },
+  {
+    "id": "066",
+    "slug": "sentence-length-stats",
+    "title": "センテンス長統計",
+    "description": "テキストの文長を統計表示",
+    "category": "テキスト",
+    "created": "2026-10-02",
+    "path": "tools/066-sentence-length-stats/"
   }
 ]
