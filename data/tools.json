@@ -565,5 +565,14 @@
     "category": "音声",
     "created": "2026-10-01",
     "path": "tools/063-audio-speed/"
+  },
+  {
+    "id": "064",
+    "slug": "punctuation-stats",
+    "title": "句読点統計ツール",
+    "description": "テキスト中の句読点を統計して表示",
+    "category": "テキスト",
+    "created": "2026-10-02",
+    "path": "tools/064-punctuation-stats/"
   }
 ]
