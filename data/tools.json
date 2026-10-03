@@ -592,5 +592,14 @@
     "category": "テキスト",
     "created": "2026-10-02",
     "path": "tools/066-sentence-length-stats/"
+  },
+  {
+    "id": "067",
+    "slug": "html-escape-unescape",
+    "title": "HTMLエスケープ/アンエスケープツール",
+    "description": "HTMLを安全にエスケープ・アンエスケープします。",
+    "category": "変換",
+    "created": "2026-10-03",
+    "path": "tools/067-html-escape-unescape/"
   }
 ]
