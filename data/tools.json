@@ -601,5 +601,14 @@
     "category": "変換",
     "created": "2026-10-03",
     "path": "tools/067-html-escape-unescape/"
+  },
+  {
+    "id": "068",
+    "slug": "simple-calculator",
+    "title": "簡易電卓",
+    "description": "四則演算ができる簡単電卓",
+    "category": "計算",
+    "created": "2026-10-03",
+    "path": "tools/068-simple-calculator/"
   }
 ]
