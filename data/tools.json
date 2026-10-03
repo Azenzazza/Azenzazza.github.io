@@ -610,5 +610,14 @@
     "category": "計算",
     "created": "2026-10-03",
     "path": "tools/068-simple-calculator/"
+  },
+  {
+    "id": "069",
+    "slug": "simple-metronome",
+    "title": "簡易メトロノーム",
+    "description": "BPMを設定してリズムを刻む",
+    "category": "時間",
+    "created": "2026-10-03",
+    "path": "tools/069-simple-metronome/"
   }
 ]
