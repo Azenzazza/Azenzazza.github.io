@@ -628,5 +628,14 @@
     "category": "計算",
     "created": "2026-10-04",
     "path": "tools/070-file-size-calculator/"
+  },
+  {
+    "id": "071",
+    "slug": "css-minifier",
+    "title": "簡易CSS圧縮ツール",
+    "description": "簡易CSSを圧縮してファイルサイズ削減",
+    "category": "変換",
+    "created": "2026-10-04",
+    "path": "tools/071-css-minifier/"
   }
 ]
