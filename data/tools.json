@@ -619,5 +619,14 @@
     "category": "時間",
     "created": "2026-10-03",
     "path": "tools/069-simple-metronome/"
+  },
+  {
+    "id": "070",
+    "slug": "file-size-calculator",
+    "title": "ファイルサイズ計算ツール",
+    "description": "アップロードしたファイルのサイズを表示",
+    "category": "計算",
+    "created": "2026-10-04",
+    "path": "tools/070-file-size-calculator/"
   }
 ]
