@@ -646,5 +646,14 @@
     "category": "色",
     "created": "2026-10-05",
     "path": "tools/072-contrast-checker/"
+  },
+  {
+    "id": "073",
+    "slug": "markdown-table-gen",
+    "title": "Markdownテーブル生成器",
+    "description": "行列数でマークダウンテーブルを作成",
+    "category": "変換",
+    "created": "2026-10-05",
+    "path": "tools/073-markdown-table-gen/"
   }
 ]
