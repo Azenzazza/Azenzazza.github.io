@@ -637,5 +637,14 @@
     "category": "変換",
     "created": "2026-10-04",
     "path": "tools/071-css-minifier/"
+  },
+  {
+    "id": "072",
+    "slug": "contrast-checker",
+    "title": "色対比チェッカー",
+    "description": "2色のコントラスト比を計算",
+    "category": "色",
+    "created": "2026-10-05",
+    "path": "tools/072-contrast-checker/"
   }
 ]
