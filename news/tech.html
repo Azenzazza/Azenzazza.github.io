@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Strands Decider 2BでAIエージェントを構築 - Azenzazzaのサイト</title>
-  <meta name="description" content="AIエージェントが開発プロセスを自動化し、コードレビューやテスト、デプロイを効率化するトレンドが急速に拡大。複数記事で実践例が示され、技術者にとって実用価値が高い。">
+  <title>AI意思決定モデルを比較検証 - Azenzazzaのサイト</title>
+  <meta name="description" content="近年、ClefやJevなど多様なAI意思決定モデルが登場し、実装・性能比較が熱い。技術者は選択基準を知る価値が高い。">
   <style>
     body {
       margin: 0;
@@ -185,56 +185,71 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年10月04日</p>
-    <h1>Strands Decider 2BでAIエージェントを構築</h1>
+    <p class="news-date">2026年10月06日</p>
+    <h1>AI意思決定モデルを比較検証</h1>
 
     <article class="news-body">
-<h2>リード文</h2>
-<p>AWSがオープンソースで提供する <strong>Strands Agents SDK</strong> と、その判断モデル「<strong>Strands Decider 2B</strong>」を活用すれば、コードレビュー・テスト・デプロイといった開発工程を AI エージェントに委任できる。実際に Cursor の pstack が月間 2,500 件以上のプルリクエストを自動化した事例や、敵対的レビューを組み合わせた品質保証の試みなど、現場での実装例が続々と報告されている。</p>
+<p>AIがタスクを担う時代に、人間が本当に「判断」に集中できているのか。Cloudflare が新たに公開した判定モデル「Clef」や、既存の Jev など、複数の意思決定モデルが実装・性能比較の焦点となっている。本稿では、最新の実装事例と評価指標をもとに、技術者がモデル選択で留意すべきポイントを整理する。</p>
 
 <h2>背景</h2>
-<p>近年、LLM（大規模言語モデル）を開発ツールに組み込む動きが加速している。特に「AI エージェントが開発プロセス全体を自走させる」モデルは、人的リソースの不足やリリースサイクル短縮への対策として注目を集めている。AWS が公開した Strands Agents は、LLM に指示とツールセットを定義し、状況に応じて最適なツールを選択・実行させるフレームワークである。これに加えて、Strands Labs が提供する判断用モデル「Decider 2B」は、エージェントが取るべき行動を「判断」する層を提供し、意思決定の一貫性と安全性を高めることができる。</p>
-<p>同時に、実務での AI コードレビューは「敵対的レビュー」や「自動修正ループ」など、指摘の収束に課題があることが指摘されている（実務における敵対的レビューの有効性）。また、オブザーバビリティ分野でも AI アシスタントの品質評価手法が模索されており、評価ループの構築が必須となっている。</p>
+<p>「AI時代はタスクはAIにやらせ、人間は判断に集中する」という言説が業界で頻繁に語られるが、<strong>判断が成立する条件</strong>については議論が分かれる。Zenn に掲載された dyoshikawa 氏の考察では、対象への理解がなければ妥当な判断は不可能であると指摘されている。また、SNS などで見られる「判断さえも AI に丸投げ」する傾向は、実際に人間の判断力が希薄化している可能性を示唆している。</p>
+<p>このような認識のもと、AI が「提案」や「判定」を行うシステム—いわゆる「意思決定モデル（System One Model）」—が注目を浴びている。2026 年 10 月に Cloudflare が発表した「Clef」および「Clef‑flash」は、オープンソース化と強化学習（RL）によるファインチューニングを特徴とし、従来の商用モデルと差別化を図っている。</p>
+<p>同時に、Qiita に掲載された比較記事では、Jev、Clef、d1、Jeff、Kev といった複数のモデルがベンチマーク結果と共に一覧化され、各社が公表した数値と測定条件の透明性が議論の焦点となっている。これらの情報は、単なる性能比較に留まらず、実装時の前提条件や評価指標の選定基準を再考させる材料となっている。</p>
 
 <h2>詳細</h2>
-<h3>Strands Decider 2B の概要と特徴</h3>
-<p>Strands Decider 2B は、Strands Labs が実験的に公開した判断モデルで、AWS の Strands Agents SDK と組み合わせて使用することを前提としている。モデルは LLM の出力に対し、実行すべきツールや次のステップを「判断」する役割を持ち、AWS の Bedrock だけでなく、他社モデル API やローカルモデルにも対応できる点が特徴だ。</p>
+<p>本節では、上記三つの素材から抽出した情報を統合し、主要な意思決定モデルの特徴と実装上の留意点を整理する。</p>
 
-<h3>実装例：Cursor の pstack</h3>
-<p>Cursor が開発した pstack は、AI エージェントに開発作業を委任するための包括的な環境で、月間 2,500 件以上のプルリクエストを自動処理した実績がある。pstack は Playbook・Principle・Skill といった構成要素を持ち、エージェントが「調査・設計・計画」までを段階的に進められるよう設計されている。これに Strands Decider 2B を組み込めば、エージェントが判断すべきタイミング（例：テスト実行の可否やデプロイの承認）を統一的に管理でき、開発フロー全体の自動化が加速する。</p>
-
-<h3>敵対的レビューとの組み合わせ</h3>
-<p>AI エージェントにコードレビューを任せる手法として「敵対的レビュー」が紹介されている。これは、通常のレビューに加えて「変更が誤った結果やエラーを引き起こす入力・状況」を探す別エージェントを走らせ、両者の指摘を実コードで検証しながら最終決定する方式だ。Decider 2B が判断ロジックを提供することで、敵対的レビューエージェントと通常レビューエージェントの結果統合を自動化し、指摘の収束を高速化できる可能性がある。</p>
-
-<h3>オブザーバビリティ評価ループ</h3>
-<p>Grafana Assistant の事例では、AI エージェントがオブザーバビリティ（監視）タスクを実行した際の品質評価が課題となっている。評価ループを構築することで、エージェントの最終応答が期待通りかを自動的に検証できる。Decider 2B を評価ロジックに組み込むと、エージェントが「評価に合格」か「再実行」かを判断し、評価サイクルを閉じることができる。</p>
-
-<h3>技術的留意点</h3>
+<h3>1. 判定モデル「Clef」の実装と評価</h3>
+<p>Cloudflare は 2026 年 10 月 1 日に、判定用モデル「Clef」と高速版「Clef‑flash」をリリースした。Zenn の akari1106 氏は、Workers AI（Cloudflare のサーバーレス環境）から両モデルを呼び出し、簡易的な実験を行ったことを報告している。実験では、入力テキストに対する二者択一の判定タスクを実施し、以下の点が確認された。</p>
 <ul>
-<li>Decider 2B は実験的プロジェクトであるため、運用時の安定性やサポート体制は限定的である可能性がある。</li>
-<li>複数エージェントを並列実行するとトークンコストが増大し、実務での負荷が顕在化する（敵対的レビューの課題参照）。</li>
-<li>モデル選択は Bedrock 以外の API やローカル環境でも可能だが、ツール連携の設定は個別に調整が必要。</li>
+<li><strong>導入ハードルの低さ</strong>：Workers AI の UI から数クリックでモデル呼び出しが可能。</li>
+<li><strong>レスポンス速度</strong>：Clef‑flash は標準版に比べて約 30% 高速化されていると公式情報が示す。</li>
+<li><strong>オープンソース性</strong>：モデル本体が公開されているため、独自のファインチューニングやローカルデプロイが容易。</li>
+</ul>
+<p>なお、Jev については同著者がすでに触っている前提で記述が省かれているが、Clef が「判定」専用に設計された点は差別化要因として重要である。</p>
+
+<h3>2. 他モデルとの比較（Qiita 記事）</h3>
+<p>Qiita の nogataka 氏は、2026 年 10 月 2 日時点で入手可能な公表数値を元に、Jev、Clef、d1、Jeff、Kev のベンチマーク結果を一覧化した。記事の要点は次の通り。</p>
+<ul>
+<li>各モデルは「System One Model」と総称され、意思決定タスクに特化したアーキテクチャを採用。</li>
+<li>ベンチマークは主に「正答率」「推論レイテンシ」「リソース消費」の三指標で評価。</li>
+<li>測定条件が公開されていないケースは、記事中で「測定条件不明」と明示。</li>
+<li>提供元が公表した数値は、外部で再現されたものではない点が注意喚起されている。</li>
+</ul>
+<p>これらの情報は、モデル選定時に「公式数値だけでなく、測定環境や再現性」も評価軸に入れる必要があることを示す。</p>
+
+<h3>3. 判断の本質とAIへの委任限界</h3>
+<p>dyoshikawa 氏の「本当に『判断』していますか？」という問いは、技術的な比較以上に哲学的側面を投げかける。AI が出す「提案」や「判定」は、あくまで「データに基づく予測」であり、対象への深い理解が伴わない限り、人間が最終的に「方針」や「価値判断」を下す必要があると指摘されている。したがって、意思決定モデルを導入する際は、以下の点を検討すべきである。</p>
+<ul>
+<li><strong>入力データの妥当性</strong>：モデルが学習した領域と実務で扱う領域のギャップを評価。</li>
+<li><strong>ヒューマン・イン・ザ・ループ（Human‑in‑the‑Loop）</strong>：AI の出力をそのまま採用せず、レビュー工程を設ける。</li>
+<li><strong>透明性と説明可能性</strong>：判定根拠を可視化できる仕組みが求められる。</li>
 </ul>
 
 <h2>影響・展望</h2>
-<p>Strands Decider 2B と AI エージェントの組み合わせは、開発チームの生産性向上と品質保証プロセスの自動化を同時に実現する有望なアプローチとして期待されている。特に、プルリクエスト数が多い大規模プロジェクトや、継続的インテグレーション／デリバリー（CI/CD）パイプラインの高速化が求められる現場での導入効果が高いとみられる。今後は、評価ループの標準化やトークンコスト削減のための最適化が進むとともに、オープンソースコミュニティによるプラグインやスキルの拡充が予想される。</p>
+<p>意思決定モデルの普及は、業務プロセスの自動化と意思決定スピードの向上をもたらす一方で、判断の質に対する新たなリスクも浮上させる。特に、モデルが「理解できない」領域での判定を行った場合、結果の信頼性が低下し、法的・倫理的問題につながる可能性があるとみられる。</p>
+<p>今後は、以下の方向性が予想される。</p>
+<ul>
+<li>「オープンソース」化が進むことで、企業は自社データでのファインチューニングが容易になり、領域特化型の高精度モデルが増加する。</li>
+<li>評価指標の標準化が進み、ベンチマーク結果の再現性が向上すれば、モデル選定が客観的に行えるようになる。</li>
+<li>ヒューマン・イン・ザ・ループを組み込んだハイブリッドワークフローが主流となり、AI の判定を「補助情報」と位置付ける運用が定着する。</li>
+</ul>
+<p>これらの流れは、技術者が単に「性能が高い」モデルを選ぶだけでなく、運用上のガバナンスや倫理的枠組みを設計に組み込む必要性を高めている。</p>
 
 <h2>まとめ</h2>
-<p>Strands Decider 2B は、AI エージェントが開発工程全体で「判断」できる基盤を提供し、Cursor の pstack など実務での自動化事例と相まって、コードレビュー・テスト・デプロイの自動化を加速させる。敵対的レビューやオブザーバビリティ評価といった高度な品質管理手法とも相性が良く、開発組織の効率化と品質向上に寄与する可能性が高い。</p>
+<p>Clef や Jev といった最新の意思決定モデルは、実装の容易さとオープン性が魅力である一方、判断の根拠やデータ適合性を検証する「ヒューマン・イン・ザ・ループ」の重要性が改めて浮き彫りになった。技術者は、性能指標だけでなく、測定条件の透明性と運用上のガバナンスを総合的に評価し、適切なモデル選択と安全な導入を進めるべきである。</p>
 
-<!-- 参考文献 -->
+<!-- 出典 -->
 <ul>
-<li>Strands Decider 2B について理解する（Zenn）</li>
-<li>AI エージェントに開発を任せる環境をつくる ―月2,500件のPRを支えた開発基盤とは？（Zenn）</li>
-<li>実務において敵対的レビューはどの程度有効なのか（Zenn）</li>
-<li>オブザーバビリティのAIエージェントをどう評価するか（Zenn）</li>
-<li>Claude Code ModsとJevでモデルルーターを構築（Qiita）</li>
+<li>本当に「判断」していますか？ – https://zenn.dev/dyoshikawa/articles/do-you-desicion</li>
+<li>Cloudflare の判定モデル Clef を Workers AI で触ってみた – https://zenn.dev/akari1106/articles/b6d3180cc50dfe</li>
+<li>Jev・Clef・d1・Jeff・Kev…意思決定モデル（System One）を仕組みから比較する【2026年10月版】 – https://qiita.com/nogataka/items/a2f89a94d243b1b715cb?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items</li>
 </ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/fusic/articles/db6e62832a4a1f" target="_blank" rel="noopener">Strands Decider 2Bについて理解する</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/sc30gsw/books/080faba713547b" target="_blank" rel="noopener">【Cursor pstack】AIエージェントに開発を任せる環境をつくる ―月2,500件のPRを支えた開発基盤とは？</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/edash_tech_blog/articles/4577f7d4780bef" target="_blank" rel="noopener">実務において敵対的レビューはどの程度有効なのか</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/ymotongpoo/articles/20261001-agent-eval-loop" target="_blank" rel="noopener">オブザーバビリティのAIエージェントをどう評価するか</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/moritalous/items/8b663db633dde3c49d62?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">Claude Code ModsとJevでモデルルーターを構築（サブスクで使えるゾ！！）</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/dyoshikawa/articles/do-you-desicion" target="_blank" rel="noopener">本当に「判断」していますか？</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/akari1106/articles/b6d3180cc50dfe" target="_blank" rel="noopener">Cloudflare の判定モデル Clef を Workers AI で触ってみた</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/nogataka/items/a2f89a94d243b1b715cb?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">Jev・Clef・d1・Jeff・Kev…意思決定モデル（System One）を仕組みから比較する【2026年10月版】</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
