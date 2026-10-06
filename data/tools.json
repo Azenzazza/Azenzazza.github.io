@@ -655,5 +655,14 @@
     "category": "変換",
     "created": "2026-10-05",
     "path": "tools/073-markdown-table-gen/"
+  },
+  {
+    "id": "074",
+    "slug": "palindrome-checker",
+    "title": "パリンドローム判定ツール",
+    "description": "文字列が左右対称か判定します",
+    "category": "テキスト",
+    "created": "2026-10-06",
+    "path": "tools/074-palindrome-checker/"
   }
 ]
