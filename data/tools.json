@@ -673,5 +673,14 @@
     "category": "画像",
     "created": "2026-10-06",
     "path": "tools/075-image-histogram/"
+  },
+  {
+    "id": "076",
+    "slug": "image-opacity",
+    "title": "画像透過度調整",
+    "description": "画像の透明度を簡単に調整できるツール",
+    "category": "画像",
+    "created": "2026-10-07",
+    "path": "tools/076-image-opacity/"
   }
 ]
