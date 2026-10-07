@@ -682,5 +682,14 @@
     "category": "画像",
     "created": "2026-10-07",
     "path": "tools/076-image-opacity/"
+  },
+  {
+    "id": "077",
+    "slug": "url-duplicate-checker",
+    "title": "URL重複検出ツール",
+    "description": "URLの重複を検出し表示します",
+    "category": "文字列",
+    "created": "2026-10-07",
+    "path": "tools/077-url-duplicate-checker/"
   }
 ]
