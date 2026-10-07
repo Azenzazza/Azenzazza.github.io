@@ -691,5 +691,14 @@
     "category": "文字列",
     "created": "2026-10-07",
     "path": "tools/077-url-duplicate-checker/"
+  },
+  {
+    "id": "078",
+    "slug": "image-cropper",
+    "title": "画像クロップツール",
+    "description": "画像を簡単に切り抜けるツール",
+    "category": "画像",
+    "created": "2026-10-07",
+    "path": "tools/078-image-cropper/"
   }
 ]
