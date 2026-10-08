@@ -718,5 +718,14 @@
     "category": "テキスト",
     "created": "2026-10-08",
     "path": "tools/080-ascii-art-generator/"
+  },
+  {
+    "id": "081",
+    "slug": "common-prefix-suffix",
+    "title": "共通接頭辞・接尾辞抽出ツール",
+    "description": "複数行から共通接頭辞と接尾辞を自動抽出",
+    "category": "文字列",
+    "created": "2026-10-08",
+    "path": "tools/081-common-prefix-suffix/"
   }
 ]
