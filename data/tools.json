@@ -709,5 +709,14 @@
     "category": "画像",
     "created": "2026-10-08",
     "path": "tools/079-csv-plotter/"
+  },
+  {
+    "id": "080",
+    "slug": "ascii-art-generator",
+    "title": "ASCII文字アート生成",
+    "description": "文字を大きなASCIIアートに変換",
+    "category": "テキスト",
+    "created": "2026-10-08",
+    "path": "tools/080-ascii-art-generator/"
   }
 ]
