@@ -700,5 +700,14 @@
     "category": "画像",
     "created": "2026-10-07",
     "path": "tools/078-image-cropper/"
+  },
+  {
+    "id": "079",
+    "slug": "csv-plotter",
+    "title": "CSVデータ可視化",
+    "description": "CSVから簡易グラフを描く",
+    "category": "画像",
+    "created": "2026-10-08",
+    "path": "tools/079-csv-plotter/"
   }
 ]
