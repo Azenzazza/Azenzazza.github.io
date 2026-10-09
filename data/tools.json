@@ -736,5 +736,14 @@
     "category": "画像",
     "created": "2026-10-09",
     "path": "tools/082-image-base64/"
+  },
+  {
+    "id": "083",
+    "slug": "regex-replace",
+    "title": "正規表現置換ツール",
+    "description": "正規表現でテキスト置換",
+    "category": "変換",
+    "created": "2026-10-09",
+    "path": "tools/083-regex-replace/"
   }
 ]
