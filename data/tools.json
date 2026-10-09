@@ -745,5 +745,14 @@
     "category": "変換",
     "created": "2026-10-09",
     "path": "tools/083-regex-replace/"
+  },
+  {
+    "id": "084",
+    "slug": "text-spacing-adjuster",
+    "title": "テキスト行間調整ツール",
+    "description": "行間・文字間を簡単に調整",
+    "category": "テキスト",
+    "created": "2026-10-09",
+    "path": "tools/084-text-spacing-adjuster/"
   }
 ]
