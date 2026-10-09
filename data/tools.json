@@ -727,5 +727,14 @@
     "category": "文字列",
     "created": "2026-10-08",
     "path": "tools/081-common-prefix-suffix/"
+  },
+  {
+    "id": "082",
+    "slug": "image-base64",
+    "title": "画像→Base64変換",
+    "description": "画像をBase64文字列に変換します",
+    "category": "画像",
+    "created": "2026-10-09",
+    "path": "tools/082-image-base64/"
   }
 ]
