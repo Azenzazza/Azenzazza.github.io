@@ -754,5 +754,14 @@
     "category": "テキスト",
     "created": "2026-10-09",
     "path": "tools/084-text-spacing-adjuster/"
+  },
+  {
+    "id": "085",
+    "slug": "word-frequency-graph",
+    "title": "語彙頻度棒グラフ生成器",
+    "description": "テキストの語彙頻度を棒グラフで可視化",
+    "category": "テキスト",
+    "created": "2026-10-10",
+    "path": "tools/085-word-frequency-graph/"
   }
 ]
