@@ -763,5 +763,14 @@
     "category": "テキスト",
     "created": "2026-10-10",
     "path": "tools/085-word-frequency-graph/"
+  },
+  {
+    "id": "086",
+    "slug": "key-display",
+    "title": "キー入力表示ツール",
+    "description": "入力したキーをリアルタイムで表示",
+    "category": "文字列",
+    "created": "2026-10-10",
+    "path": "tools/086-key-display/"
   }
 ]
