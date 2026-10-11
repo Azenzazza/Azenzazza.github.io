@@ -781,5 +781,14 @@
     "category": "テキスト",
     "created": "2026-10-11",
     "path": "tools/087-caesar-cipher/"
+  },
+  {
+    "id": "088",
+    "slug": "image-size-ratio",
+    "title": "画像サイズと縦横比計算",
+    "description": "画像の寸法と縦横比を表示",
+    "category": "画像",
+    "created": "2026-10-11",
+    "path": "tools/088-image-size-ratio/"
   }
 ]
