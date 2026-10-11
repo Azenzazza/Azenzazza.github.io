@@ -772,5 +772,14 @@
     "category": "文字列",
     "created": "2026-10-10",
     "path": "tools/086-key-display/"
+  },
+  {
+    "id": "087",
+    "slug": "caesar-cipher",
+    "title": "シーザー暗号ツール",
+    "description": "文字列をシフトして暗号化・復号",
+    "category": "テキスト",
+    "created": "2026-10-11",
+    "path": "tools/087-caesar-cipher/"
   }
 ]
