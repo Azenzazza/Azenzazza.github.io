@@ -790,5 +790,14 @@
     "category": "画像",
     "created": "2026-10-11",
     "path": "tools/088-image-size-ratio/"
+  },
+  {
+    "id": "089",
+    "slug": "image-grayscale",
+    "title": "画像をグレースケール化",
+    "description": "画像を白黒に変換し保存できるツール",
+    "category": "画像",
+    "created": "2026-10-11",
+    "path": "tools/089-image-grayscale/"
   }
 ]
