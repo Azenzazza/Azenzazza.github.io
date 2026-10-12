@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://azenzazza.github.io/</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-10-12</lastmod>
   </url>
   <url>
     <loc>https://azenzazza.github.io/tools/tools.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-10-12</lastmod>
   </url>
   <url>
     <loc>https://azenzazza.github.io/tools/001-word-frequency-counter/</loc>
@@ -363,5 +363,9 @@
   <url>
     <loc>https://azenzazza.github.io/tools/089-image-grayscale/</loc>
     <lastmod>2026-10-11</lastmod>
+  </url>
+  <url>
+    <loc>https://azenzazza.github.io/tools/090-color-adjust/</loc>
+    <lastmod>2026-10-12</lastmod>
   </url>
 </urlset>

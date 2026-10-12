@@ -799,5 +799,14 @@
     "category": "画像",
     "created": "2026-10-11",
     "path": "tools/089-image-grayscale/"
+  },
+  {
+    "id": "090",
+    "slug": "color-adjust",
+    "title": "画像色調調整",
+    "description": "画像の色相・彩度・明度を調整",
+    "category": "画像",
+    "created": "2026-10-12",
+    "path": "tools/090-color-adjust/"
   }
 ]
