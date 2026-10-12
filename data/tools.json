@@ -808,5 +808,14 @@
     "category": "画像",
     "created": "2026-10-12",
     "path": "tools/090-color-adjust/"
+  },
+  {
+    "id": "091",
+    "slug": "image-filter",
+    "title": "画像フィルタツール",
+    "description": "画像に簡単フィルタを適用できるツール",
+    "category": "画像",
+    "created": "2026-10-12",
+    "path": "tools/091-image-filter/"
   }
 ]
