@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>【速報】Claude の新機能 Claude Motion 早速使ってみた - Azenzazzaのサイト</title>
-  <meta name="description" content="AIがコード・文章・映像を自動生成し、開発速度と品質を向上させる一方で、AIの脆弱性や自律攻撃が増加。開発者は効率化とセキュリティの両立を意識する必要がある。">
+  <title>Amazon Bedrock 利用料金ダッシュボード作成 - Azenzazzaのサイト</title>
+  <meta name="description" content="AIサービス利用のコスト管理は開発者必須。Bedrockダッシュボード、Claudeコスト、GitHub Actionsの脆弱性対策など、コストと安全性を統合的に把握できるテーマ。">
   <style>
     body {
       margin: 0;
@@ -185,66 +185,60 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年10月12日</p>
-    <h1>【速報】Claude の新機能 Claude Motion 早速使ってみた</h1>
+    <p class="news-date">2026年10月13日</p>
+    <h1>Amazon Bedrock 利用料金ダッシュボード作成</h1>
 
     <article class="news-body">
-<h2>リード</h2>
-<p>Anthropic がベータ版で公開した新機能「Claude Motion」。プロンプトやレポート・画像から短いアニメーション動画を自動生成できるという画期的なツールが、AI を活用した開発効率化の最前線に登場した。一方で、AI が自律的に攻撃を実行するケースが増えているという指摘もあり、開発者は「スピード」と「安全性」の両立を迫られている。</p>
+<h2>リード文</h2>
+<p>AIサービスの利用が急速に拡大する中、開発者は「誰が、どのモデルを、どれだけ使ったか」を正確に把握できるかが競争力の鍵となっている。Amazon Bedrock の利用料金をユーザー単位で可視化するダッシュボード構築事例と、CI/CD パイプラインの脆弱性がコストに与える影響を取り上げ、コスト管理と安全性を統合的に捉える最新の取り組みを紹介する。</p>
 
 <h2>背景</h2>
-<p>近年、AI はコード・文章・映像を自動生成し、開発速度と品質を大幅に向上させている。Zenn に掲載された記事では、AI が生成した文章を読む時間が増える一方で、情報取得のスピードは加速し、読解に要する時間が相対的に減少していると指摘されている。長文で難解な回答が返ってくることが頻繁に起き、「つまり何？」と再質問しても同様に長い返答が返るため、開発者は情報の可読性を改善するツールの必要性を感じている。</p>
-<p>同時に、Qiita の記事が警告するように、AI が関与する自律型エージェント攻撃が顕在化しつつある。AI モデル自体が攻撃キャンペーンに利用されるケースが報告され、従来のセキュリティ資格や対策が「古びた」ものとなりつつあることが示唆されている。開発現場では、効率化とともに新たな脆弱性への対策が急務となっている。</p>
+<p>AI を内部サービスとして提供する企業は、従来のサーバー利用料に加えて、LLM（大規模言語モデル）や画像生成モデルの呼び出し回数に応じた従量課金を管理しなければならない。AWS の Cost Explorer ではタグ付けで集計できるが、パートナー経由で契約したアカウントや複数テナント環境ではタグが適用できず、正確なコスト配分が困難になるケースが散見される。さらに、GitHub Actions を用いた自動デプロイやテストが増えると、脆弱性が突如として予期せぬ費用（インシデント対応やシステム停止）を招くリスクが顕在化している。こうした「見える化できない」コストと「見えない」セキュリティリスクが同時に顕在化したことが、AI 開発のコスト可視化と管理への関心を高めている。</p>
 
 <h2>詳細</h2>
-<p><strong>Claude Motion の概要と体験</strong></p>
+<h3>Bedrock 利用料金ダッシュボードの構築手順</h3>
+<p>AWS ソリューションアーキテクトの杉山氏は、<strong>CUR 2.0（Cost and Usage Report）</strong> と <strong>Amazon QuickSight</strong> を組み合わせ、ユーザーごとの Bedrock 利用料金をリアルタイムで表示するダッシュボードを作成した。手順は大きく以下の三段階に分かれる。</p>
 <ul>
-<li>プロンプトや手元のレポート・グラフ・画像を入力すると、数秒で短いアニメーション動画を生成。</li>
-<li>ベータ版ながら、動画生成の品質は実用レベルで、データの可視化やプレゼンテーション資料の作成に即応できる。</li>
-<li>同時にリリースされた「Claude Dashboards」も併用でき、生成した動画の管理や共有が容易になる。</li>
+<li>CUR 2.0 で Bedrock の課金データを S3 バケットにエクスポートし、必要なカラム（ユーザー ID、モデル名、トークン数、料金）を抽出。</li>
+<li>Athena で SQL クエリを作成し、ユーザー別・モデル別の集計テーブルを生成。</li>
+<li>QuickSight にデータセットをインポートし、棒グラフやヒートマップで「誰がどのモデルをどれだけ使ったか」を可視化。フィルタ機能で期間やプロジェクト単位の絞り込みも可能。</li>
 </ul>
-<p>実際に使用した感想としては、従来は手作業で作成していたデモ動画や UI フローの説明が、数クリックで自動化できた点が特に有効だった。開発チームは、コードレビューや設計資料に付随するビジュアル説明を迅速に作成でき、レビューサイクルが短縮された。</p>
+<p>このアプローチは、Cost Explorer が利用できない環境でも同様の可視化が実現できる点が大きな利点である。</p>
 
-<p><strong>AI 文章の可読性向上スキル</strong></p>
+<h3>Claude 系モデルのコスト管理事例</h3>
+<p>Claude Desktop（Chat / Cowork）や Claude Code を Bedrock 経由で社内に展開したケースでは、モデル別のトークン消費量がコストに直結する。ダッシュボードに「モデル別トークン数」「ユーザー別月間費用」などの指標を追加することで、過剰利用の兆候を早期に検知し、予算超過を防止できる。</p>
+
+<h3>GitHub Actions の脆弱性とコストへの波及効果</h3>
+<p>tj-actions や Trivy の供給チェーン攻撃以降、<strong>SHA Pinning</strong> が標準的な対策として広まったが、Zenn の記事は「SHA Pinning だけでは防げないケース」を指摘している。具体的には、リポジトリ自体が乗っ取られた場合や、タグが指すコミットが改ざんされた場合である。さらに、Qiita の調査では以下の三つの「見えない」脆弱性が頻出している。</p>
 <ul>
-<li>文章の難しさを点数化し、構造化するスキルを自作した開発者が、Zenn にて手法を公開。</li>
-<li>長文・難解な AI の回答を自動で要約し、スコア化することで、情報取得の効率を向上させる。</li>
+<li>permissions を明示しないままデフォルトの権限で実行される。</li>
+<li>GITHUB_TOKEN のスコープが広すぎて、不要なリポジトリ操作が可能になる。</li>
+<li>外部アクションのバージョン指定が曖昧で、意図しないコードが実行される。</li>
 </ul>
-<p>このスキルは、Claude Motion と組み合わせることで、生成した動画のナレーションや説明文を簡潔に整形し、視聴者の理解負荷を低減できる可能性がある。</p>
+<p>これらの脆弱性が実装ミスや情報漏洩につながると、インシデント対応コストやシステム停止による機会損失が発生する。対策としては、静的解析ツールで権限設定を自動検出し、Action 開発者側は署名付きリリースと明示的なバージョン管理を徹底することが推奨される。</p>
 
-<p><strong>AI で浮いた時間の活用</strong></p>
-<ul>
-<li>AI エージェントによりシステム構築のスピードと量が飛躍的に上がり、開発チームは従来より多くのプロジェクトを同時進行できるようになった。</li>
-<li>しかし、浮いた時間を何に使うかが課題となっている。単に作業量を増やすだけでなく、セキュリティレビューや脆弱性診断に割く時間を確保することが求められる。</li>
-</ul>
-
-<p><strong>セキュリティへの警鐘</strong></p>
-<p>Qiita の報告によれば、AI が自律的に攻撃手順を生成・実行するケースが増えており、従来の「人が手動で攻撃コードを作成する」モデルから大きく転換している。これに伴い、セキュリティ資格やベストプラクティスの見直しが必要とされている。開発者は、AI が生成したコードやドキュメントをそのまま受け入れるのではなく、AI の出力を検証・サンドボックス化するプロセスを組み込む必要がある。</p>
+<h3>AI 時代の開発費見積もりとの関連性</h3>
+<p>AI が設計書やコード生成を担うようになると、従来の人月ベースの見積もりは意味を失いつつある。Qiita の記事は「顧客が自分でやったらいくらか」という視点を提示し、実際の利用料（例：Bedrock のトークン課金）をベースにした費用算出が主流になると指摘している。したがって、正確な利用料の可視化と、脆弱性による予期せぬコスト増加の防止が、開発費全体の透明性向上に直結する。</p>
 
 <h2>影響・展望</h2>
-<p>Claude Motion のような生成系 AI ツールは、開発ドキュメントやデモ動画の作成コストを大幅に削減し、プロジェクトのリードタイム短縮に直結する。一方で、AI が生成したコンテンツの正確性や安全性を検証する工程が新たなボトルネックとなり得る。</p>
-<p>今後は、以下のような動きが予測される。</p>
-<ul>
-<li>AI 生成物の可読性・正確性を自動評価するツールの普及。</li>
-<li>AI 攻撃に対応した新しいセキュリティ資格や認証制度の整備。</li>
-<li>生成系 AI とセキュリティスキャンを統合した開発パイプラインの標準化。</li>
-</ul>
-<p>開発者は、効率化の恩恵を最大化すると同時に、AI が持つ潜在的なリスクを体系的に管理する体制を早急に構築することが求められる。</p>
+<p>Bedrock のユーザー別コストダッシュボードは、AI サービス提供者が内部的にコスト配分を最適化するだけでなく、顧客への課金モデルを明示する際の根拠資料としても機能する可能性がある。また、GitHub Actions のセキュリティ対策が標準化すれば、CI/CD パイプラインに潜む「見えない」コストが削減され、全体の開発予算が安定化すると期待される。今後は、CUR 2.0 と QuickSight の連携をさらに自動化し、リアルタイム警告や予算超過シナリオを組み込んだ統合管理プラットフォームが登場する見込みである。</p>
 
 <h2>まとめ</h2>
-<p>Anthropic の「Claude Motion」は、プロンプトから短いアニメーション動画を自動生成し、開発効率を飛躍的に高める新機能として注目されている。しかし、AI の自律的な攻撃や生成物の可読性問題といった安全性の課題が同時に浮上している。開発者は、可読性向上スキルや時間の有効活用策を取り入れつつ、AI セキュリティへの対策を組み合わせ、スピードと安全性の両立を目指す必要がある。</p>
+<p>AI 開発におけるコスト管理は、利用料の可視化とセキュリティリスクの抑制という二軸で考える必要がある。Bedrock のダッシュボードはユーザー単位の課金を明確にし、GitHub Actions の脆弱性対策は予期せぬコスト増を防ぐ。これらを統合的に運用すれば、開発者は「何にいくら使っているか」をリアルタイムで把握でき、持続可能な AI ビジネスを構築できる。</p>
 
+<h2>参考情報</h2>
 <ul>
-<li><a href="https://zenn.dev/branbran/articles/047821d64590f0">【速報】Claude の新機能 Claude Motion 早速使ってみた</a></li>
-<li><a href="https://zenn.dev/netetahito/articles/a3539e541b179c">AIの文章を読みやすくするskillを作る（文の難しさの点数化＋構造化）</a></li>
-<li><a href="https://zenn.dev/idealog/articles/a3e9cf4299b1cf">AIで浮いた時間を「もっと作る」に使っていませんか</a></li>
-<li><a href="https://qiita.com/tasklog/items/c6dbb5bbf2c789c290fb?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items">AIが攻撃を自動実行する時代、セキュリティ資格は本当に古びたのか</a></li>
+<li>Amazon Bedrock の利用料金をユーザーごとに確認するダッシュボードを CUR 2.0 と Amazon QuickSight で作る</li>
+<li>GitHub ActionsのSHA Pinningだけで本当に大丈夫ですか？</li>
+<li>GitHub Actionsでよくある3つの『見えない』脆弱性を、自前の静的解析で検出してみた</li>
+<li>サイバーセキュリティを勉強するなら今？おすすめリソース紹介</li>
+<li>AI時代の開発費は「お客さんが自分でやったらいくら？」で決まる</li>
 </ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/netetahito/articles/a3539e541b179c" target="_blank" rel="noopener">AIの文章を読みやすくするskillを作る（文の難しさの点数化＋構造化）</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/branbran/articles/047821d64590f0" target="_blank" rel="noopener">【速報】Claude の新機能 Claude Motion 早速使ってみた</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/idealog/articles/a3e9cf4299b1cf" target="_blank" rel="noopener">AIで浮いた時間を「もっと作る」に使っていませんか</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/tasklog/items/c6dbb5bbf2c789c290fb?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AIが攻撃を自動実行する時代、セキュリティ資格は本当に古びたのか</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/aws_japan/articles/aws-bedrock-cur2-user-cost-dashboard" target="_blank" rel="noopener">Amazon Bedrock の利用料金をユーザーごとに確認するダッシュボードを CUR 2.0 と Amazon Quick で作る</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/nishino_hiroki/articles/d7570d3bb3408f" target="_blank" rel="noopener">GitHub ActionsのSHA Pinningだけで本当に大丈夫ですか？</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/vakoya_village/items/f7a457e6f51ad9c8aa4c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">GitHub Actionsでよくある3つの『見えない』脆弱性を、自前の静的解析で検出してみた</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/leolui2004/items/226062f17e55202e8c47?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">サイバーセキュリティを勉強するなら今？おすすめリソース紹介</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/kotowazaman/items/3a82a47b39bacf7f02d7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI時代の開発費は「お客さんが自分でやったらいくら？」で決まる</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
