@@ -817,5 +817,14 @@
     "category": "画像",
     "created": "2026-10-12",
     "path": "tools/091-image-filter/"
+  },
+  {
+    "id": "092",
+    "slug": "kana-romaji-converter",
+    "title": "カナ→ローマ字変換",
+    "description": "カナをローマ字に変換します",
+    "category": "変換",
+    "created": "2026-10-13",
+    "path": "tools/092-kana-romaji-converter/"
   }
 ]
