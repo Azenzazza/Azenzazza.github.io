@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Amazon Bedrock 利用料金ダッシュボード作成 - Azenzazzaのサイト</title>
-  <meta name="description" content="AIサービス利用のコスト管理は開発者必須。Bedrockダッシュボード、Claudeコスト、GitHub Actionsの脆弱性対策など、コストと安全性を統合的に把握できるテーマ。">
+  <title>AIエージェントでAPIキー管理を安全に - Azenzazzaのサイト</title>
+  <meta name="description" content="近年AIエージェントの導入が進む中、APIキーや機密情報を安全に扱う方法が急務となっている。複数記事で秘密レス設計・キー管理・CI/CD統合の課題が共有され、技術者にとって実務的価値が高い。">
   <style>
     body {
       margin: 0;
@@ -185,60 +185,73 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年10月13日</p>
-    <h1>Amazon Bedrock 利用料金ダッシュボード作成</h1>
+    <p class="news-date">2026年10月14日</p>
+    <h1>AIエージェントでAPIキー管理を安全に</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>AIサービスの利用が急速に拡大する中、開発者は「誰が、どのモデルを、どれだけ使ったか」を正確に把握できるかが競争力の鍵となっている。Amazon Bedrock の利用料金をユーザー単位で可視化するダッシュボード構築事例と、CI/CD パイプラインの脆弱性がコストに与える影響を取り上げ、コスト管理と安全性を統合的に捉える最新の取り組みを紹介する。</p>
+<p>AIエージェントが開発フローに浸透する中、APIキーやパスワードといった機密情報の取り扱いがセキュリティ上の大きな課題となっている。GitHub Actions と Kubernetes を組み合わせた「シークレットレス」接続や、AI エージェントに対する鍵操作の安全性評価、CI/CD パイプラインへのエージェント品質ゲート導入といった実践例が注目されている。本稿では、これらの事例をもとに「AI エージェントで API キー管理を安全に」行うための具体的手法と今後の展望を整理する。</p>
 
 <h2>背景</h2>
-<p>AI を内部サービスとして提供する企業は、従来のサーバー利用料に加えて、LLM（大規模言語モデル）や画像生成モデルの呼び出し回数に応じた従量課金を管理しなければならない。AWS の Cost Explorer ではタグ付けで集計できるが、パートナー経由で契約したアカウントや複数テナント環境ではタグが適用できず、正確なコスト配分が困難になるケースが散見される。さらに、GitHub Actions を用いた自動デプロイやテストが増えると、脆弱性が突如として予期せぬ費用（インシデント対応やシステム停止）を招くリスクが顕在化している。こうした「見える化できない」コストと「見えない」セキュリティリスクが同時に顕在化したことが、AI 開発のコスト可視化と管理への関心を高めている。</p>
+<p>従来、開発者は PR（プルリクエスト）を提出した段階で手動で VPN に接続し、Kubernetes クラスタ上のジョブやリソースの状態を確認していた。複数人が同時に作業するため、作業手順が煩雑になるだけでなく、ヒューマンエラーや認証情報の漏洩リスクも高まっていた。さらに、AI エージェント（Claude Code・Codex・Gemini など）がコード生成やデプロイ作業を自動化するケースが増えると、エージェントが外部サービスとやり取りする際に必要となる API キーやパスワードの管理方法が不透明になる。</p>
+<p>このような状況を受け、以下の二つの課題が顕在化した。</p>
+<ul>
+<li>開発フローにおける認証情報の「手作業」依存を排除し、再現性とスピードを向上させる必要がある。</li>
+<li>AI エージェントに機密情報を委任する際の「安全性」と「監査可能性」を確保しなければ、情報漏洩や不正利用のリスクが拡大する。</li>
+</ul>
+<p>これらの課題は、GitHub Actions と Kubernetes のシークレットレス連携、AI エージェントの鍵操作評価、CI/CD へのエージェント評価組み込みという三つの実装パターンで具体的に検証されている。</p>
 
 <h2>詳細</h2>
-<h3>Bedrock 利用料金ダッシュボードの構築手順</h3>
-<p>AWS ソリューションアーキテクトの杉山氏は、<strong>CUR 2.0（Cost and Usage Report）</strong> と <strong>Amazon QuickSight</strong> を組み合わせ、ユーザーごとの Bedrock 利用料金をリアルタイムで表示するダッシュボードを作成した。手順は大きく以下の三段階に分かれる。</p>
+<h3>シークレットレス A2A エージェントの構築</h3>
+<p>ある開発チームは、GitHub Actions から A2A（Application‑to‑Application）エージェントを起動し、Kubernetes クラスタ上のジョブ状態を取得するフローを「シークレットレス」で実装した。従来は VPN 接続と kubeconfig に埋め込まれた証明書を手動で配布していたが、GitHub の OIDC（OpenID Connect）トークンを利用して、GitHub Actions のランナーが直接 Kubernetes の RBAC（Role‑Based Access Control）に基づく一時的な ServiceAccount トークンを取得できるようにした。</p>
+<p>この方式のポイントは次の通りである。</p>
 <ul>
-<li>CUR 2.0 で Bedrock の課金データを S3 バケットにエクスポートし、必要なカラム（ユーザー ID、モデル名、トークン数、料金）を抽出。</li>
-<li>Athena で SQL クエリを作成し、ユーザー別・モデル別の集計テーブルを生成。</li>
-<li>QuickSight にデータセットをインポートし、棒グラフやヒートマップで「誰がどのモデルをどれだけ使ったか」を可視化。フィルタ機能で期間やプロジェクト単位の絞り込みも可能。</li>
+<li><strong>トークンの短期有効化</strong>：GitHub Actions がジョブ実行中にのみ有効なトークンを取得し、ジョブ終了後は自動的に失効する。</li>
+<li><strong>認可の最小権限化</strong>：A2A エージェントに付与する ServiceAccount はジョブ状態確認に必要な API 権限だけを持つ。</li>
+<li><strong>VPN 不要のフル自動化</strong>：開発者はローカルで VPN を起動する必要がなく、PR のレビュー時に自動でリソース状態が取得できる。</li>
 </ul>
-<p>このアプローチは、Cost Explorer が利用できない環境でも同様の可視化が実現できる点が大きな利点である。</p>
 
-<h3>Claude 系モデルのコスト管理事例</h3>
-<p>Claude Desktop（Chat / Cowork）や Claude Code を Bedrock 経由で社内に展開したケースでは、モデル別のトークン消費量がコストに直結する。ダッシュボードに「モデル別トークン数」「ユーザー別月間費用」などの指標を追加することで、過剰利用の兆候を早期に検知し、予算超過を防止できる。</p>
-
-<h3>GitHub Actions の脆弱性とコストへの波及効果</h3>
-<p>tj-actions や Trivy の供給チェーン攻撃以降、<strong>SHA Pinning</strong> が標準的な対策として広まったが、Zenn の記事は「SHA Pinning だけでは防げないケース」を指摘している。具体的には、リポジトリ自体が乗っ取られた場合や、タグが指すコミットが改ざんされた場合である。さらに、Qiita の調査では以下の三つの「見えない」脆弱性が頻出している。</p>
+<h3>AI エージェントに対する鍵操作の安全性評価</h3>
+<p>別の調査では、Claude Code、Codex、Gemini といった AI エージェントに対し、API キーやパスワードの取り扱いを 5 種類の操作シナリオでテストした。その結果、以下のように「危険」「要注意」「安全」な手法に分類された。</p>
 <ul>
-<li>permissions を明示しないままデフォルトの権限で実行される。</li>
-<li>GITHUB_TOKEN のスコープが広すぎて、不要なリポジトリ操作が可能になる。</li>
-<li>外部アクションのバージョン指定が曖昧で、意図しないコードが実行される。</li>
+<li><strong>危険</strong>：エージェントに平文でキーを直接入力させ、ログや標準出力に残す。</li>
+<li><strong>要注意</strong>：環境変数やファイルにキーを保存し、エージェントがそれを読み取るが、アクセス権限や削除処理が不明確。</li>
+<li><strong>安全</strong>：シークレットマネージャ（AWS Secrets Manager、HashiCorp Vault 等）から一時的に取得し、使用後に自動削除する方式。</li>
 </ul>
-<p>これらの脆弱性が実装ミスや情報漏洩につながると、インシデント対応コストやシステム停止による機会損失が発生する。対策としては、静的解析ツールで権限設定を自動検出し、Action 開発者側は署名付きリリースと明示的なバージョン管理を徹底することが推奨される。</p>
+<p>特に「安全」な方式は、エージェントが外部シークレットストアと直接対話し、キー自体がエージェントの実行環境に残らない点が評価された。一方、平文保存はログ解析や CI ランナーのキャッシュから容易に抽出できるため、実務での採用は推奨されない。</p>
 
-<h3>AI 時代の開発費見積もりとの関連性</h3>
-<p>AI が設計書やコード生成を担うようになると、従来の人月ベースの見積もりは意味を失いつつある。Qiita の記事は「顧客が自分でやったらいくらか」という視点を提示し、実際の利用料（例：Bedrock のトークン課金）をベースにした費用算出が主流になると指摘している。したがって、正確な利用料の可視化と、脆弱性による予期せぬコスト増加の防止が、開発費全体の透明性向上に直結する。</p>
+<h3>CI/CD パイプラインへのエージェント品質ゲート導入</h3>
+<p>さらに、GitHub Actions と AWS の AgentCore Evaluations を組み合わせ、エージェントの品質評価を CI/CD に組み込む実装例が報告されている。開発（dev）→ステージング（stg）→本番（prd）と環境を上げるたびに、AgentCore が生成したコードやプロンプトの安全性・性能指標を自動で検証し、合格しなければ次ステージへ進めない「品質ゲート」を実装した。</p>
+<p>この仕組みの特徴は次の通りだ。</p>
+<ul>
+<li>評価結果は GitHub Actions のジョブステータスとして可視化され、レビュー時に明示的に確認できる。</li>
+<li>評価基準は「シークレット漏洩リスク」「実行コスト」「応答品質」など複数項目で構成され、プロジェクトごとにカスタマイズ可能。</li>
+<li>評価プロセス自体がコードとして管理されるため、変更履歴が残り、監査証跡として利用できる。</li>
+</ul>
 
 <h2>影響・展望</h2>
-<p>Bedrock のユーザー別コストダッシュボードは、AI サービス提供者が内部的にコスト配分を最適化するだけでなく、顧客への課金モデルを明示する際の根拠資料としても機能する可能性がある。また、GitHub Actions のセキュリティ対策が標準化すれば、CI/CD パイプラインに潜む「見えない」コストが削減され、全体の開発予算が安定化すると期待される。今後は、CUR 2.0 と QuickSight の連携をさらに自動化し、リアルタイム警告や予算超過シナリオを組み込んだ統合管理プラットフォームが登場する見込みである。</p>
+<p>シークレットレス接続と AI エージェントの鍵操作安全化は、開発スピードとセキュリティの両立を実現する重要な技術トレンドとなりつつある。具体的には、以下のような効果が期待できる。</p>
+<ul>
+<li>開発者は VPN や手動認証の手間から解放され、コードレビューとデプロイ作業に集中できる。</li>
+<li>機密情報がエージェント実行環境に残らない設計は、内部不正や外部漏洩リスクを大幅に低減する。</li>
+<li>CI/CD にエージェント評価を組み込むことで、AI 製品の品質保証が自動化され、リリースサイクルが短縮される。</li>
+</ul>
+<p>今後は、Kubernetes の ServiceAccount トークン自動ローテーションや、シークレットマネージャと AI エージェントの標準化された連携プロトコルが登場する可能性がある。また、AI エージェント自体が「シークレットレス」な動作をネイティブにサポートするようになると、開発組織全体での鍵管理ポリシーがさらに簡素化されるとみられる。</p>
 
 <h2>まとめ</h2>
-<p>AI 開発におけるコスト管理は、利用料の可視化とセキュリティリスクの抑制という二軸で考える必要がある。Bedrock のダッシュボードはユーザー単位の課金を明確にし、GitHub Actions の脆弱性対策は予期せぬコスト増を防ぐ。これらを統合的に運用すれば、開発者は「何にいくら使っているか」をリアルタイムで把握でき、持続可能な AI ビジネスを構築できる。</p>
+<p>AI エージェントの普及に伴う API キー管理の課題は、シークレットレス接続、シークレットマネージャの活用、CI/CD への品質ゲート組み込みという三本柱で解決できる。実装例として、GitHub Actions と Kubernetes の OIDC 連携、AI エージェントの安全な鍵取得手順、AgentCore 評価の自動化が示されており、これらは開発フローの効率化とセキュリティ強化を同時に実現する有力なアプローチである。</p>
 
-<h2>参考情報</h2>
+<h2>出典</h2>
 <ul>
-<li>Amazon Bedrock の利用料金をユーザーごとに確認するダッシュボードを CUR 2.0 と Amazon QuickSight で作る</li>
-<li>GitHub ActionsのSHA Pinningだけで本当に大丈夫ですか？</li>
-<li>GitHub Actionsでよくある3つの『見えない』脆弱性を、自前の静的解析で検出してみた</li>
-<li>サイバーセキュリティを勉強するなら今？おすすめリソース紹介</li>
-<li>AI時代の開発費は「お客さんが自分でやったらいくら？」で決まる</li>
+<li>Zenn: PRコメントからKubernetesに訊く ~GitHub ActionsからA2Aエージェントをシークレットレスで繋ぐ~</li>
+<li>Qiita: AI エージェントに鍵を任せて大丈夫か — API キー操作5種類、Claude Code・Codex・Gemini に51 回頼み、危険・要注意・安全なやり方を分けた</li>
+<li>Qiita: 【AWS】GitHub ActionsとAgentCore Evaluationsでエージェントの評価をCI/CDに組み込んでみた</li>
 </ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/aws_japan/articles/aws-bedrock-cur2-user-cost-dashboard" target="_blank" rel="noopener">Amazon Bedrock の利用料金をユーザーごとに確認するダッシュボードを CUR 2.0 と Amazon Quick で作る</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/nishino_hiroki/articles/d7570d3bb3408f" target="_blank" rel="noopener">GitHub ActionsのSHA Pinningだけで本当に大丈夫ですか？</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/vakoya_village/items/f7a457e6f51ad9c8aa4c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">GitHub Actionsでよくある3つの『見えない』脆弱性を、自前の静的解析で検出してみた</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/leolui2004/items/226062f17e55202e8c47?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">サイバーセキュリティを勉強するなら今？おすすめリソース紹介</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/kotowazaman/items/3a82a47b39bacf7f02d7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI時代の開発費は「お客さんが自分でやったらいくら？」で決まる</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/hyeonjae/articles/secretless-a2a-github-actions-ja" target="_blank" rel="noopener">PRコメントからKubernetesに訊く ~GitHub ActionsからA2Aエージェントをシークレットレスで繋ぐ~</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/songchong/items/0d759f44eb26f332b897?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI エージェントに鍵を任せて大丈夫か — API キー操作5種類、Claude Code・Codex・Gemini に51 回頼み、危険・要注意・安全なやり方を分けた</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/yakumo_09/items/6f3936d9f7255a4259d9?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">【AWS】GitHub ActionsとAgentCore Evaluationsでエージェントの評価をCI/CDに組み込んでみた</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
