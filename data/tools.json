@@ -826,5 +826,14 @@
     "category": "変換",
     "created": "2026-10-13",
     "path": "tools/092-kana-romaji-converter/"
+  },
+  {
+    "id": "093",
+    "slug": "simple-poll",
+    "title": "簡易投票ツール",
+    "description": "ブラウザだけで投票と結果を管理",
+    "category": "生活",
+    "created": "2026-10-13",
+    "path": "tools/093-simple-poll/"
   }
 ]
