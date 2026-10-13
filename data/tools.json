@@ -835,5 +835,14 @@
     "category": "生活",
     "created": "2026-10-13",
     "path": "tools/093-simple-poll/"
+  },
+  {
+    "id": "094",
+    "slug": "sentiment-score",
+    "title": "感情スコア計算",
+    "description": "簡易的にテキストの感情スコアを算出",
+    "category": "テキスト",
+    "created": "2026-10-13",
+    "path": "tools/094-sentiment-score/"
   }
 ]
