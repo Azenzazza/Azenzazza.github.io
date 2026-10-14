@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <link rel="icon" href="../../../logo.png" type="image/png">
+  <link rel="stylesheet" href="../../../main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URLパラメータ生成器 - Azenzazzaのサイト</title>
+  <meta name="description" content="URLにパラメータを追加して生成">
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background-color: #AFE48E;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      margin-right: 16px;
+    }
+
+    .site-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    nav.navbar {
+      margin-left: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    nav.navbar a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+
+    nav.navbar a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .lead {
+      line-height: 1.7;
+      color: #333;
+      margin-top: 0;
+      margin-bottom: 28px;
+    }
+
+    .tool-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 1rem;
+      font-family: inherit;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: #AFE48E;
+      box-shadow: 0 0 0 3px rgba(175,228,142,0.3);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 600;
+      background: #AFE48E;
+      color: #2a3d1a;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    button:hover {
+      background: #9dd97a;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      background: #fafafa;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      min-height: 40px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: #fff;
+    }
+
+    th, td {
+      border: 1px solid #e5e5e5;
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #eef7e6;
+      color: #4a7c2f;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 16px 32px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #777;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 12px 16px; }
+      .logo { width: 48px; height: 48px; margin-right: 12px; }
+      .site-title { font-size: 1.1rem; }
+      nav.navbar { margin-left: 0; }
+      nav.navbar a { margin: 0 8px; }
+      main { padding: 0 16px; margin: 24px auto; }
+      h1 { font-size: 1.5rem; }
+      .tool-card { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center;">
+      <img src="../../../logo.png" alt="サイトロゴ" class="logo">
+      <div class="site-title">Azenzazzaのサイト</div>
+    </div>
+
+    <nav class="navbar">
+      <a href="../../../">ホーム</a>
+      <a href="../../../project/project.html">プロジェクト</a>
+      <a href="../../../tools/tools.html">ツール</a>
+      <a href="../../../news/index.html">ニュース</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>URLパラメータ生成器</h1>
+    <p class="lead">URLにパラメータを追加して生成</p>
+
+    <div class="tool-card">
+      <input type="text" id="baseUrl" placeholder="Base URL"><button type="button" id="addParam">Add Parameter</button><table id="paramsTable"><thead><tr><th>Key</th><th>Value</th><th>Action</th></tr></thead><tbody></tbody></table><button type="button" id="generateUrl">Generate URL</button><button type="button" id="copyUrl">Copy URL</button><div id="error" style="color:red;"></div><div id="result" style="margin-top:8px;"></div>
+    </div>
+
+    <div class="result" id="result"></div>
+  </main>
+
+  <footer>
+    &copy; 2026 Azenzazza.
+  </footer>
+
+  <script>
+const baseInput=document.getElementById('baseUrl');const addBtn=document.getElementById('addParam');const tableBody=document.querySelector('#paramsTable tbody');const genBtn=document.getElementById('generateUrl');const copyBtn=document.getElementById('copyUrl');const errorDiv=document.getElementById('error');const resultDiv=document.getElementById('result');function addRow(){const tr=document.createElement('tr');const tdKey=document.createElement('td');const keyInput=document.createElement('input');keyInput.type='text';keyInput.placeholder='Key';keyInput.className='param-key';tdKey.appendChild(keyInput);const tdVal=document.createElement('td');const valInput=document.createElement('input');valInput.type='text';valInput.placeholder='Value';valInput.className='param-value';tdVal.appendChild(valInput);const tdAct=document.createElement('td');const delBtn=document.createElement('button');delBtn.type='button';delBtn.textContent='Delete';delBtn.addEventListener('click',()=>tr.remove());tdAct.appendChild(delBtn);tr.appendChild(tdKey);tr.appendChild(tdVal);tr.appendChild(tdAct);tableBody.appendChild(tr);}addBtn.addEventListener('click',addRow);function validateUrl(url){try{new URL(url);return true;}catch(e){return false;}}genBtn.addEventListener('click',()=>{errorDiv.textContent='';resultDiv.textContent='';const base=baseInput.value.trim();if(!validateUrl(base)){errorDiv.textContent='Invalid URL format.';return;}let url;try{url=new URL(base);}catch(e){errorDiv.textContent='Invalid URL format.';return;}const rows=tableBody.querySelectorAll('tr');rows.forEach(row=>{const key=row.querySelector('.param-key').value.trim();const value=row.querySelector('.param-value').value;if(key){url.searchParams.append(key,value);}});resultDiv.textContent=url.toString();});copyBtn.addEventListener('click',()=>{const text=resultDiv.textContent;if(!text){errorDiv.textContent='No URL to copy.';return;}navigator.clipboard.writeText(text).then(()=>{errorDiv.textContent='Copied to clipboard.';}).catch(()=>{errorDiv.textContent='Copy failed.';});});
+  </script>
+</body>
+</html>

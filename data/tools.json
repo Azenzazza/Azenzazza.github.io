@@ -853,5 +853,14 @@
     "category": "テキスト",
     "created": "2026-10-14",
     "path": "tools/095-line-stat/"
+  },
+  {
+    "id": "096",
+    "slug": "url-params-generator",
+    "title": "URLパラメータ生成器",
+    "description": "URLにパラメータを追加して生成",
+    "category": "変換",
+    "created": "2026-10-14",
+    "path": "tools/096-url-params-generator/"
   }
 ]
