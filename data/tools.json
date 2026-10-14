@@ -844,5 +844,14 @@
     "category": "テキスト",
     "created": "2026-10-13",
     "path": "tools/094-sentiment-score/"
+  },
+  {
+    "id": "095",
+    "slug": "line-stat",
+    "title": "テキスト行別統計ツール",
+    "description": "各行の文字数・単語数を表示",
+    "category": "テキスト",
+    "created": "2026-10-14",
+    "path": "tools/095-line-stat/"
   }
 ]
