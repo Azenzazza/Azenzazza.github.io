@@ -862,5 +862,14 @@
     "category": "変換",
     "created": "2026-10-14",
     "path": "tools/096-url-params-generator/"
+  },
+  {
+    "id": "097",
+    "slug": "case-changer",
+    "title": "ケースチェンジャー",
+    "description": "文字列の大文字・小文字を変換します",
+    "category": "テキスト",
+    "created": "2026-10-14",
+    "path": "tools/097-case-changer/"
   }
 ]
