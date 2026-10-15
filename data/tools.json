@@ -871,5 +871,14 @@
     "category": "テキスト",
     "created": "2026-10-14",
     "path": "tools/097-case-changer/"
+  },
+  {
+    "id": "098",
+    "slug": "duplicate-char-remover",
+    "title": "重複文字除去ツール",
+    "description": "文字列内の重複文字を削除",
+    "category": "文字列",
+    "created": "2026-10-15",
+    "path": "tools/098-duplicate-char-remover/"
   }
 ]
