@@ -880,5 +880,14 @@
     "category": "文字列",
     "created": "2026-10-15",
     "path": "tools/098-duplicate-char-remover/"
+  },
+  {
+    "id": "099",
+    "slug": "binary-converter",
+    "title": "バイナリ変換ツール",
+    "description": "数値の変換を簡単に",
+    "category": "変換",
+    "created": "2026-10-15",
+    "path": "tools/099-binary-converter/"
   }
 ]

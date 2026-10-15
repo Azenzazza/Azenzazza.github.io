@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <link rel="icon" href="../../../logo.png" type="image/png">
+  <link rel="stylesheet" href="../../../main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>バイナリ変換ツール - Azenzazzaのサイト</title>
+  <meta name="description" content="数値の変換を簡単に">
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background-color: #AFE48E;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      margin-right: 16px;
+    }
+
+    .site-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    nav.navbar {
+      margin-left: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    nav.navbar a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+
+    nav.navbar a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .lead {
+      line-height: 1.7;
+      color: #333;
+      margin-top: 0;
+      margin-bottom: 28px;
+    }
+
+    .tool-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 1rem;
+      font-family: inherit;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: #AFE48E;
+      box-shadow: 0 0 0 3px rgba(175,228,142,0.3);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 600;
+      background: #AFE48E;
+      color: #2a3d1a;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    button:hover {
+      background: #9dd97a;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      background: #fafafa;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      min-height: 40px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: #fff;
+    }
+
+    th, td {
+      border: 1px solid #e5e5e5;
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #eef7e6;
+      color: #4a7c2f;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 16px 32px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #777;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 12px 16px; }
+      .logo { width: 48px; height: 48px; margin-right: 12px; }
+      .site-title { font-size: 1.1rem; }
+      nav.navbar { margin-left: 0; }
+      nav.navbar a { margin: 0 8px; }
+      main { padding: 0 16px; margin: 24px auto; }
+      h1 { font-size: 1.5rem; }
+      .tool-card { padding: 18px; }
+    }
+  </style>
+  <style>
+    #copy-msg {
+      margin-top: 8px;
+      color: #2a3d1a;
+      display: none;
+    }
+    #copy-msg.error {
+      color: #c00;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center;">
+      <img src="../../../logo.png" alt="サイトロゴ" class="logo">
+      <div class="site-title">Azenzazzaのサイト</div>
+    </div>
+
+    <nav class="navbar">
+      <a href="../../../">ホーム</a>
+      <a href="../../../project/project.html">プロジェクト</a>
+      <a href="../../../tools/tools.html">ツール</a>
+      <a href="../../../news/index.html">ニュース</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>バイナリ変換ツール</h1>
+    <p class="lead">数値の変換を簡単に</p>
+
+    <div class="tool-card">
+      <label for="number-input">数値:</label>
+      <input type="text" id="number-input" placeholder="Enter number">
+      <label for="base-select">基数:</label>
+      <select id="base-select">
+        <option value="2">2 (Binary)</option>
+        <option value="8">8 (Octal)</option>
+        <option value="10" selected>10 (Decimal)</option>
+        <option value="16">16 (Hex)</option>
+      </select>
+      <div id="error-msg" style="color:red;display:none;"></div>
+      <div>結果: <span id="result-span"></span></div>
+      <button id="copy-btn">コピー</button>
+      <div id="copy-msg"></div>
+    </div>
+
+    <div class="result" id="result-div"></div>
+  </main>
+
+  <footer>
+    &copy; 2026 Azenzazza.
+  </footer>
+
+  <script>
+    const input = document.getElementById('number-input');
+    const baseSelect = document.getElementById('base-select');
+    const resultSpan = document.getElementById('result-span');
+    const errorDiv = document.getElementById('error-msg');
+    const copyBtn = document.getElementById('copy-btn');
+    const copyMsg = document.getElementById('copy-msg');
+
+    function showCopyMessage(message, isError) {
+      copyMsg.textContent = message;
+      copyMsg.className = isError ? 'error' : '';
+      copyMsg.style.display = 'block';
+      setTimeout(() => { copyMsg.style.display = 'none'; }, 2000);
+    }
+
+    function update() {
+      const val = input.value.trim();
+      const base = parseInt(baseSelect.value, 10);
+
+      if (val === '') {
+        resultSpan.textContent = '';
+        errorDiv.style.display = 'none';
+        localStorage.removeItem('binaryTool_input');
+        localStorage.removeItem('binaryTool_base');
+        return;
+      }
+
+      const parsed = parseInt(val, base);
+      if (isNaN(parsed)) {
+        errorDiv.textContent = '無効な数値です';
+        errorDiv.style.display = 'block';
+        resultSpan.textContent = '';
+      } else {
+        errorDiv.style.display = 'none';
+        resultSpan.textContent = parsed.toString(10);
+        localStorage.setItem('binaryTool_input', val);
+        localStorage.setItem('binaryTool_base', baseSelect.value);
+      }
+    }
+
+    input.addEventListener('input', update);
+    baseSelect.addEventListener('change', update);
+
+    copyBtn.addEventListener('click', () => {
+      const text = resultSpan.textContent;
+      if (!text) {
+        showCopyMessage('コピーする内容がありません', true);
+        return;
+      }
+      navigator.clipboard.writeText(text).then(() => {
+        showCopyMessage('コピーしました', false);
+      }).catch(() => {
+        showCopyMessage('コピーに失敗しました', true);
+      });
+    });
+
+    window.addEventListener('load', () => {
+      const savedVal = localStorage.getItem('binaryTool_input');
+      const savedBase = localStorage.getItem('binaryTool_base');
+      if (savedVal !== null) input.value = savedVal;
+      if (savedBase !== null) baseSelect.value = savedBase;
+      update();
+    });
+  </script>
+</body>
+</html>
