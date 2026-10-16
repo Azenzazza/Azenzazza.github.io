@@ -898,5 +898,14 @@
     "category": "ランダム",
     "created": "2026-10-16",
     "path": "tools/100-word-shuffle/"
+  },
+  {
+    "id": "101",
+    "slug": "markdown-to-text",
+    "title": "Markdownをテキストに変換",
+    "description": "マークダウンをプレーンテキストに変換します",
+    "category": "変換",
+    "created": "2026-10-16",
+    "path": "tools/101-markdown-to-text/"
   }
 ]
