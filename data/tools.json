@@ -889,5 +889,14 @@
     "category": "変換",
     "created": "2026-10-15",
     "path": "tools/099-binary-converter/"
+  },
+  {
+    "id": "100",
+    "slug": "word-shuffle",
+    "title": "語順シャッフルツール",
+    "description": "文章の語順をランダムに並べ替える",
+    "category": "ランダム",
+    "created": "2026-10-16",
+    "path": "tools/100-word-shuffle/"
   }
 ]
