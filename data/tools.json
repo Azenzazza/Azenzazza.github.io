@@ -907,5 +907,14 @@
     "category": "変換",
     "created": "2026-10-16",
     "path": "tools/101-markdown-to-text/"
+  },
+  {
+    "id": "102",
+    "slug": "emoji-art-converter",
+    "title": "絵文字アート変換器",
+    "description": "画像を絵文字アートに変換します",
+    "category": "画像",
+    "created": "2026-10-16",
+    "path": "tools/102-emoji-art-converter/"
   }
 ]
