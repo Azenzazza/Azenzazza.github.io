@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LLMでロボットアームを動かす - Azenzazzaのサイト</title>
-  <meta name="description" content="LLMを使ったロボット制御や自律化が注目され、複数記事で実装例や応用が示されている。">
+  <title>Slack+GitHub+LLMでブログ題材探し - Azenzazzaのサイト</title>
+  <meta name="description" content="AI・LLMが開発現場で活用されるケースが増え、実務での導入方法や効果を知ることは技術者にとって価値が高い。">
   <style>
     body {
       margin: 0;
@@ -185,58 +185,51 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年10月16日</p>
-    <h1>LLMでロボットアームを動かす</h1>
+    <p class="news-date">2026年10月17日</p>
+    <h1>Slack+GitHub+LLMでブログ題材探し</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>大規模言語モデル（LLM）をロボットアームの制御に組み込む取り組みが加速している。最新の研究では、テレオペレーションデータを用いた自己教師あり学習や、マルチモーダルLLM「Gemini 4 Argon」の直接指示による把持動作が実証され、国内でも高性能日本語LLM「Sarashina3‑mini」の活用が始まっている。これらの事例は、LLMがロボットの自律化と人間指示の自然な橋渡しを可能にする道を切り開いている。</p>
+<p>社内の Slack、GitHub、会議メモといった一次情報を LLM に読ませ、執筆者と記事題材を自動でマッチングさせる仕組みが注目を集めている。実務での導入手順や効果を具体的に示すことで、開発現場における AI 活用のヒントを提供する。</p>
 
 <h2>背景</h2>
-<p>従来のロボット制御は、事前に設計されたプランや強化学習で獲得したポリシーに依存し、ユーザーからの自然言語指示を直接解釈できる仕組みは限られていた。2026年に入ってから、LLMの日本語理解力とマルチモーダル処理能力が飛躍的に向上し、ロボットへの適用が注目されている。特に、以下の要因が融合を後押ししている。</p>
-<ul>
-<li><strong>LLMの汎用性：</strong>テキストだけでなく、画像やシミュレーションデータを統合的に扱える点が、ロボットの視覚・触覚情報と相性が良い。</li>
-<li><strong>テレオペレーションデータの活用：</strong>人が遠隔操作したデモンストレーションを学習データとして利用し、ロボットが「言葉と動作」を結びつける手法が実証された。</li>
-<li><strong>日本語特化LLMの登場：</strong>SB Intuitionsが提供する「Sarashina3‑mini」は日本語の推敲や指示生成に強みがあり、国内ロボット開発者にとって言語の壁を低減する。</li>
-<li><strong>Agentic RLの研究進展：</strong>LLMを学習可能な方策として扱い、環境との相互作用を通じてタスク達成能力を強化学習で向上させる枠組みが提案され、ロボットへの応用が期待されている。</li>
-</ul>
-<p>これらの流れは、ロボットが単なる機械的作業者から、自然言語で指示を受け取り柔軟にタスクを切り替える「対話型エージェント」へと変貌させる可能性を示唆している。</p>
+<p>技術ブログは組織のナレッジ共有やブランディングに不可欠だが、執筆対象の選定はしばしば「誰が何を知っているか」という暗黙知に依存している。Zenn に掲載された事例では、社内の Slack と GitHub、会議メモから一次情報を抽出し、執筆可能な人と題材を結びつけるプロセスを自動化した。これにより、記憶に頼った手作業が削減され、記事案の根拠が明示的になる。</p>
+<p>同時期に、ローカル LLM を活用したアプリ連携の検証や、ロボット制御への LLM 組み込みといった実装例が報告されており、LLM が単なる質問応答を超えて、開発フロー全体に浸透しつつあることが分かる。これらの動向は、AI が開発現場の「情報取得」から「意思決定支援」まで広範に利用できる可能性を示唆している。</p>
 
 <h2>詳細</h2>
-<h3>テレオペデータを用いたVLA学習とStrands Robotsへの実装</h3>
-<p>Zennに掲載された実装例では、Strands Robotsが提供するSO‑100ロボットアームのシミュレーション環境に対し、テレオペレーションで取得したデータをVLA（Vision‑Language‑Action）モデルの学習に利用した。従来の強化学習ベースのポリシーは「赤い球を掴む」単一タスクに限定され、指示文のバリエーションに対応できなかった。今回の手法では、エージェントが「赤い球を掴む」ボタンを押す権限を持つイメージで、自然言語指示とロボット動作を結びつけることができたとされる。</p>
+<h3>Slack・GitHub・会議メモを LLM に読ませる仕組み</h3>
+<p>対象となる情報は、Slack のチャンネル履歴、GitHub のプルリクエストやイシュー、会議メモといった構造化・半構造化データである。これらを一括で LLM に投入し、自然言語で「最近の技術的課題は何か」「誰がその課題に関与したか」などの質問を投げると、モデルは根拠付きで候補を提示する。</p>
+<p>実装上のポイントは、データ取得の自動化とプライバシー保護である。Zenn の事例では、社内 API を利用して定期的にデータを取得し、機密情報はマスクした上で LLM に渡すことで、情報漏洩リスクを低減している。</p>
 
-<h3>Gemini 4 Argonによる直接指示制御</h3>
-<p>同じく2026年10月13日に発表されたGoogleのマルチモーダルLLM「Gemini 4 Argon」でも、ロボットアーム制御が試みられた。Qiitaの記事によれば、Gemini 4 Argonは画像入力とテキスト指示を同時に処理し、アームの把持動作をリアルタイムで生成できた。これにより、LLMが単なる指示生成に留まらず、実際の制御信号の生成までを担う可能性が示された。</p>
+<h3>執筆者と題材のマッチング</h3>
+<p>LLM が出した候補は「候補リスト」だけであり、実際に執筆できるかどうかは別問題だ。そこで、各社員のスキルシートや過去の執筆実績を別途データベース化し、LLM の出力と照合するロジックを追加した。結果として、執筆者が自ら関与したコードや議論を元にした記事案が自動的に抽出され、承認フローへとスムーズに移行できる。</p>
 
-<h3>日本語特化LLM「Sarashina3‑mini」の活用</h3>
-<p>国内向けにリリースされた「Sarashina3‑mini」は、Zennの記事で日本語の推敲タスクに適用された事例が報告されている。日本語指示の自然さや文脈保持が高く評価されており、ロボットへの指示生成に利用すれば、英語ベースのLLMに比べて言語的なロスが低減されるとみられる。特に、国内産ロボットメーカーが日本語指示を直接受け付けるシステムを構築する際の基盤として有望である。</p>
+<h3>ローカル LLM とアプリ連携の実装例</h3>
+<p>同時期に報告された Strata を用いたローカル LLM の実装では、PC 上で完結する回答生成が可能となり、社内ネットワーク内でのデータ処理が実現された。API 経由で既存の開発ツールと連携し、応答時間や出力精度を測定した結果、ストリーミング API での遅延は数百ミリ秒程度に抑えられたことが示された。この手法は、Slack・GitHub データを外部に送信せずに処理できる点で、セキュリティ要件の高い組織に適合する。</p>
 
-<h3>Agentic RLによる自己強化学習的ロボットエージェント</h3>
-<p>Agentic RLは、LLMを「学習可能な方策」として扱い、環境との対話を通じてタスク達成能力を強化学習で向上させる枠組みとして紹介されている。Zennの記事では、Akinatorを用いたタスク設計と初期検証が行われ、LLMがツール利用方法を事後学習で獲得する手法が示された。この考え方をロボット制御に適用すれば、ロボットが新たな作業や道具の使い方を自律的に学習できる可能性がある。</p>
-
-<h3>LocalLLMによる社内運用とコスト検証</h3>
-<p>Claude Codeの代替としてLocalLLMを導入した検証結果は、GPUリソース1枚で複数ユーザーが同時に利用可能であり、費用面でのスケーラビリティが示された。ロボット制御においても、外部クラウドに依存せず社内サーバー上でLLMを走らせることで、データプライバシーやレイテンシの課題を緩和できると考えられる。</p>
+<h3>他領域への応用可能性</h3>
+<p>LLM をテレオペデータに適用し、ロボットアームの操作指示を自然言語で生成した事例（Strands Robots）や、日本語推敲に特化した国産モデル「sarashina3-mini」の活用例も報告されている。これらは、情報抽出だけでなく「生成」や「制御」への応用が広がっていることを示す。</p>
 
 <h2>影響・展望</h2>
-<p>LLMとロボットアームの融合は、製造・物流・医療など多様な産業での自律化を促進する。テレオペデータやマルチモーダルLLMを活用すれば、従来は高価なプログラミングや専門知識が必要だった作業も、自然言語指示だけで実行できるようになる可能性がある。また、日本語特化LLMの登場は、国内市場における導入ハードルを下げ、地方中小企業でも高度なロボット活用が広がるとみられる。</p>
-<p>今後は、Agentic RLによる自己学習ロボットエージェントと、LocalLLMを組み合わせたオンプレミス環境が主流になる可能性がある。これにより、データセキュリティを確保しつつ、リアルタイム性を保った高度なロボット制御が実現できるだろう。</p>
+<p>一次情報を LLM に読ませて自動的に記事案を生成する手法は、情報の可視化と執筆リソースの最適化を同時に実現する。社内ナレッジが散在する大規模組織では、同様のパイプラインを導入することで、技術情報の発信速度が向上し、外部への技術発信力が強化されるとみられる。</p>
+<p>今後は、ローカル LLM の性能向上とプライバシー保護機能の成熟に伴い、より多様なデータソース（例：チケットシステム、CI/CD ログ）への拡張が期待できる。また、生成された記事案の品質評価や、執筆者へのフィードバックループを自動化すれば、継続的なナレッジサイクルが構築できる可能性がある。</p>
 
 <h2>まとめ</h2>
-<p>LLMをロボットアーム制御に組み込む取り組みは、テレオペデータ学習、マルチモーダル指示生成、日本語特化モデル、Agentic RL、そしてローカル実装という五つの技術潮流が交差し、自然言語での柔軟なロボット操作を実現しつつある。これらの技術が成熟すれば、産業現場だけでなく日常生活におけるロボットの利用範囲が大幅に拡大することが期待される。</p>
+<p>Slack・GitHub・会議メモを LLM に読ませ、執筆者と題材を自動マッチングさせる仕組みは、一次情報の活用と執筆プロセスの効率化を同時に実現した。ローカル LLM の導入や他領域への応用例と合わせて、実務での AI 活用が加速する兆しが見えている。</p>
 
+<p>出典：</p>
 <ul>
-<li><a href="https://zenn.dev/aws_japan/articles/strands-robots-llm-teleop">フィジカルAI]LLM によるテレオペデータで VLA を学習して Strands Robots に組み込んでみた</a></li>
-<li><a href="https://zenn.dev/algoartis/articles/03ca12150ccbee">国産モデル sarashina3-mini は日本語の推敲で何を変えるのか？</a></li>
-<li><a href="https://zenn.dev/mkj/articles/8e1da67da67f98">Akinatorで始めるAgentic RL ー タスク設計と初期検証 ー</a></li>
-<li><a href="https://qiita.com/kentaro_kawamura/items/118144a5e0c707de12dd?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items">Gemini 4 Argonでロボットアームを動かしてみた</a></li>
-<li><a href="https://zenn.dev/solvio/articles/6d374a9224327a">【LocalLLM】Claude Codeの代わりになる？精度・同時人数・費用を検証</a></li>
+<li>Zenn: 社内の Slack と GitHub を LLM に読ませて技術ブログの題材を探す</li>
+<li>Zenn: Strata でできること：ローカル LLMの実行とアプリ連携</li>
+<li>Zenn: [フィジカルAI]LLM によるテレオペデータで VLA を学習して Strands Robots に組み込んでみた</li>
+<li>Zenn: 国産モデル sarashina3-mini は日本語の推敲で何を変えるのか？</li>
+<li>Qiita: AI時代、何をもってソフトウェアの品質を担保するのか</li>
 </ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/aws_japan/articles/strands-robots-llm-teleop" target="_blank" rel="noopener">[フィジカルAI]LLM によるテレオペデータで VLA を学習して Strands Robots に組み込んでみた</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/algoartis/articles/03ca12150ccbee" target="_blank" rel="noopener">国産モデル sarashina3-mini は日本語の推敲で何を変えるのか？</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/mkj/articles/8e1da67da67f98" target="_blank" rel="noopener">Akinatorで始めるAgentic RL ー タスク設計と初期検証  ー</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/kentaro_kawamura/items/118144a5e0c707de12dd?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">Gemini 4 Argonでロボットアームを動かしてみた</a><span class="src-name">(Qiita)</span></li><li><a href="https://zenn.dev/solvio/articles/6d374a9224327a" target="_blank" rel="noopener">【LocalLLM】Claude Codeの代わりになる？精度・同時人数・費用を検証</a><span class="src-name">(Zenn)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/salt2/articles/slack-github-llm-bb912760" target="_blank" rel="noopener">社内の Slack と GitHub を LLM に読ませて技術ブログの題材を探す：モデルに任せたこと、任せなかったこと</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/jtcc/articles/strata-local-llm-app-integration" target="_blank" rel="noopener">Strata でできること：ローカル LLMの実行とアプリ連携</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/aws_japan/articles/strands-robots-llm-teleop" target="_blank" rel="noopener">[フィジカルAI]LLM によるテレオペデータで VLA を学習して Strands Robots に組み込んでみた</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/algoartis/articles/03ca12150ccbee" target="_blank" rel="noopener">国産モデル sarashina3-mini は日本語の推敲で何を変えるのか？</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/acsuzuki/items/a1f4533a4d7c724c097f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI時代、何をもってソフトウェアの品質を担保するのか</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
