@@ -916,5 +916,14 @@
     "category": "画像",
     "created": "2026-10-16",
     "path": "tools/102-emoji-art-converter/"
+  },
+  {
+    "id": "103",
+    "slug": "audio-waveform",
+    "title": "音声波形ビューワ",
+    "description": "音声ファイルを可視化して波形を表示",
+    "category": "音声",
+    "created": "2026-10-17",
+    "path": "tools/103-audio-waveform/"
   }
 ]
