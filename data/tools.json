@@ -925,5 +925,14 @@
     "category": "音声",
     "created": "2026-10-17",
     "path": "tools/103-audio-waveform/"
+  },
+  {
+    "id": "104",
+    "slug": "random-sentence",
+    "title": "ランダム文章生成器",
+    "description": "簡単な語彙で文章を生成",
+    "category": "ランダム",
+    "created": "2026-10-17",
+    "path": "tools/104-random-sentence/"
   }
 ]
