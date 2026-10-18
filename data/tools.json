@@ -952,5 +952,14 @@
     "category": "音声",
     "created": "2026-10-18",
     "path": "tools/106-voice-to-text/"
+  },
+  {
+    "id": "107",
+    "slug": "reading-time",
+    "title": "読了時間計算ツール",
+    "description": "入力テキストの読了時間を算出します",
+    "category": "テキスト",
+    "created": "2026-10-18",
+    "path": "tools/107-reading-time/"
   }
 ]
