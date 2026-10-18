@@ -943,5 +943,14 @@
     "category": "テキスト",
     "created": "2026-10-18",
     "path": "tools/105-keyword-extractor/"
+  },
+  {
+    "id": "106",
+    "slug": "voice-to-text",
+    "title": "音声からテキストへ変換",
+    "description": "音声をリアルタイムで文字化します",
+    "category": "音声",
+    "created": "2026-10-18",
+    "path": "tools/106-voice-to-text/"
   }
 ]
