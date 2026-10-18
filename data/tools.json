@@ -934,5 +934,14 @@
     "category": "ランダム",
     "created": "2026-10-17",
     "path": "tools/104-random-sentence/"
+  },
+  {
+    "id": "105",
+    "slug": "keyword-extractor",
+    "title": "キーワード抽出ツール",
+    "description": "テキストから頻出キーワードを抽出します",
+    "category": "テキスト",
+    "created": "2026-10-18",
+    "path": "tools/105-keyword-extractor/"
   }
 ]
