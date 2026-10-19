@@ -961,5 +961,14 @@
     "category": "テキスト",
     "created": "2026-10-18",
     "path": "tools/107-reading-time/"
+  },
+  {
+    "id": "108",
+    "slug": "random-quote",
+    "title": "名言ランダム",
+    "description": "ランダムに名言を表示",
+    "category": "ランダム",
+    "created": "2026-10-19",
+    "path": "tools/108-random-quote/"
   }
 ]
