@@ -970,5 +970,14 @@
     "category": "ランダム",
     "created": "2026-10-19",
     "path": "tools/108-random-quote/"
+  },
+  {
+    "id": "109",
+    "slug": "word-length-histogram",
+    "title": "単語長統計",
+    "description": "単語長を棒グラフで可視化",
+    "category": "テキスト",
+    "created": "2026-10-19",
+    "path": "tools/109-word-length-histogram/"
   }
 ]
