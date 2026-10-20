@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Claude Codeのステップごとのレビューを既定から外した理由 - Azenzazzaのサイト</title>
-  <meta name="description" content="AIツールの導入で開発フローを最適化し、レビューの自動化や権限管理を見直すケースが増えている。これによりコーディングの生産性とセキュリティが同時に向上する。">
+  <title>AIを利用したレガシーコード改善 - Azenzazzaのサイト</title>
+  <meta name="description" content="AIコード生成・レビューツールがテストやCIを高速化し、レガシーコード改善まで可能で、開発者の生産性向上に直結する点が注目。">
   <style>
     body {
       margin: 0;
@@ -186,63 +186,58 @@
     </div>
 
     <p class="news-date">2026年10月20日</p>
-    <h1>Claude Codeのステップごとのレビューを既定から外した理由</h1>
+    <h1>AIを利用したレガシーコード改善</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>AI開発支援ツール「Claude Code」の運用で、実装ステップごとのレビューを既定から外し、セキュリティ関連工程だけに絞った事例が注目を集めている。レビューの自動化と権限管理の見直しにより、開発効率とコードの安全性が同時に向上する可能性が示された。</p>
+<p>AI コーディングツールが、テスト自動生成や CI の高速化だけでなく、テストが欠如したレガシーコードの改善まで担えることが実証された。Claude Code による CI 待ち時間の大幅短縮や、REA（Reverse Engineer Anything）を用いた逆解析の試み、さらに Codex がゲーム開発とチーム運営を同時に支援した事例が相次ぎ、開発者の生産性向上への期待が高まっている。</p>
 
 <h2>背景</h2>
-<p>Claude Code は、プロンプトベースでコード生成・テスト・デプロイまでを一括で行えるAIエージェントである。多くの開発者は「レビューは積むほど安全」という感覚から、実装の各ステップにサブエージェントを配置し、逐次的にコードを検証してきた。2023年8月に同ツールの構成比較実験を実施し、10月に設計書レビューを追加した結果、レビューが増えるほど欠陥検出数が上がるわけではないことが判明した。</p>
-<p>同時期に、個人利用者向けにClaude Code の権限設定を再検討した事例（macOS Golden Gate 27.0.1、Claude Code 2.1.296）でも、期待外の要求やプロンプトインジェクションといったリスクが顕在化していることが報告されている。これらの背景から、レビュー工程の最適化と権限管理の徹底が開発フロー全体の効率化とセキュリティ向上に不可欠と考えられる。</p>
+<p>近年、AI がコード生成・レビュー・テスト自動化といった開発工程に浸透しつつある。特に大規模言語モデル（LLM）をベースにした Claude Code や Codex は、自然言語で指示すれば実装やテストコードを即座に生成できる点が注目されている。一方で、長年メンテナンスされてきたレガシーコードはテストが無く、依存関係が古くなっているケースが多く、開発スピードを阻害する要因となっている。</p>
+<p>このような課題に対し、AI を活用した自動化・最適化の取り組みが企業内勉強会や個人プロジェクトで活発化している。2026 年 10 月の事例では、以下の三つの視点が共通している。</p>
+<ul>
+<li>AI エージェントに対し、具体的なゴール（テスト作成、CI 時間短縮、逆解析）を提示し、段階的にタスクを実行させる。</li>
+<li>AI の提案を人間がレビューし、必要に応じて手動で介入するハイブリッドなワークフローを採用。</li>
+<li>成果が数分単位の時間削減やコード品質向上といった具体的な指標で測定できる。</li>
+</ul>
+<p>これらの実践は、AI が単なるコード生成ツールに留まらず、レガシーシステムのリファクタリングや開発プロセス全体の最適化にまで適用可能であることを示唆している。</p>
 
 <h2>詳細</h2>
-<h3>ステップごとのレビューを外した経緯</h3>
-<p>筆者は、1ブランチ＝1プルリクエスト（PR）という単位を「タスク」と定義し、タスクごとに実装計画を分割してサブエージェントにレビューを委任していた。8月の構成比較実験では、各レビューが検出した欠陥数を集計し、10月に設計書レビューを加えた上で、レビュー対象を「セキュリティに関わるステップ」のみへ絞り込む方針へ転換した。</p>
-<p>この転換により、レビューに費やすトークン量と時間が削減される一方、重要な脆弱性は依然として捕捉できることが確認された。具体的な変更点は以下の通りである。</p>
-<ul>
-<li>コード生成・ユニットテスト段階の自動レビューを廃止</li>
-<li>認証・権限付与、外部API呼び出しなどセキュリティリスクが高い工程にのみサブエージェントを配置</li>
-<li>レビュー結果は欠陥数だけでなく、検出されたリスクカテゴリでも評価</li>
-</ul>
+<h3>REA（Reverse Engineer Anything）の試み</h3>
+<p>FLINTERS の河内氏は、社内勉強会で REA を取り上げた。REA はバイナリやアプリを AI エージェントに解析させるツールで、10 月に入ってから GitHub のスター数が急増している。実際の使用では、題材選定やコマンド引数の設定でつまずき、最終的に別のスキルへ切り替えたが、最も興味深かった点は「証拠付きで進める」設計思想だった。AI が出した解析結果に対し、根拠となる証拠（ログやコードスニペット）を同時に提示させることで、信頼性の高い逆解析が可能になるというアプローチである。</p>
 
-<h3>権限設定の見直しと防御範囲</h3>
-<p>個人利用者が行った権限設定の見直しでは、Claude Code の設定だけでどこまでリスクを抑制できるかを検証した。主なリスクとしては、① 秘匿情報の漏洩、② プロンプトインジェクションによる不正コード生成、③ 外部システムへの不正アクセス要求が挙げられる。</p>
-<p>対策として、以下の項目が設定された。</p>
-<ul>
-<li>AI からの出力をファイルシステムへ直接書き込ませないサンドボックス化</li>
-<li>機密情報を含むプロンプトは事前にマスクし、AI の応答で復元しない方針</li>
-<li>外部API キーや認証情報は環境変数で管理し、Claude Code のプロンプト内で露出しないように制御</li>
-</ul>
-<p>これにより、コンテナ化ほどの隔離は実現できないものの、個人端末でのライトな運用において実用的な防御層が構築された。</p>
+<h3>Claude Code による CI 待ち時間の短縮</h3>
+<p>e‑dash の iakito 氏は、Next.js（TypeScript）ベースのプロダクトで CI 待ち時間が最長で 18 分に達し、開発者のストレス要因となっていた。Claude Code を活用し、テストコードの自動生成とテストスイートの最適化を実施した結果、CI 待ち時間を 4 分台にまで削減できた。具体的には、テストケースの重複除去や不要な依存の削減、さらに AI が提案したキャッシュ戦略の導入が功を奏した。</p>
 
-<h3>コード保護とデザイン検証の実践例</h3>
-<p>AI 時代に配布する Python コードを守るための難読化実験（PKSHA Technology、PyCon JP 2026）では、コードの可読性と実行性能のトレードオフを評価し、難読化がセキュリティ向上に寄与する条件を提示した。Claude Code のレビュー削減と併せて、コード自体の保護手段を導入することで、外部へのコード流出リスクを二層で低減できる。</p>
-<p>また、Claude Code と Figma MCP を組み合わせたデザイン自動生成・検査の事例では、AI が生成した画面を数分で Figma に出力できるが、配置や情報設計の不備が残ることが指摘された。そこで、別の AI エージェントにデザインの品質チェックを委任する「デザインのグラフエンジニアリング」手法が提案され、レビュー工程の一部を AI に置き換える実用例として注目されている。</p>
+<h3>AI を利用したレガシーコード改善</h3>
+<p>naoyuki1212 氏は、テストがなく依存関係が古い Excel 差分比較ツールを対象に、Claude Code に三つのゴール（テスト作成、依存更新、リファクタリング）を指示した。作業期間は 2026/10/18‑19 の二日間で、AI がまずテストコードを生成し、次に古いライブラリのバージョンアップ案を提示、最後にコードの可読性向上のためのリファクタリングを実施した。全工程で「レガシーコード改善ガイド」に沿った手順が踏まれ、AI の提案は人間が最終的に承認する形で進められた。</p>
 
-<h3>AI 指示遵守の原則</h3>
-<p>2026年版の「AI との会話術」では、Claude・Gemini・Codex に対し指示を正確に守らせるための 6 つの原則が提示されている。これらは、レビュー工程の自動化や権限設定の最適化において、AI が期待通りの挙動を示すための基本的な指針となる。</p>
+<h3>Codex が生み出した小規模 AI 開発組織</h3>
+<p>Masato Iwasaki 氏は、Codex を用いてゲームを一つ作成した際、AI に役割を割り当ててスプリントを回す実験を行った。ゲーム開発というタスクを通じて、AI が「デザイン」「実装」「テスト」の各フェーズを担当し、プロジェクト管理まで行う小規模な AI 開発組織が自然に形成された。これにより、AI が単なるコード生成に留まらず、プロジェクト全体のフローを支援できる可能性が示された。</p>
+
+<h3>AI 時代の開発プロセスとチームのあり方</h3>
+<p>Tabata 氏は、Claude Code や Codex がツール開発や PoC 開発、さらには Google Apps Script を用いた業務改善まで幅広く活用されている現状を報告している。AI がコード生成だけでなく、要件定義やテスト設計、デプロイ自動化にまで関与することで、従来の開発プロセスが大幅に簡素化され、チーム構成や役割分担にも変化が生じている。</p>
 
 <h2>影響・展望</h2>
-<p>ステップごとのレビューを削減し、セキュリティ工程に集中させた運用は、開発サイクルの短縮とトークンコストの削減を同時に実現できる可能性がある。権限設定の見直しやコード難読化、デザイン自動検査といった補完的手法と組み合わせることで、AI 主導の開発フロー全体の安全性が向上する。</p>
-<p>今後は、企業レベルでのコンテナ化やゼロトラスト環境と組み合わせた「AI‑first」開発プロセスが標準化される見込みである。特に、AI が生成したコードやデザインの品質保証を自動化するフレームワークが成熟すれば、レビュー負荷のさらなる軽減と、セキュリティリスクのリアルタイム検出が実現するだろう。</p>
+<p>これらの事例が示すように、AI コーディングツールは「コードを書くだけ」の機能を超えて、テスト自動生成、CI の高速化、レガシーコードのリファクタリング、さらにはプロジェクトマネジメントまでを支援できる。開発者は AI の提案を「証拠付き」で検証し、最終的な判断を下すハイブリッドなフローを確立すれば、品質を保ちつつ開発速度を劇的に向上させられる可能性がある。</p>
+<p>今後は、AI が生成したコードやテストの信頼性評価指標の標準化、AI エージェント間の協調（例：REA と Claude Code の連携）といった技術的課題が残るものの、AI 主導の開発プロセスが主流になる兆しが見えている。特にレガシーシステムの保守・改修においては、テストが無いコードを AI が自動でテスト化し、段階的にモダナイズできる点が、企業の技術負債削減に直結すると期待される。</p>
 
 <h2>まとめ</h2>
-<p>Claude Code のレビュー工程をセキュリティステップに絞り込んだ実践は、開発効率と安全性の両立を示す好例である。権限設定の最適化やコード難読化、AI‑駆動デザイン検査といった技術と合わせることで、AI 活用時代に求められる開発フローの最適化が具体化しつつある。</p>
+<p>AI コーディングツールは、CI 待ち時間の短縮やレガシーコードのテスト化・リファクタリングといった具体的な効果を示している。REA の証拠提示設計や Claude Code のハイブリッド作業フローは、開発者が AI の提案を安全に活用できる指針となり得る。これらの取り組みが広がることで、開発効率化と技術負債削減が同時に実現し、ソフトウェア開発の新たなパラダイムが形成されつつある。</p>
 
-<h3>参考資料</h3>
+<p>出典</p>
 <ul>
-<li>https://zenn.dev/ara_jlu/articles/per-task-review-dropped</li>
-<li>https://zenn.dev/takyshu98/articles/915702cf8c84f3</li>
-<li>https://zenn.dev/pksha/articles/0f9c11d1daea2e</li>
-<li>https://qiita.com/vivi-koh/items/fc957950ba9fd21c1d1b</li>
-<li>https://qiita.com/songchong/items/351a939e2e1b673c2929</li>
+<li>AI にリバースエンジニアリングさせる REA を触って、持ち帰ったのは「証拠付きで進める」考え方でした（Zenn）</li>
+<li>Claude Code で CI 待ち時間を 18 分から 4 分台に短縮する【GitHub Actions】（Zenn）</li>
+<li>AIを利用したレガシーコード改善（Zenn）</li>
+<li>Codexでゲームを作っていたら、小さなAI開発組織を回す実験になった（Qiita）</li>
+<li>AI時代の開発プロセスとチームのあり方を考える（Qiita）</li>
 </ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/ara_jlu/articles/per-task-review-dropped" target="_blank" rel="noopener">Claude Codeのステップごとのレビューを既定から外した理由</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/takyshu98/articles/915702cf8c84f3" target="_blank" rel="noopener">個人で使うClaude Codeの権限設定についてざっくり見直してみた</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/pksha/articles/0f9c11d1daea2e" target="_blank" rel="noopener">AI時代、配布するPythonコードをどう守るか: 難読化の実験と判断軸</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/vivi-koh/items/fc957950ba9fd21c1d1b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">Claude Code × Figma MCP で作ったデザインを別のAIに検査させる — デザインのグラフエンジニアリング</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/songchong/items/351a939e2e1b673c2929?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">今日から使える AI との会話術 — Claude・Gemini・Codex に指示を守らせる 6 つの原則【2026年版】</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/flinters_blog/articles/3b377ce568d676" target="_blank" rel="noopener">AI にリバースエンジニアリングさせる REA を触って、持ち帰ったのは「証拠付きで進める」考え方でした</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/edash_tech_blog/articles/5b90aa33bd8d49" target="_blank" rel="noopener">Claude Code で CI 待ち時間を 18 分から 4 分台に短縮する【GitHub Actions】</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/naoyuki1212/articles/20261019-legacy-code-with-ai" target="_blank" rel="noopener">AIを利用したレガシーコード改善</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/Masato_Iwasaki/items/7e5241176f3eead2a2f5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">Codexでゲームを作っていたら、小さなAI開発組織を回す実験になった</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/kizuku_tabata/items/6d5b58ad0cb832d2a4c5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI時代の開発プロセスとチームのあり方を考える</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
