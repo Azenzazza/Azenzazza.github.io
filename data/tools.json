@@ -988,5 +988,14 @@
     "category": "音声",
     "created": "2026-10-20",
     "path": "tools/110-text-to-melody/"
+  },
+  {
+    "id": "111",
+    "slug": "clipboard-history",
+    "title": "クリップボード履歴管理",
+    "description": "コピーしたテキストを一覧で管理",
+    "category": "文字列",
+    "created": "2026-10-20",
+    "path": "tools/111-clipboard-history/"
   }
 ]
