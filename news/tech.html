@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIを利用したレガシーコード改善 - Azenzazzaのサイト</title>
-  <meta name="description" content="AIコード生成・レビューツールがテストやCIを高速化し、レガシーコード改善まで可能で、開発者の生産性向上に直結する点が注目。">
+  <title>Amazon Bedrock GuardrailsでAI安全性検証 - Azenzazzaのサイト</title>
+  <meta name="description" content="近年AI開発ツールが急速に普及し、生成AIの誤用や有害出力が懸念される中、Guardrailsや安全設計の重要性が急上昇。複数記事がAI安全性に焦点を当てているため、読者にとって時宜を得たテーマと判断した。">
   <style>
     body {
       margin: 0;
@@ -185,59 +185,62 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年10月20日</p>
-    <h1>AIを利用したレガシーコード改善</h1>
+    <p class="news-date">2026年10月21日</p>
+    <h1>Amazon Bedrock GuardrailsでAI安全性検証</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>AI コーディングツールが、テスト自動生成や CI の高速化だけでなく、テストが欠如したレガシーコードの改善まで担えることが実証された。Claude Code による CI 待ち時間の大幅短縮や、REA（Reverse Engineer Anything）を用いた逆解析の試み、さらに Codex がゲーム開発とチーム運営を同時に支援した事例が相次ぎ、開発者の生産性向上への期待が高まっている。</p>
+<p>生成AIの急速な普及に伴い、入力・出力の有害性が問題視されている。Amazonが提供する <strong>Bedrock Guardrails</strong> は、モデルに届く前の入力と生成後の出力を自動的に検査し、危険と判定された情報をブロックする安全機構だ。本稿では、同サービスの仕組みと実装例、そしてAI開発全体における「ガードレール」概念の重要性を整理する。</p>
 
 <h2>背景</h2>
-<p>近年、AI がコード生成・レビュー・テスト自動化といった開発工程に浸透しつつある。特に大規模言語モデル（LLM）をベースにした Claude Code や Codex は、自然言語で指示すれば実装やテストコードを即座に生成できる点が注目されている。一方で、長年メンテナンスされてきたレガシーコードはテストが無く、依存関係が古くなっているケースが多く、開発スピードを阻害する要因となっている。</p>
-<p>このような課題に対し、AI を活用した自動化・最適化の取り組みが企業内勉強会や個人プロジェクトで活発化している。2026 年 10 月の事例では、以下の三つの視点が共通している。</p>
-<ul>
-<li>AI エージェントに対し、具体的なゴール（テスト作成、CI 時間短縮、逆解析）を提示し、段階的にタスクを実行させる。</li>
-<li>AI の提案を人間がレビューし、必要に応じて手動で介入するハイブリッドなワークフローを採用。</li>
-<li>成果が数分単位の時間削減やコード品質向上といった具体的な指標で測定できる。</li>
-</ul>
-<p>これらの実践は、AI が単なるコード生成ツールに留まらず、レガシーシステムのリファクタリングや開発プロセス全体の最適化にまで適用可能であることを示唆している。</p>
+<p>近年、Claude、Gemini、Codex といった大規模言語モデル（LLM）を活用した開発ツールが増加し、コード自動生成や業務支援に広く利用されている。一方で、AI が指示を途中で無視したり、意図しない有害出力を行うケースが報告され、開発者は「指示を守らせる」ための原則や安全設計を模索している（<a href="https://qiita.com/songchong/items/351a939e2e1b673c2929">Qiita: AIとの会話術 2026年版</a>）。さらに、AI を開発プロセスに組み込む際のチーム体制やレビュー体制の整備も議論されており（<a href="https://qiita.com/kizuku_tabata/items/6d5b58ad0cb832d2a4c5">Qiita: AI時代の開発プロセス</a>）、安全性を担保する仕組みの需要が高まっている。</p>
+<p>このような流れの中で、Amazonは <strong>Bedrock Guardrails</strong> を発表。Guardrails は「Classic」と「Standard」の二つの Tier に分かれ、判定ロジックやカスタマイズ性が異なる点が特徴だ（<a href="https://zenn.dev/aws_japan/articles/bedrock-guardrails-japanese-tier">Zenn: Bedrock Guardrails を AnswerCarefully で試す</a>）。入力段階でのブロックと、出力段階でのブロックを明確に区別し、利用者へ危害情報が届く前に遮断できる仕組みは、従来の単一フィルタリングに比べて多層的な防御を提供する。</p>
 
 <h2>詳細</h2>
-<h3>REA（Reverse Engineer Anything）の試み</h3>
-<p>FLINTERS の河内氏は、社内勉強会で REA を取り上げた。REA はバイナリやアプリを AI エージェントに解析させるツールで、10 月に入ってから GitHub のスター数が急増している。実際の使用では、題材選定やコマンド引数の設定でつまずき、最終的に別のスキルへ切り替えたが、最も興味深かった点は「証拠付きで進める」設計思想だった。AI が出した解析結果に対し、根拠となる証拠（ログやコードスニペット）を同時に提示させることで、信頼性の高い逆解析が可能になるというアプローチである。</p>
-
-<h3>Claude Code による CI 待ち時間の短縮</h3>
-<p>e‑dash の iakito 氏は、Next.js（TypeScript）ベースのプロダクトで CI 待ち時間が最長で 18 分に達し、開発者のストレス要因となっていた。Claude Code を活用し、テストコードの自動生成とテストスイートの最適化を実施した結果、CI 待ち時間を 4 分台にまで削減できた。具体的には、テストケースの重複除去や不要な依存の削減、さらに AI が提案したキャッシュ戦略の導入が功を奏した。</p>
-
-<h3>AI を利用したレガシーコード改善</h3>
-<p>naoyuki1212 氏は、テストがなく依存関係が古い Excel 差分比較ツールを対象に、Claude Code に三つのゴール（テスト作成、依存更新、リファクタリング）を指示した。作業期間は 2026/10/18‑19 の二日間で、AI がまずテストコードを生成し、次に古いライブラリのバージョンアップ案を提示、最後にコードの可読性向上のためのリファクタリングを実施した。全工程で「レガシーコード改善ガイド」に沿った手順が踏まれ、AI の提案は人間が最終的に承認する形で進められた。</p>
-
-<h3>Codex が生み出した小規模 AI 開発組織</h3>
-<p>Masato Iwasaki 氏は、Codex を用いてゲームを一つ作成した際、AI に役割を割り当ててスプリントを回す実験を行った。ゲーム開発というタスクを通じて、AI が「デザイン」「実装」「テスト」の各フェーズを担当し、プロジェクト管理まで行う小規模な AI 開発組織が自然に形成された。これにより、AI が単なるコード生成に留まらず、プロジェクト全体のフローを支援できる可能性が示された。</p>
-
-<h3>AI 時代の開発プロセスとチームのあり方</h3>
-<p>Tabata 氏は、Claude Code や Codex がツール開発や PoC 開発、さらには Google Apps Script を用いた業務改善まで幅広く活用されている現状を報告している。AI がコード生成だけでなく、要件定義やテスト設計、デプロイ自動化にまで関与することで、従来の開発プロセスが大幅に簡素化され、チーム構成や役割分担にも変化が生じている。</p>
+<p>Guardrails のフローは次のようになる。</p>
+<ul>
+<li>ユーザーが質問やプロンプトを送信</li>
+<li>Guardrail が <strong>入力判定</strong> を実施し、有害性が検出された場合は「ブロック」し、モデルへ渡さない</li>
+<li>判定を通過した入力は Bedrock の生成モデルへ送られる</li>
+<li>モデルが生成したテキストは Guardrail の <strong>出力判定</strong> に再びかけられ、問題があれば同様にブロック</li>
+<li>最終的に安全と判断された回答だけが利用者に返却される</li>
+</ul>
+<p>この過程で Guardrail が「ブロック」した場合と、モデル自体が「拒否」した場合を区別している点が注目される。たとえば、入力が有害と判定されたときは Guardrail が直接遮断し、モデルは処理に入らない。一方、モデルが出力段階で「回答できません」と自ら拒否するケースもある。</p>
+<p>Tier の違いは次の通りだ。</p>
+<ul>
+<li><strong>Classic</strong>：比較的シンプルなルールベースの判定ロジック。導入コストが低く、基本的な有害語句フィルタに適している。</li>
+<li><strong>Standard</strong>：機械学習ベースの高度な判定エンジンを搭載し、文脈理解や微妙なニュアンスの判別が可能。カスタムポリシーの設定や日本語特有の表現にも柔軟に対応できる。</li>
+</ul>
+<p>実際に Zenn のハンドオンでは、Standard Tier を利用し「AnswerCarefully」プロンプトで安全性を検証した結果、入力・出力の双方で有害と判定されたケースが正しくブロックされたことが確認されている。</p>
+<p>Guardrails の導入は、AI 開発における「指示遵守」の課題とも相通じる。Qiita の記事で提示された「指示を守らせる 6 つの原則」では、プロンプト設計やトークン管理が重要とされるが、Guardrails はそれらの上位レイヤーとして、システム全体で有害出力を排除する役割を果たす。</p>
 
 <h2>影響・展望</h2>
-<p>これらの事例が示すように、AI コーディングツールは「コードを書くだけ」の機能を超えて、テスト自動生成、CI の高速化、レガシーコードのリファクタリング、さらにはプロジェクトマネジメントまでを支援できる。開発者は AI の提案を「証拠付き」で検証し、最終的な判断を下すハイブリッドなフローを確立すれば、品質を保ちつつ開発速度を劇的に向上させられる可能性がある。</p>
-<p>今後は、AI が生成したコードやテストの信頼性評価指標の標準化、AI エージェント間の協調（例：REA と Claude Code の連携）といった技術的課題が残るものの、AI 主導の開発プロセスが主流になる兆しが見えている。特にレガシーシステムの保守・改修においては、テストが無いコードを AI が自動でテスト化し、段階的にモダナイズできる点が、企業の技術負債削減に直結すると期待される。</p>
+<p>Guardrails の普及は、以下のような影響が予想される。</p>
+<ul>
+<li><strong>開発プロセスの安全化</strong>：コード生成やドキュメント自動化にAIを組み込む際、事前に有害出力を除去できるため、レビュー工数が削減される。</li>
+<li><strong>企業リスクの低減</strong>：有害情報が外部に漏れるリスクが低減し、コンプライアンス違反やブランドイメージの毀損を防げる。</li>
+<li><strong>ツールエコシステムの成熟</strong>：Claude や Gemini など他社モデルでも同様のガードレール機能が求められ、業界全体で安全設計の標準化が進む可能性がある。</li>
+<li><strong>ユーザー体験の変化</strong>：有害な質問に対しては即座にブロックされるため、利用者は「回答が得られない」ことに慣れる必要がある。これは「拒否」応答と混同しないよう、UI/UX の工夫が求められる。</li>
+</ul>
+<p>今後、Guardrails のカスタマイズ性が向上すれば、業界固有の規制や社内ポリシーに合わせた細かな制御が可能になるとみられる。また、AI が自ら「安全でない」出力を生成しないように学習させる手法（例：安全モードやツール呼び出しの最適化）と併用すれば、トークン消費の削減と安全性の両立が期待できる。</p>
 
 <h2>まとめ</h2>
-<p>AI コーディングツールは、CI 待ち時間の短縮やレガシーコードのテスト化・リファクタリングといった具体的な効果を示している。REA の証拠提示設計や Claude Code のハイブリッド作業フローは、開発者が AI の提案を安全に活用できる指針となり得る。これらの取り組みが広がることで、開発効率化と技術負債削減が同時に実現し、ソフトウェア開発の新たなパラダイムが形成されつつある。</p>
+<p>Amazon Bedrock Guardrails は、入力と出力の二段階で有害性を検査し、ブロックと拒否を明確に分けることで、生成AI の安全性を実装レベルで担保する新たなツールだ。AI 開発が加速する中で、指示遵守やトークン管理といった既存の課題に加え、ガードレールによる多層防御が不可欠になると考えられる。今後はカスタマイズ性の向上と、他社モデルへの適用拡大が期待される。</p>
 
-<p>出典</p>
-<ul>
-<li>AI にリバースエンジニアリングさせる REA を触って、持ち帰ったのは「証拠付きで進める」考え方でした（Zenn）</li>
-<li>Claude Code で CI 待ち時間を 18 分から 4 分台に短縮する【GitHub Actions】（Zenn）</li>
-<li>AIを利用したレガシーコード改善（Zenn）</li>
-<li>Codexでゲームを作っていたら、小さなAI開発組織を回す実験になった（Qiita）</li>
-<li>AI時代の開発プロセスとチームのあり方を考える（Qiita）</li>
-</ul>
+出典  
+Zenn: Amazon Bedrock Guardrails を AnswerCarefully で試してみた  
+https://zenn.dev/aws_japan/articles/bedrock-guardrails-japanese-tier  
+
+Qiita: 今日から使える AI との会話術 — Claude・Gemini・Codex に指示を守らせる 6 つの原則【2026年版】  
+https://qiita.com/songchong/items/351a939e2e1b673c2929  
+
+Qiita: AI時代の開発プロセスとチームのあり方を考える  
+https://qiita.com/kizuku_tabata/items/6d5b58ad0cb832d2a4c5
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/flinters_blog/articles/3b377ce568d676" target="_blank" rel="noopener">AI にリバースエンジニアリングさせる REA を触って、持ち帰ったのは「証拠付きで進める」考え方でした</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/edash_tech_blog/articles/5b90aa33bd8d49" target="_blank" rel="noopener">Claude Code で CI 待ち時間を 18 分から 4 分台に短縮する【GitHub Actions】</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/naoyuki1212/articles/20261019-legacy-code-with-ai" target="_blank" rel="noopener">AIを利用したレガシーコード改善</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/Masato_Iwasaki/items/7e5241176f3eead2a2f5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">Codexでゲームを作っていたら、小さなAI開発組織を回す実験になった</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/kizuku_tabata/items/6d5b58ad0cb832d2a4c5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI時代の開発プロセスとチームのあり方を考える</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/aws_japan/articles/bedrock-guardrails-japanese-tier" target="_blank" rel="noopener">Amazon Bedrock Guardrails を AnswerCarefully で試してみた</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/songchong/items/351a939e2e1b673c2929?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">今日から使える AI との会話術 — Claude・Gemini・Codex に指示を守らせる 6 つの原則【2026年版】</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/kizuku_tabata/items/6d5b58ad0cb832d2a4c5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI時代の開発プロセスとチームのあり方を考える</a><span class="src-name">(Qiita)</span></li><li><a href="https://zenn.dev/yosiki/articles/claude-p-cron-token-diet" target="_blank" rel="noopener">cronのclaude -pが"ok"だけで4万トークン——--safe-modeと--tools ""で98%削減</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/flinters_blog/articles/3b377ce568d676" target="_blank" rel="noopener">AI にリバースエンジニアリングさせる REA を触って、持ち帰ったのは「証拠付きで進める」考え方でした</a><span class="src-name">(Zenn)</span></li></ul>
     </section>
   </main>
 
