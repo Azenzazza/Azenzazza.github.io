@@ -1006,5 +1006,14 @@
     "category": "テキスト",
     "created": "2026-10-21",
     "path": "tools/112-text-summarizer/"
+  },
+  {
+    "id": "113",
+    "slug": "regex-highlighter",
+    "title": "正規表現ハイライター",
+    "description": "テキスト中の正規表現に一致する部分をハイライト表示",
+    "category": "テキスト",
+    "created": "2026-10-21",
+    "path": "tools/113-regex-highlighter/"
   }
 ]
