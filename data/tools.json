@@ -997,5 +997,14 @@
     "category": "文字列",
     "created": "2026-10-20",
     "path": "tools/111-clipboard-history/"
+  },
+  {
+    "id": "112",
+    "slug": "text-summarizer",
+    "title": "テキスト要約ツール",
+    "description": "入力テキストを簡潔に要約します",
+    "category": "テキスト",
+    "created": "2026-10-21",
+    "path": "tools/112-text-summarizer/"
   }
 ]
