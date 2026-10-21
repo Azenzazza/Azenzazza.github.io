@@ -1015,5 +1015,14 @@
     "category": "テキスト",
     "created": "2026-10-21",
     "path": "tools/113-regex-highlighter/"
+  },
+  {
+    "id": "114",
+    "slug": "json-formatter",
+    "title": "JSON整形ツール",
+    "description": "JSONを見やすく整形します",
+    "category": "変換",
+    "created": "2026-10-21",
+    "path": "tools/114-json-formatter/"
   }
 ]
