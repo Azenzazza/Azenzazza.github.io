@@ -1024,5 +1024,14 @@
     "category": "変換",
     "created": "2026-10-21",
     "path": "tools/114-json-formatter/"
+  },
+  {
+    "id": "115",
+    "slug": "duplicate-word-detector",
+    "title": "重複単語検出ツール",
+    "description": "文章中の重複単語をハイライト表示",
+    "category": "テキスト",
+    "created": "2026-10-22",
+    "path": "tools/115-duplicate-word-detector/"
   }
 ]
