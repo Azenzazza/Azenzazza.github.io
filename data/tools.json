@@ -1042,5 +1042,14 @@
     "category": "色",
     "created": "2026-10-22",
     "path": "tools/116-css-gradient-generator/"
+  },
+  {
+    "id": "117",
+    "slug": "html-tag-tree",
+    "title": "HTMLタグ階層ビュー",
+    "description": "入力HTMLのタグ構造を階層表示",
+    "category": "テキスト",
+    "created": "2026-10-22",
+    "path": "tools/117-html-tag-tree/"
   }
 ]
