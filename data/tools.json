@@ -1033,5 +1033,14 @@
     "category": "テキスト",
     "created": "2026-10-22",
     "path": "tools/115-duplicate-word-detector/"
+  },
+  {
+    "id": "116",
+    "slug": "css-gradient-generator",
+    "title": "CSSグラデーション生成器",
+    "description": "2色で簡単にグラデーションCSSを生成",
+    "category": "色",
+    "created": "2026-10-22",
+    "path": "tools/116-css-gradient-generator/"
   }
 ]
