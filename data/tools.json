@@ -1051,5 +1051,14 @@
     "category": "テキスト",
     "created": "2026-10-22",
     "path": "tools/117-html-tag-tree/"
+  },
+  {
+    "id": "118",
+    "slug": "audio-volume-adjuster",
+    "title": "音声音量調整ツール",
+    "description": "音声ファイルの音量を調整できるツール",
+    "category": "音声",
+    "created": "2026-10-23",
+    "path": "tools/118-audio-volume-adjuster/"
   }
 ]
