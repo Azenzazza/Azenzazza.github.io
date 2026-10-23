@@ -1060,5 +1060,14 @@
     "category": "音声",
     "created": "2026-10-23",
     "path": "tools/118-audio-volume-adjuster/"
+  },
+  {
+    "id": "119",
+    "slug": "color-blindness-simulator",
+    "title": "色覚シミュレータ",
+    "description": "色覚障害者向け画像シミュレーション",
+    "category": "色",
+    "created": "2026-10-23",
+    "path": "tools/119-color-blindness-simulator/"
   }
 ]
