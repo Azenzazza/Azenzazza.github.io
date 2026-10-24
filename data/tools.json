@@ -1069,5 +1069,14 @@
     "category": "色",
     "created": "2026-10-23",
     "path": "tools/119-color-blindness-simulator/"
+  },
+  {
+    "id": "120",
+    "slug": "ascii-art-to-image",
+    "title": "ASCIIアート画像化",
+    "description": "ASCIIアートを画像に変換",
+    "category": "画像",
+    "created": "2026-10-24",
+    "path": "tools/120-ascii-art-to-image/"
   }
 ]
