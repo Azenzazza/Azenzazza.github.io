@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Node.js 2026-10セキュリティリリースで修正された10件の脆弱性 - Azenzazzaのサイト</title>
-  <meta name="description" content="Node.jsはサーバーサイドで広く使われており、10件の高リスク脆弱性が同時に修正されたため、開発者にとって即時の対応が必要。複数記事で同一テーマが報じられ、注目度が高い。">
+  <title>PHP2Shell脆弱性と緊急対策 - Azenzazzaのサイト</title>
+  <meta name="description" content="2026年10月に発覚したPHP2Shell脆弱性は多くのサーバに影響を与え、即時対策が求められる。複数の記事で実装例や対策手順を共有し、技術者が迅速に防御できるようにまとめる価値が高い。">
   <style>
     body {
       margin: 0;
@@ -185,58 +185,54 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年10月23日</p>
-    <h1>Node.js 2026-10セキュリティリリースで修正された10件の脆弱性</h1>
+    <p class="news-date">2026年10月24日</p>
+    <h1>PHP2Shell脆弱性と緊急対策</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>2026年10月21日、Node.jsプロジェクトは10件の脆弱性を同時に修正したセキュリティリリースを公開しました。中でもBrotli デコーダの範囲外書き込み（CVE‑2026‑111497）やTLS 証明書のホスト名チェック回避といったHigh評価の脆弱性が4件含まれ、即時のアップデートが求められています。</p>
+<p>2026年10月21日に公表されたPHP2Shell脆弱性（CVE-2026-109618 / CVE-2026-109619）は、PHP 5.4以降のほぼ全バージョンに影響し、認証不要でリモートコード実行が可能になる深刻な問題です。CVSSv4.0スコアは9.2と最高クラスで、即時のパッチ適用やサーバ停止、IPフィルタリングといった緊急対策が求められています。本稿では、実際の攻撃例や対策手順を素材を元に整理し、技術者が迅速に防御できるようまとめます。</p>
 
 <h2>背景</h2>
-<p>Node.jsはサーバーサイドのJavaScript実行環境として、WebサービスからIoT、クラウドインフラまで幅広く採用されています。そのため、基盤に潜む脆弱性は直接的に多数のサービスの安全性に影響を及ぼす可能性があります。今回のリリースは、過去数か月で報告された脆弱性が蓄積した結果としてまとめられたもので、特に「範囲外書き込み」や「TLS 証明書検証回避」といった攻撃ベクトルはリモートコード実行（RCE）や中間者攻撃（MITM）につながる危険性が高く、開発者コミュニティの関心が集中しました。</p>
-<p>同日にPHPでも重大脆弱性が報告されたことから、サーバーサイド全体でのセキュリティ意識が再度高まっており、Node.js利用者にとっては「見逃しは許されない」状況です。Zenn の記事では「Claude Code 用チェックリスト」を提示し、実務での対応手順を具体化しています。一方、Qiita のガイドは初心者向けに安全なアップデート手順を解説しており、両者が相補的に機能することで、幅広い層への情報提供が実現されています。</p>
+<p>PHPは世界中のウェブサイトで広く利用されているサーバサイド言語であり、その普及度の高さから脆弱性が発覚すると瞬時に多数のサービスに波及します。今回のPHP2Shellは、PHPの内部関数呼び出しロジックに潜む入力検証不備を突くもので、攻撃者は特定のリクエストを送るだけで任意のシェルコードを実行できるとされています。公表直後、国内外のメディアやセキュリティベンダーが警告を出し、政府関係者も「ウェブサイト等を一時的に停止させることもリスク低減の有効策」とコメントしています（高市総理のX投稿参照）。このため、企業や個人事業者は「パッチ適用が困難な場合の代替策」や「即効性のある防御策」を急いで検討せざるを得ない状況となっています。</p>
 
 <h2>詳細</h2>
-<p>今回のセキュリティリリースで修正された10件の脆弱性は、Node.js 公式ブログ（<a href="https://nodejs.org/en/blog/vulnerability/october-2026-security-releases">Node.js Blog</a>）に一覧化されています。その中で特に注目すべきポイントを以下に整理します。</p>
+<p>以下では、複数のQiita投稿から得られた情報を統合し、PHP2Shellの仕組みと具体的な緊急対策を解説します。</p>
+
+<h3>脆弱性の概要と影響範囲</h3>
+<p>PHP2ShellはCVE-2026-109618とCVE-2026-109619に分類され、PHP 5.4以降の全バージョンに共通して存在します。攻撃者は認証なしでリモートコードを実行でき、サーバ上で任意のコマンドを走らせることが可能です。スコア9.2という評価は、機密性・完全性・可用性の三側面すべてに重大な影響を及ぼすことを示しています。</p>
+
+<h3>実際の攻撃例と被害状況</h3>
+<p>「PHP脆弱性php2shell対応、7.4本番を止めずに守った夜と実際の攻撃」の投稿では、攻撃が成功したケースとして、PHP 7.4を稼働させていたECサイトが不正なシェルコードで乗っ取られ、顧客情報が外部へ送信されたと報告されています。被害が拡大する前に、運用チームはログ解析と手動でのリクエストブロックにより被害拡大を防止しました。</p>
+
+<h3>緊急対策のチェックリスト</h3>
 <ul>
-<li><strong>CVE‑2026‑111497（Brotli デコーダの範囲外書き込み）</strong>：Brotli 圧縮データをデコードする際に、メモリ領域を書き換える可能性がある。攻撃者が細工したデータを送信すると、任意コードが実行される恐れがある。</li>
-<li><strong>TLS 証明書のホスト名チェック回避</strong>：TLS ハンドシェイク時に証明書のホスト名検証が正しく行われないバグが存在し、偽装サーバーへの接続が可能になる。</li>
-<li>その他の High 評価脆弱性は、<strong>イベントループの競合状態</strong>や、<strong>内部モジュールの権限昇格</strong>に関わるものが含まれ、いずれもリモートからの攻撃を想定したリスクが高い。</li>
+<li><strong>パッチ適用</strong>：公式リリースの8.2.35、8.3.36、8.4.27以降を速やかに導入する。</li>
+<li><strong>サーバ停止の検討</strong>：パッチ適用が遅れる場合は、サービスを一時的に停止しリスクを低減する（高市総理のコメント参照）。</li>
+<li><strong>IPフィルタリング</strong>：日本国内向けサイトでは、海外IPを全てブロックする設定を即時適用する。具体例は「PHP2Shell緊急対策：日本国内向けサイトで海外IPを全部弾く、即効性のあるIPフィルタ防御」に記載。</li>
+<li><strong>カスタムビルド</strong>：Amazon Linux 2023 の場合、公式パッケージが提供されるまで自前で修正版をビルドし、8.2系・8.3系・8.4系のいずれかに置き換える（「Amazon Linux 2023 の PHP を CVE-2026-109618 修正版へ先行ビルドする」参照）。</li>
+<li><strong>監視とログ分析</strong>：不審なリクエストパターンや異常なプロセス起動をリアルタイムで検知できるよう、WAFやIDSのルールを追加する。</li>
 </ul>
-<p>修正版として提供されたバージョンは、<strong>24.22.1</strong>、<strong>22.23.4</strong>、および 2 系列の最新パッチです。これらは LTS（Long‑Term Support）リリースに含まれるため、企業やプロジェクトでの採用が推奨されます。</p>
-<p>Zenn の記事では、アップデート前に実施すべき「Claude Code 用チェックリスト」が提示されています。主な項目は次の通りです。</p>
-<ul>
-<li>依存パッケージのバージョン確認とロックファイルの更新</li>
-<li>テストスイートの全ケース実行による回帰テスト</li>
-<li>ステージング環境での負荷テストと TLS 設定の再検証</li>
-<li>本番環境へのロールバック手順の事前確認</li>
-</ul>
-<p>Qiita のガイドは、初心者向けに「安全に適用する方法」を段階的に解説しています。具体的には、</p>
-<ul>
-<li>Node.js の公式サイトから該当バージョンのバイナリを取得</li>
-<li>npm/yarn でインストールされたグローバルモジュールを一度クリア</li>
-<li>CI/CD パイプラインに「セキュリティアップデート」ステージを追加し、失敗時は自動でロールバック</li>
-<li>アップデート後は <code>node -v</code> と <code>npm audit</code> でバージョンと残存脆弱性を再確認</li>
-</ul>
-<p>このように、Zenn と Qiita が提供するチェックリストと手順は、開発者が「何を確認すべきか」「どのように安全に導入すべきか」を明確に示す実践的な指針となっています。</p>
+
+<h3>実装例と注意点</h3>
+<p>IPフィルタリングの具体的な設定例として、Apacheの場合は<code>Require ip 127.0.0.1 ::1 203.0.113.0/24</code>、Nginxの場合は<code>allow 203.0.113.0/24; deny all;</code>と記述し、国内IPレンジだけを許可する形が推奨されています。また、Amazon Linux 2023でのビルド手順は、ソースコード取得→パッチ適用→<code>rpmbuild</code>でパッケージ化し、<code>yum localinstall</code>で置き換える流れです。ビルド時は依存関係のバージョン整合性に注意し、テスト環境で動作確認を行うことが重要です。</p>
 
 <h2>影響・展望</h2>
-<p>今回の修正により、Node.js を基盤とする Web アプリケーションやマイクロサービスは、RCE や MITM 攻撃に対する防御が強化されます。特に大規模トラフィックを処理するプラットフォームでは、TLS 証明書チェック回避の脆弱性が悪用された場合、顧客情報や認証情報が漏洩するリスクが顕在化するため、即時のパッチ適用が不可欠です。</p>
-<p>今後の見通しとしては、Node.js コミュニティが「セキュリティリリースの頻度を高め、脆弱性情報の公開タイミングを透明化」する方向性を示す可能性があります。また、Zenn のような開発者向け情報プラットフォームがチェックリストやベストプラクティスを継続的に提供することで、組織全体のセキュリティ成熟度が向上すると期待されます。</p>
+<p>PHP2Shellは、ECサイトやCMS、社内ポータルといった多種多様なウェブサービスに直接的なリスクをもたらします。短期的には、パッチ未適用サーバの急速な遮断やIPフィルタ導入が主流となり、運用コストが増大することが予想されます。長期的には、PHP自体のサプライチェーン強化や、脆弱性情報の早期共有体制の整備が求められ、政府や業界団体によるセキュリティ指針の策定が進む可能性があります。また、今回のように「PHPを使っているから危険」という偏見が広がるリスクも指摘されており、適切なリスク評価と技術的防御策の両立が重要です。</p>
 
 <h2>まとめ</h2>
-<p>Node.js 2026年10月のセキュリティリリースは、10件の脆弱性（うちHigh評価4件）を同時に修正し、Brotli デコーダや TLS 証明書検証に関わる重大リスクを解消しました。公式バージョン24.22.1、22.23.4 へのアップデートと、Zenn・Qiita が示すチェックリストを活用した安全な導入手順が、開発者にとって最優先課題となります。</p>
+<p>PHP2Shell（CVE-2026-109618 / CVE-2026-109619）は、PHP全バージョンに影響する深刻なリモートコード実行脆弱性です。公式パッチの速やかな適用、緊急時のサービス停止、海外IPのブロック、カスタムビルドといった多層的対策が推奨されます。技術者は本稿のチェックリストを活用し、被害拡大を防ぐとともに、今後の脆弱性対応体制の強化に備える必要があります。</p>
 
 <ul>
-<li>Node.js 2026年10月セキュリティリリース（公式ブログ）</li>
-<li>Zenn：Node.jsの2026年10月セキュリティリリースでやること（Claude Code用チェックリスト付き）</li>
-<li>Qiita：【緊急】Node.jsの重大脆弱性に対応するセキュリティアップデートを安全に適用する方法</li>
+<li>Qiita: PHP脆弱性php2shell対応、7.4本番を止めずに守った夜と実際の攻撃</li>
+<li>Qiita: 「PHPなんて使ってるやつが悪い」と言っている輩が一番危ない</li>
+<li>Qiita: PHP2Shell緊急対策：日本国内向けサイトで海外IPを全部弾く、即効性のあるIPフィルタ防御</li>
+<li>Qiita: Amazon Linux 2023 の PHP を CVE-2026-109618 修正版へ先行ビルドする</li>
 </ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/yoshinani_dev/articles/0e6513a56eb629" target="_blank" rel="noopener">Node.jsの2026年10月セキュリティリリースでやること（Claude Code用チェックリスト付き）</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/superdora-cloud/items/8cad27487cd0e67d088c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">【緊急】Node.jsの重大脆弱性に対応するセキュリティアップデートを安全に適用する方法</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://qiita.com/kenimo49/items/30f290bf0f4fff021fb3?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">PHP脆弱性php2shell対応、7.4本番を止めずに守った夜と実際の攻撃</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/kotowazaman/items/aab621d31a8501617eb4?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">「PHPなんて使ってるやつが悪い」と言っている輩が一番危ない</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/Hiro884/items/27a98c86ef17b70df7ed?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">PHP2Shell緊急対策：日本国内向けサイトで海外IPを全部弾く、即効性のあるIPフィルタ防御</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/amu-kuroneko/items/46f00fbe8b5bac009c1c?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">Amazon Linux 2023 の PHP を CVE-2026-109618 修正版へ先行ビルドする</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
