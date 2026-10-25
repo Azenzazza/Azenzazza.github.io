@@ -1087,5 +1087,14 @@
     "category": "変換",
     "created": "2026-10-24",
     "path": "tools/121-html-table-to-json/"
+  },
+  {
+    "id": "122",
+    "slug": "emoji-counter",
+    "title": "絵文字カウンタ",
+    "description": "テキスト内の絵文字を数えて表示",
+    "category": "テキスト",
+    "created": "2026-10-25",
+    "path": "tools/122-emoji-counter/"
   }
 ]
