@@ -1096,5 +1096,14 @@
     "category": "テキスト",
     "created": "2026-10-25",
     "path": "tools/122-emoji-counter/"
+  },
+  {
+    "id": "123",
+    "slug": "html-to-plain-text",
+    "title": "HTMLをプレーンテキストへ",
+    "description": "HTMLタグを除去してテキストだけに変換",
+    "category": "変換",
+    "created": "2026-10-25",
+    "path": "tools/123-html-to-plain-text/"
   }
 ]
