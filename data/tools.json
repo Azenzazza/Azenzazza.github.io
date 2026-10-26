@@ -1105,5 +1105,14 @@
     "category": "変換",
     "created": "2026-10-25",
     "path": "tools/123-html-to-plain-text/"
+  },
+  {
+    "id": "124",
+    "slug": "random-color-palette",
+    "title": "ランダム配色パレット生成",
+    "description": "ランダムで色調和パレットを生成",
+    "category": "色",
+    "created": "2026-10-26",
+    "path": "tools/124-random-color-palette/"
   }
 ]
