@@ -1123,5 +1123,14 @@
     "category": "画像",
     "created": "2026-10-26",
     "path": "tools/125-image-average-color/"
+  },
+  {
+    "id": "126",
+    "slug": "credit-card-validator",
+    "title": "クレジットカード番号検証ツール",
+    "description": "番号が有効かLuhnチェックで確認",
+    "category": "計算",
+    "created": "2026-10-26",
+    "path": "tools/126-credit-card-validator/"
   }
 ]
