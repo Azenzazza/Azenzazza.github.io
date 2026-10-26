@@ -1114,5 +1114,14 @@
     "category": "色",
     "created": "2026-10-26",
     "path": "tools/124-random-color-palette/"
+  },
+  {
+    "id": "125",
+    "slug": "image-average-color",
+    "title": "画像平均色表示",
+    "description": "画像の平均色をRGBとHEXで表示",
+    "category": "画像",
+    "created": "2026-10-26",
+    "path": "tools/125-image-average-color/"
   }
 ]
