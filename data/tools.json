@@ -1141,5 +1141,14 @@
     "category": "ゲーム",
     "created": "2026-10-27",
     "path": "tools/127-typing-game/"
+  },
+  {
+    "id": "128",
+    "slug": "emoji-picker",
+    "title": "絵文字ピッカー",
+    "description": "好きな絵文字を選んでコピーできるツール",
+    "category": "文字列",
+    "created": "2026-10-27",
+    "path": "tools/128-emoji-picker/"
   }
 ]
