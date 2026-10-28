@@ -1168,5 +1168,14 @@
     "category": "テキスト",
     "created": "2026-10-28",
     "path": "tools/130-pig-latin-converter/"
+  },
+  {
+    "id": "131",
+    "slug": "rle-encoder",
+    "title": "文字列圧縮ツール",
+    "description": "文字列をRLEで圧縮・解凍できる簡易ツール",
+    "category": "文字列",
+    "created": "2026-10-28",
+    "path": "tools/131-rle-encoder/"
   }
 ]
