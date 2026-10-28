@@ -1159,5 +1159,14 @@
     "category": "音声",
     "created": "2026-10-27",
     "path": "tools/129-morse-audio/"
+  },
+  {
+    "id": "130",
+    "slug": "pig-latin-converter",
+    "title": "ピグリ語変換ツール",
+    "description": "英単語をピグリ語に変換します",
+    "category": "テキスト",
+    "created": "2026-10-28",
+    "path": "tools/130-pig-latin-converter/"
   }
 ]
