@@ -1177,5 +1177,14 @@
     "category": "文字列",
     "created": "2026-10-28",
     "path": "tools/131-rle-encoder/"
+  },
+  {
+    "id": "132",
+    "slug": "base-converter",
+    "title": "数値ベース変換ツール",
+    "description": "10進数を2進・8進・16進に変換",
+    "category": "計算",
+    "created": "2026-10-28",
+    "path": "tools/132-base-converter/"
   }
 ]
