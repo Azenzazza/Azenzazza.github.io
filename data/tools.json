@@ -1195,5 +1195,14 @@
     "category": "テキスト",
     "created": "2026-10-29",
     "path": "tools/133-html-tag-counter/"
+  },
+  {
+    "id": "134",
+    "slug": "text-to-csv",
+    "title": "テキストをCSVへ変換",
+    "description": "複数行テキストをCSV形式に変換",
+    "category": "変換",
+    "created": "2026-10-29",
+    "path": "tools/134-text-to-csv/"
   }
 ]

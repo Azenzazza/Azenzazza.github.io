@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <link rel="icon" href="../../../logo.png" type="image/png">
+  <link rel="stylesheet" href="../../../main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>テキストをCSVへ変換 - Azenzazzaのサイト</title>
+  <meta name="description" content="複数行テキストをCSV形式に変換">
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background-color: #AFE48E;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      margin-right: 16px;
+    }
+
+    .site-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    nav.navbar {
+      margin-left: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    nav.navbar a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+
+    nav.navbar a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .lead {
+      line-height: 1.7;
+      color: #333;
+      margin-top: 0;
+      margin-bottom: 28px;
+    }
+
+    .tool-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 1rem;
+      font-family: inherit;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: #AFE48E;
+      box-shadow: 0 0 0 3px rgba(175,228,142,0.3);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 600;
+      background: #AFE48E;
+      color: #2a3d1a;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    button:hover {
+      background: #9dd97a;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      background: #fafafa;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      min-height: 40px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: #fff;
+    }
+
+    th, td {
+      border: 1px solid #e5e5e5;
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #eef7e6;
+      color: #4a7c2f;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 16px 32px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #777;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 12px 16px; }
+      .logo { width: 48px; height: 48px; margin-right: 12px; }
+      .site-title { font-size: 1.1rem; }
+      nav.navbar { margin-left: 0; }
+      nav.navbar a { margin: 0 8px; }
+      main { padding: 0 16px; margin: 24px auto; }
+      h1 { font-size: 1.5rem; }
+      .tool-card { padding: 18px; }
+    }
+  </style>
+  <style>
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 6px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      font-size: 0.9rem;
+      z-index: 1000;
+    }
+    #toast.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center;">
+      <img src="../../../logo.png" alt="サイトロゴ" class="logo">
+      <div class="site-title">Azenzazzaのサイト</div>
+    </div>
+
+    <nav class="navbar">
+      <a href="../../../">ホーム</a>
+      <a href="../../../project/project.html">プロジェクト</a>
+      <a href="../../../tools/tools.html">ツール</a>
+      <a href="../../../news/index.html">ニュース</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>テキストをCSVへ変換</h1>
+    <p class="lead">複数行テキストをCSV形式に変換</p>
+
+    <div class="tool-card">
+      <label>テキスト入力:<br><textarea id="inputText" rows="6" style="width:100%;"></textarea></label><br>
+      <label>区切り文字: <select id="delimiter"><option value=",">カンマ</option><option value="\t">タブ</option><option value=";">セミコロン</option></select></label><br>
+      <label><input type="checkbox" id="hasHeader" checked> ヘッダー行あり</label><br>
+      <button id="convertBtn">CSVに変換</button> <button id="copyBtn">コピー</button><br>
+    </div>
+
+    <div class="result" id="result"></div>
+    <div id="toast"></div>
+  </main>
+
+  <footer>
+    &copy; 2026 Azenzazza.
+  </footer>
+
+  <script>
+    const convertBtn = document.getElementById('convertBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const resultDiv = document.getElementById('result');
+    const toast = document.getElementById('toast');
+
+    const showToast = (msg) => {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    };
+
+    const escapeCsv = (value, delim) => {
+      let v = value;
+      if (v.includes('"')) v = v.replace(/"/g, '""');
+      const needsQuote = v.includes(delim) || v.includes('"') || v.includes('\r') || v.includes('\n');
+      if (needsQuote) v = `"${v}"`;
+      return v;
+    };
+
+    convertBtn.addEventListener('click', () => {
+      const text = document.getElementById('inputText').value;
+      let delim = document.getElementById('delimiter').value;
+      if (delim === '\\t') delim = '\t';
+      const hasHeader = document.getElementById('hasHeader').checked;
+
+      const lines = text.split(/\r?\n/).filter(l => l.length > 0);
+      if (!hasHeader && lines.length > 0) lines.shift();
+
+      const csvLines = lines.map(line => {
+        const fields = line.split(delim);
+        return fields.map(f => escapeCsv(f, delim)).join(delim);
+      });
+
+      resultDiv.textContent = csvLines.join('\r\n');
+    });
+
+    copyBtn.addEventListener('click', () => {
+      const resultText = resultDiv.textContent;
+      if (!resultText) {
+        showToast('コピーする内容がありません');
+        return;
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(resultText).then(() => {
+          showToast('コピーしました');
+        }).catch(() => {
+          showToast('コピーに失敗しました');
+        });
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = resultText;
+        textarea.style.position = 'fixed';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          const successful = document.execCommand('copy');
+          showToast(successful ? 'コピーしました' : 'コピーに失敗しました');
+        } catch {
+          showToast('コピーに失敗しました');
+        }
+        document.body.removeChild(textarea);
+      }
+    });
+  </script>
+</body>
+</html>
