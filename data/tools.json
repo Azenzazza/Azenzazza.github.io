@@ -1186,5 +1186,14 @@
     "category": "計算",
     "created": "2026-10-28",
     "path": "tools/132-base-converter/"
+  },
+  {
+    "id": "133",
+    "slug": "html-tag-counter",
+    "title": "HTMLタグカウンタ",
+    "description": "入力HTMLのタグ数を表示",
+    "category": "テキスト",
+    "created": "2026-10-29",
+    "path": "tools/133-html-tag-counter/"
   }
 ]
