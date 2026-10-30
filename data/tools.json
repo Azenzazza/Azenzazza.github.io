@@ -1213,5 +1213,14 @@
     "category": "文字列",
     "created": "2026-10-30",
     "path": "tools/135-file-name-sequence/"
+  },
+  {
+    "id": "136",
+    "slug": "word-length-histogram",
+    "title": "単語長分布図",
+    "description": "単語長の頻度を棒グラフで表示",
+    "category": "テキスト",
+    "created": "2026-10-30",
+    "path": "tools/136-word-length-histogram/"
   }
 ]
