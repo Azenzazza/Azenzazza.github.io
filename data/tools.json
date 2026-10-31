@@ -1240,5 +1240,14 @@
     "category": "テキスト",
     "created": "2026-10-31",
     "path": "tools/138-word-sort/"
+  },
+  {
+    "id": "139",
+    "slug": "image-gallery",
+    "title": "簡易画像ギャラリー",
+    "description": "複数画像をアップロードしてサムネイル表示",
+    "category": "画像",
+    "created": "2026-10-31",
+    "path": "tools/139-image-gallery/"
   }
 ]
