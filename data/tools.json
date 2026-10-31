@@ -1222,5 +1222,14 @@
     "category": "テキスト",
     "created": "2026-10-30",
     "path": "tools/136-word-length-histogram/"
+  },
+  {
+    "id": "137",
+    "slug": "string-length-count",
+    "title": "文字列長別カウントツール",
+    "description": "文字列の長さごとの出現数を表示",
+    "category": "文字列",
+    "created": "2026-10-31",
+    "path": "tools/137-string-length-count/"
   }
 ]
