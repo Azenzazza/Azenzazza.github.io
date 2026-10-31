@@ -1231,5 +1231,14 @@
     "category": "文字列",
     "created": "2026-10-31",
     "path": "tools/137-string-length-count/"
+  },
+  {
+    "id": "138",
+    "slug": "word-sort",
+    "title": "単語並べ替えツール",
+    "description": "単語をアルファベット順に並べ替えて表示",
+    "category": "テキスト",
+    "created": "2026-10-31",
+    "path": "tools/138-word-sort/"
   }
 ]
