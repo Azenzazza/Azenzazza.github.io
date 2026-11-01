@@ -1249,5 +1249,14 @@
     "category": "画像",
     "created": "2026-10-31",
     "path": "tools/139-image-gallery/"
+  },
+  {
+    "id": "140",
+    "slug": "duplicate-char-counter",
+    "title": "重複文字カウンタ",
+    "description": "文字列の重複文字をカウントし表示",
+    "category": "文字列",
+    "created": "2026-11-01",
+    "path": "tools/140-duplicate-char-counter/"
   }
 ]

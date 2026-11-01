@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://azenzazza.github.io/</loc>
-    <lastmod>2026-10-31</lastmod>
+    <lastmod>2026-11-01</lastmod>
   </url>
   <url>
     <loc>https://azenzazza.github.io/tools/tools.html</loc>
-    <lastmod>2026-10-31</lastmod>
+    <lastmod>2026-11-01</lastmod>
   </url>
   <url>
     <loc>https://azenzazza.github.io/tools/001-word-frequency-counter/</loc>
@@ -563,5 +563,9 @@
   <url>
     <loc>https://azenzazza.github.io/tools/139-image-gallery/</loc>
     <lastmod>2026-10-31</lastmod>
+  </url>
+  <url>
+    <loc>https://azenzazza.github.io/tools/140-duplicate-char-counter/</loc>
+    <lastmod>2026-11-01</lastmod>
   </url>
 </urlset>
