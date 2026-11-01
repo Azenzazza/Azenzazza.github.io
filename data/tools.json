@@ -1258,5 +1258,14 @@
     "category": "文字列",
     "created": "2026-11-01",
     "path": "tools/140-duplicate-char-counter/"
+  },
+  {
+    "id": "141",
+    "slug": "file-info",
+    "title": "ファイル情報表示ツール",
+    "description": "ファイルのメタ情報を確認できるツール",
+    "category": "ファイル",
+    "created": "2026-11-01",
+    "path": "tools/141-file-info/"
   }
 ]
