@@ -1267,5 +1267,14 @@
     "category": "ファイル",
     "created": "2026-11-01",
     "path": "tools/141-file-info/"
+  },
+  {
+    "id": "142",
+    "slug": "offline-url-shortener",
+    "title": "オフラインURL短縮器",
+    "description": "ローカルでURLを短縮し、短縮URLから元にリダイレクト",
+    "category": "変換",
+    "created": "2026-11-01",
+    "path": "tools/142-offline-url-shortener/"
   }
 ]
