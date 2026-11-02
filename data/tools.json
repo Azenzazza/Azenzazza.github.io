@@ -1276,5 +1276,14 @@
     "category": "変換",
     "created": "2026-11-01",
     "path": "tools/142-offline-url-shortener/"
+  },
+  {
+    "id": "143",
+    "slug": "wareki-converter",
+    "title": "和暦変換ツール",
+    "description": "西暦と和暦の相互変換",
+    "category": "日付",
+    "created": "2026-11-02",
+    "path": "tools/143-wareki-converter/"
   }
 ]
