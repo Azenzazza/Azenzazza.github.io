@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <link rel="icon" href="../../../logo.png" type="image/png">
+  <link rel="stylesheet" href="../../../main.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>簡易カンバンボード - Azenzazzaのサイト</title>
+  <meta name="description" content="タスクを視覚的に管理するボード">
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background-color: #AFE48E;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      margin-right: 16px;
+    }
+
+    .site-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    nav.navbar {
+      margin-left: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    nav.navbar a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+
+    nav.navbar a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .lead {
+      line-height: 1.7;
+      color: #333;
+      margin-top: 0;
+      margin-bottom: 28px;
+    }
+
+    .tool-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 1rem;
+      font-family: inherit;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: #AFE48E;
+      box-shadow: 0 0 0 3px rgba(175,228,142,0.3);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 600;
+      background: #AFE48E;
+      color: #2a3d1a;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    button:hover {
+      background: #9dd97a;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      background: #fafafa;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      min-height: 40px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: #fff;
+    }
+
+    th, td {
+      border: 1px solid #e5e5e5;
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #eef7e6;
+      color: #4a7c2f;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 16px 32px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #777;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 12px 16px; }
+      .logo { width: 48px; height: 48px; margin-right: 12px; }
+      .site-title { font-size: 1.1rem; }
+      nav.navbar { margin-left: 0; }
+      nav.navbar a { margin: 0 8px; }
+      main { padding: 0 16px; margin: 24px auto; }
+      h1 { font-size: 1.5rem; }
+      .tool-card { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center;">
+      <img src="../../../logo.png" alt="サイトロゴ" class="logo">
+      <div class="site-title">Azenzazzaのサイト</div>
+    </div>
+
+    <nav class="navbar">
+      <a href="../../../">ホーム</a>
+      <a href="../../../project/project.html">プロジェクト</a>
+      <a href="../../../tools/tools.html">ツール</a>
+      <a href="../../../news/index.html">ニュース</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>簡易カンバンボード</h1>
+    <p class="lead">タスクを視覚的に管理するボード</p>
+
+    <div class="tool-card">
+      <div class="kanban-tool"><div class="kanban-input"><input type="text" id="task-input" placeholder="Add a new task"/><button id="add-task">Add</button></div><div class="kanban-board"><div class="kanban-column" data-status="todo"><h3>To Do</h3><div class="kanban-list" id="list-todo"></div></div><div class="kanban-column" data-status="inprogress"><h3>In Progress</h3><div class="kanban-list" id="list-inprogress"></div></div><div class="kanban-column" data-status="done"><h3>Done</h3><div class="kanban-list" id="list-done"></div></div></div></div>
+    </div>
+
+    <div class="result" id="result"></div>
+  </main>
+
+  <footer>
+    &copy; 2026 Azenzazza.
+  </footer>
+
+  <script>
+window.addEventListener('DOMContentLoaded',function(){const storageKey='simpleKanbanBoard';let board={todo:[],inprogress:[],done:[]};function save(){localStorage.setItem(storageKey,JSON.stringify(board));}function load(){const data=localStorage.getItem(storageKey);if(data){try{board=JSON.parse(data);}catch(e){board={todo:[],inprogress:[],done:[];}}}render();}function generateId(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5);}function createTask(task){const el=document.createElement('div');el.className='kanban-task';el.draggable=true;el.textContent=task.text;el.dataset.id=task.id;el.addEventListener('dragstart',function(e){e.dataTransfer.setData('text/plain',task.id);e.dataTransfer.effectAllowed='move';});return el;}function render(){['todo','inprogress','done'].forEach(function(status){const list=document.getElementById('list-'+status);while(list.firstChild){list.removeChild(list.firstChild);}board[status].forEach(function(task){list.appendChild(createTask(task));});});}function addTask(){const input=document.getElementById('task-input');const text=input.value.trim();if(!text)return;const task={id:generateId(),text:text};board.todo.push(task);save();render();input.value='';}document.getElementById('add-task').addEventListener('click',addTask);document.getElementById('task-input').addEventListener('keypress',function(e){if(e.key==='Enter')addTask();});function handleDragOver(e){e.preventDefault();e.dataTransfer.dropEffect='move';}function handleDrop(e){e.preventDefault();const id=e.dataTransfer.getData('text/plain');if(!id)return;const targetList=e.currentTarget;const status=targetList.id.replace('list-','');let taskObj=null;['todo','inprogress','done'].forEach(function(s){const idx=board[s].findIndex(t=>t.id===id);if(idx>-1){taskObj=board[s][idx];board[s].splice(idx,1);}});if(!taskObj)return;let insertBefore=null;if(e.target.classList.contains('kanban-task')&&e.target.dataset.id!==id){insertBefore=e.target;}if(insertBefore){const children=Array.from(targetList.children);const index=children.indexOf(insertBefore);board[status].splice(index,0,taskObj);}else{board[status].push(taskObj);}save();render();}['list-todo','list-inprogress','list-done'].forEach(function(id){const list=document.getElementById(id);list.addEventListener('dragover',handleDragOver);list.addEventListener('drop',handleDrop);});load();});
+  </script>
+</body>
+</html>

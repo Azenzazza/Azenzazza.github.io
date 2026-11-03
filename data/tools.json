@@ -1285,5 +1285,14 @@
     "category": "日付",
     "created": "2026-11-02",
     "path": "tools/143-wareki-converter/"
+  },
+  {
+    "id": "144",
+    "slug": "simple-kanban",
+    "title": "簡易カンバンボード",
+    "description": "タスクを視覚的に管理するボード",
+    "category": "生活",
+    "created": "2026-11-03",
+    "path": "tools/144-simple-kanban/"
   }
 ]
