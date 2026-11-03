@@ -1294,5 +1294,14 @@
     "category": "生活",
     "created": "2026-11-03",
     "path": "tools/144-simple-kanban/"
+  },
+  {
+    "id": "145",
+    "slug": "text-to-hex",
+    "title": "文字列→16進数変換",
+    "description": "文字を16進数で表示するツール",
+    "category": "変換",
+    "created": "2026-11-03",
+    "path": "tools/145-text-to-hex/"
   }
 ]
