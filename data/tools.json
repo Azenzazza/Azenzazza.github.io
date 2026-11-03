@@ -1303,5 +1303,14 @@
     "category": "変換",
     "created": "2026-11-03",
     "path": "tools/145-text-to-hex/"
+  },
+  {
+    "id": "146",
+    "slug": "slug-generator",
+    "title": "スラッグ生成ツール",
+    "description": "テキストをURLスラッグに変換します",
+    "category": "変換",
+    "created": "2026-11-03",
+    "path": "tools/146-slug-generator/"
   }
 ]
