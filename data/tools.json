@@ -1312,5 +1312,14 @@
     "category": "変換",
     "created": "2026-11-03",
     "path": "tools/146-slug-generator/"
+  },
+  {
+    "id": "147",
+    "slug": "html-table-to-csv",
+    "title": "HTMLテーブル→CSV変換器",
+    "description": "HTMLテーブルをCSVに変換",
+    "category": "変換",
+    "created": "2026-11-04",
+    "path": "tools/147-html-table-to-csv/"
   }
 ]
