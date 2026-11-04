@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DeepSeek が描く AI エージェントの未来像 - Azenzazzaのサイト</title>
-  <meta name="description" content="AIが設計記録からコード生成までを担うことで、開発フローが大幅に変革。複数記事でAIの実装事例と管理課題が示され、技術者にとって実務応用が鍵となる。">
+  <title>AIペネトレーションテストで自動化を実現 - Azenzazzaのサイト</title>
+  <meta name="description" content="AIエージェントが開発・運用を加速する一方、セキュリティリスクや倫理問題が浮上。自動化と安全性の両立が重要だと感じた。">
   <style>
     body {
       margin: 0;
@@ -185,47 +185,57 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年11月04日</p>
-    <h1>DeepSeek が描く AI エージェントの未来像</h1>
+    <p class="news-date">2026年11月05日</p>
+    <h1>AIペネトレーションテストで自動化を実現</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>DeepSeek が提唱する「Super‑agent」構想は、設計記録からコード生成、GitHub へのプルリクエスト作成までを会話ベースで自動化し、開発者の手作業負担を大幅に削減することを目指す。既存の AI エージェントと異なり、作業の振り分けやセッション管理をシステム側に委ねることで、開発フロー全体の効率化と品質向上が期待されている。</p>
+<p>サイバー攻撃の高度化とAI技術の急速な進展が交錯する中、Zennチームは「OpenCode＋Docker＋GitHub Actions」を組み合わせた全自動AIペネトレーションテストを実装した。AIエージェントがコードレビューや脆弱性診断を自律的に行うことで、開発サイクルに組み込める「安全性」と「自動化」の両立が実現された。本稿では、同プロジェクトの技術的概要と、AIエージェントの危険行動抑止策、そして業界全体への波及効果を整理する。</p>
 
 <h2>背景</h2>
-<p>近年、AI がコード補完やテスト自動生成に活用されるケースが増えているが、実務での導入は「AI が出力した成果物の統一性」や「作業の進行管理」の課題に阻まれがちだ。たとえば、ADR（Architecture Decision Record）を AI に委託した事例では、テンプレートを用意しても出力が徐々にずれ、レビューコストが増大したという報告がある。</p>
-<p>また、GitHub Copilot App のローカルサンドボックスが GA したものの、.NET 環境での設定や依存関係の解決に手間がかかる点も指摘されている。さらに、AI エージェント導入後に実行履歴の収集基盤が不足しているケースが散見され、評価と改善のサイクルが滞りやすいという実務上の壁がある。</p>
-<p>こうした背景の中で、DeepSeek は「利用者との対話を通じて複数タスクを同時進行させ、GitHub やチャットの通知を自動で振り分ける」ことを実現する Super‑agent を提案し、開発プロセス全体の自動化と管理負担の軽減を狙っている。</p>
+<p>近年、サイバー攻撃は「AIをフル活用」した手法へとシフトし、脆弱性が発見されてから実際に悪用されるまでの時間が従来に比べて大幅に短縮されつつある（<a href="https://scan.netsecurity.ne.jp/article/2026/08/06/55875.html">NetSecurity 2026年8月記事</a>）。このような状況下で、開発チームは「脆弱性検出＝手動」から「脆弱性検出＝自動」への転換を迫られている。さらに、AIエージェントに対して「⚪︎⚪︎はしないで」と単に禁止指示を出すだけでは、期待通りに行動させられないケースが報告されている（Qiita「AI Agent の危険行動を制限する 5 つの方法」）。この課題は、AIが生成するコードや操作指示が予期せぬリスクを伴う可能性を示唆しており、実装時の安全策が不可欠である。</p>
+<p>加えて、AI導入が「40年分の技術負債」を顕在化させるという指摘（Hacker News「AI is forcing us to pay off 40 years of technical debt」）もあり、古いコードベースや非標準的な開発プロセスがAIの効果を阻害するリスクが指摘されている。こうした背景から、AIエージェントを安全に、しかも自動化された形で運用する技術的枠組みへの関心が高まっている。</p>
 
 <h2>詳細</h2>
-<h3>Super‑agent の基本構造</h3>
-<p>Super‑agent は大きく <strong>Router</strong> と <strong>Worker</strong> に分かれる。Router は利用者との会話を解析し、タスクの種類や優先度に応じて適切な Worker に振り分ける役割を担う。一方、Worker は実際の作業―コード生成、プルリクエスト作成、ドキュメント更新など―を担当し、完了後は結果を利用者にフィードバックする。</p>
-<p>この構造により、利用者は「AI に何をしてほしいか」だけを指示すれば、細かな作業指示や進捗確認はシステムが自動で処理する。たとえば、設計記録（ADR）を作成する際に「この決定を ADR にしてほしい」と依頼すれば、Router が ADR 用テンプレートを選択し、Worker が Claude Code などの大規模言語モデルに生成を委託、最終的にフォーマットを整えてリポジトリにコミットするまでを自動化できる。</p>
-
-<h3>既存エージェントとの差別化ポイント</h3>
+<p><strong>Zenn の全自動ペネトレーションテスト</strong>は、以下の三要素で構成されている。</p>
 <ul>
-<li>セッション管理の自動化：従来は利用者がタスクごとに新規セッションを開始したが、Super‑agent は継続的に同一セッションを保持し、過去のコンテキストを踏まえて作業を進める。</li>
-<li>外部通知への対応：GitHub のプルリクエストやチャットツールの通知をリアルタイムで受け取り、必要に応じて適切な Worker に割り当てる。</li>
-<li>作業負荷の分散：複数の Worker が並列に稼働できるため、長時間かかるビルドやテストもバックグラウンドで処理でき、利用者は他の開発タスクに集中できる。</li>
+<li><strong>OpenCode</strong>：AIがコード全体を解析し、潜在的な脆弱性を抽出するフレームワーク。</li>
+<li><strong>Docker</strong>：テスト環境をコンテナ化し、環境依存の差異を排除。毎回クリーンな状態でテストを実行できる。</li>
+<li><strong>GitHub Actions</strong>：CI/CD パイプラインに組み込み、プルリクエストごとの AI レビューに加えて、週次で自動的にペネトレーションテストを走らせる。</li>
 </ul>
+<p>この仕組みにより、開発者は PR のマージ前に AI が生成したセキュリティレポートを確認でき、脆弱性が検出された場合は即座にフィードバックが返る。さらに、週次の自動テストは「実運用に近いシナリオ」をシミュレートし、AI エージェントが攻撃者視点でシステム全体を走査する。</p>
 
-<h3>実装事例と運用上の課題</h3>
-<p>ADR の自動生成に関する実務報告では、AI が書いた ADR がテンプレートから逸脱し、仕様書に近い記述が混入するケースが指摘されている。これに対処するために、<a href="https://zenn.dev/babarot/articles/regomark-adr-checker">「ADR を rego で lint する」</a> 手法が提案され、形式的なチェックを自動化することで人手によるレビュー負荷を抑える試みが行われている。</p>
-<p>また、AI が生成したドキュメントの可読性を確保するために、<a href="https://zenn.dev/tokium_dev/articles/adr-authoring-guideline">ADR のガイドライン</a> を策定し、統一された記述ルールを設ける取り組みも報告されている。これらは Super‑agent の Worker が生成したアウトプットを事前に検証・整形するプロセスとして組み込むことで、品質のばらつきを抑えることが可能になる。</p>
-<p>GitHub Copilot App のサンドボックス実装例では、.NET 環境での依存関係解決やファイルアクセス権限の調整が課題となったが、これらは「環境設定を自動化する Worker」を追加すれば解決できると考えられる。すなわち、環境構築やビルド手順をスクリプト化し、Router が適切なタイミングで実行させることで、手動設定の手間を排除できる。</p>
-<p>さらに、AI エージェント導入後の実行履歴収集基盤の構築事例（FDE のトレーシング基盤）では、実行ログを統一フォーマットで保存し、評価指標として活用する仕組みが紹介されている。Super‑agent の Worker が実行した各タスクのメタデータを自動的に記録し、後続の評価フェーズで再利用できるようにすれば、改善サイクルの迅速化が期待できる。</p>
+<p>しかし、AI エージェントの「危険行動」を抑止するためには、単なる「しないで」指示だけでは不十分であることが Qiita の調査で明らかになっている。具体的な対策としては、次の五つが提案されている。</p>
+<ol>
+<li>**明示的な許可リスト**（ホワイトリスト）を用意し、許可された操作のみを実行させる。</li>
+<li>**コンテキスト制御**：AI が参照できるデータやコマンドを限定し、意図しない権限昇格を防止。</li>
+<li>**監査ログの強化**：全ての AI の指示と実行結果を記録し、事後分析を可能にする。</li>
+<li>**人間のレビュー層**：AI が出した提案は必ず人間が確認し、承認するフローを設ける。</li>
+<li>**モデルの安全化**：Claude Code や Antigravity CLI といった特定のモデルに対し、危険行動抑止用のファインチューニングを実施。</li>
+</ol>
+<p>Zenn の実装は、GitHub Actions のジョブ定義に「安全性チェック」ステップを追加し、上記のうち「許可リスト」と「監査ログ」を自動的に適用している点が特徴的である。これにより、AI が生成した攻撃シナリオが実際に実行される前に、事前に安全性が検証される仕組みが整備された。</p>
+
+<p>また、AI エージェントが高速に情報を取得できる基盤として、Qiita の「Decision RAG」も注目されている。Decision RAG は、判断特化型モデル（例：Jev）を検索エンジンに組み込み、従来の RAG（Retrieval‑Augmented Generation）に比べて「速い・安い・上手い」特性を持つとされる。Zenn のペネトレーションテストにおいても、脆弱性情報の検索や攻撃パターンの推論に Decision RAG を活用すれば、テスト実行時間を短縮しつつ、より精度の高い結果が期待できる。</p>
+
+<p>さらに、Hacker News の議論（「Gemini trains on chat history」）からは、AI がユーザーのチャット履歴を学習に利用するケースが指摘されており、プライバシーとセキュリティの二重課題が浮き彫りになっている。Zenn の自動テストは社内リポジトリ内のコードに限定して実行されるため、外部データの流出リスクは低減できるが、同様のプライバシー保護策が他の AI セキュリティツールでも求められる。</p>
 
 <h2>影響・展望</h2>
-<p>Super‑agent が実装されれば、設計段階の記録からコード実装、レビューまでの一連の流れが対話ベースで完結し、開発者は「何をやるか」ではなく「どの問題を解決すべきか」の判断に集中できるようになる。特に大規模プロジェクトや分散チームにおいては、タスクの振り分けや進捗共有が自動化されることで、コミュニケーションコストが削減されるとみられる。</p>
-<p>一方で、AI が生成したアウトプットの品質保証や、実行履歴の適切な管理といった運用上の課題は残っており、lint ツールやガイドライン、トレーシング基盤の併用が不可欠であると考えられる。今後は、Super‑agent の Router が「品質チェック」や「セキュリティ評価」も担う拡張が期待され、AI 主導の開発フローが本格的に産業標準へと近づく可能性がある。</p>
+<p>全自動 AI ペネトレーションテストの実装は、以下のような波及効果をもたらすと考えられる。</p>
+<ul>
+<li>**開発サイクルの短縮**：脆弱性検出が PR 時点で完了するため、修正コストが大幅に削減される。</li>
+<li>**技術負債の顕在化**：AI が自動的に古いコードや非標準実装を指摘することで、長年放置されてきた技術負債が可視化され、リファクタリングの優先順位付けが容易になる。</li>
+<li>**安全性の標準化**：危険行動抑止のベストプラクティス（許可リスト、監査ログ、人間レビュー）が CI/CD に組み込まれることで、業界全体での安全基準が統一される可能性がある。</li>
+<li>**AI 活用のハードル低減**：Docker と GitHub Actions という一般的なツールチェーンで実装できるため、スタートアップや中小企業でも導入しやすくなる。</li>
+</ul>
+<p>今後は、Decision RAG のような高速検索モデルや、AI エージェントの「安全性プロファイル」を自動生成する仕組みが加わることで、さらに高度な自動化とリスク管理が同時に実現できると予想される。また、AI が生成した攻撃手法が実世界で悪用されるリスクを抑えるため、AI の学習データや実行環境に対するガバナンスが法的・倫理的に問われる局面も増えてくるだろう。</p>
 
 <h2>まとめ</h2>
-<p>DeepSeek の Super‑agent は、利用者との対話を中心にタスク管理とコード生成を自動化する新たな AI エージェント像を提示した。既存の課題であるアウトプットの統一性や実行履歴の欠如に対し、Router/Worker の分離と外部通知の自動振り分けにより、開発フロー全体の効率化と品質向上が期待できる。実装事例から得られた lint やガイドライン、トレーシング基盤の活用は、今後の実務導入における重要な鍵となるだろう。</p>
+<p>サイバー攻撃が AI を活用して高度化する中、Zenn の「OpenCode＋Docker＋GitHub Actions」ベースの全自動ペネトレーションテストは、開発フローに安全性と自動化をシームレスに統合した先駆的事例である。危険行動抑止の具体策や Decision RAG の導入可能性を踏まえると、今後の AI エージェント活用は「安全な自動化」へと収束していくと見込まれる。</p>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/marvelousu/articles/deepseek-super-agent-design" target="_blank" rel="noopener">DeepSeek が描く AI エージェントの未来像</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/babarot/articles/regomark-adr-checker" target="_blank" rel="noopener">ADRをregoでlintする</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/tokium_dev/articles/adr-authoring-guideline" target="_blank" rel="noopener">AIが書く「読みづらいADR」に発狂しかけたので、ADRのガイドラインを作った</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/microsoft/articles/copilot-app-dotnet-windows-sandbox" target="_blank" rel="noopener">GitHub Copilot App のサンドボックスで .NET アプリを開発するための設定を試してみた</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/aishift/articles/e761cff4f079cd" target="_blank" rel="noopener">【LLMOps】FDEの開発を支えるトレーシング基盤の開発</a><span class="src-name">(Zenn)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/team_zenn/articles/opencode-docker-actions-ai-pentest" target="_blank" rel="noopener">OpenCode+Docker+GitHub Actionsで全自動AIペネトレーションテストはじめました</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/songchong/items/945479177d4dcbb80f69?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">「⚪︎⚪︎はしないで」は効かない？AI Agent の危険行動を制限する 5 つの方法と守られる強さで比べた</a><span class="src-name">(Qiita)</span></li><li><a href="https://spectrum.ieee.org/ai-in-cybersecurity-php2shell-vulnerability" target="_blank" rel="noopener">AI is forcing us to pay off 40 years of technical debt</a><span class="src-name">(Hacker News)</span></li><li><a href="https://news.ycombinator.com/item?id=50363461" target="_blank" rel="noopener">Tell HN: Gemini trains on chat history, even for subscribers (personal accounts)</a><span class="src-name">(Hacker News)</span></li><li><a href="https://qiita.com/kikuziro/items/cc82e6e4e4c215eac99f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">新しいRAG「Decision RAG」は速い！安い！上手い！🍜</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
