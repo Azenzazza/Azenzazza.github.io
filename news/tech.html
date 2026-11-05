@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIペネトレーションテストで自動化を実現 - Azenzazzaのサイト</title>
-  <meta name="description" content="AIエージェントが開発・運用を加速する一方、セキュリティリスクや倫理問題が浮上。自動化と安全性の両立が重要だと感じた。">
+  <title>Siri AIにアプリをつなぎ、振る舞いを評価する - Azenzazzaのサイト</title>
+  <meta name="description" content="Siri AIがアプリと連携し振る舞いを評価できる点は、AI開発の品質保証を革新し、実務への導入が加速するため重要。">
   <style>
     body {
       margin: 0;
@@ -185,57 +185,74 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年11月05日</p>
-    <h1>AIペネトレーションテストで自動化を実現</h1>
+    <p class="news-date">2026年11月06日</p>
+    <h1>Siri AIにアプリをつなぎ、振る舞いを評価する</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>サイバー攻撃の高度化とAI技術の急速な進展が交錯する中、Zennチームは「OpenCode＋Docker＋GitHub Actions」を組み合わせた全自動AIペネトレーションテストを実装した。AIエージェントがコードレビューや脆弱性診断を自律的に行うことで、開発サイクルに組み込める「安全性」と「自動化」の両立が実現された。本稿では、同プロジェクトの技術的概要と、AIエージェントの危険行動抑止策、そして業界全体への波及効果を整理する。</p>
+<p>2026年11月3日にリリースされたiOS 27.3 betaとXcode 27.3 betaに同梱された<strong>Siri AI Developer Preview</strong>により、任意のiOSアプリが独自のアクションやコンテンツをSiriに提供できるようになった。加えて、Siriの振る舞いをコード化してテストできる<strong>Siri Evaluations</strong>が登場し、AIを活用した開発プロセスと品質評価の新たな標準が形成されつつある。</p>
 
 <h2>背景</h2>
-<p>近年、サイバー攻撃は「AIをフル活用」した手法へとシフトし、脆弱性が発見されてから実際に悪用されるまでの時間が従来に比べて大幅に短縮されつつある（<a href="https://scan.netsecurity.ne.jp/article/2026/08/06/55875.html">NetSecurity 2026年8月記事</a>）。このような状況下で、開発チームは「脆弱性検出＝手動」から「脆弱性検出＝自動」への転換を迫られている。さらに、AIエージェントに対して「⚪︎⚪︎はしないで」と単に禁止指示を出すだけでは、期待通りに行動させられないケースが報告されている（Qiita「AI Agent の危険行動を制限する 5 つの方法」）。この課題は、AIが生成するコードや操作指示が予期せぬリスクを伴う可能性を示唆しており、実装時の安全策が不可欠である。</p>
-<p>加えて、AI導入が「40年分の技術負債」を顕在化させるという指摘（Hacker News「AI is forcing us to pay off 40 years of technical debt」）もあり、古いコードベースや非標準的な開発プロセスがAIの効果を阻害するリスクが指摘されている。こうした背景から、AIエージェントを安全に、しかも自動化された形で運用する技術的枠組みへの関心が高まっている。</p>
+<p>従来、iOSアプリと音声アシスタントの連携は、Appleが提供する固定的なインテントやショートカットに依存していた。そのため、開発者は限定的な対話フローしか実装できず、ユーザー体験の差別化が難しかった。さらに、AIが生成した応答や動作の品質を自動的に検証する仕組みは整備されておらず、手動テストやヒューマンレビューに多くの工数が費やされていた。</p>
+<p>このような課題を受け、Appleは「AIを活用した開発プロセスと評価」の実装例として、Siri AIにアプリを直接接続し、振る舞いをプログラム的に評価できるフレームワークを提供した。発表と同時に、Cortex AI GatewayがGA（一般提供）となり、AI推論の可観測性やコスト管理機能が本格化したことも相まって、エンドツーエンドのAI開発サイクルが一層統合的に管理できる環境が整いつつある。</p>
 
 <h2>詳細</h2>
-<p><strong>Zenn の全自動ペネトレーションテスト</strong>は、以下の三要素で構成されている。</p>
+<h3>Siri AI Developer Preview の概要</h3>
+<p>iOS 27.3 beta に同梱された Siri AI Developer Preview では、既存の <strong>App Intent</strong> に <code>@AppIntent(.tool)</code> アノテーションを付与するだけで、任意のアプリが Siri AI に対して独自のツールとして登録できる。これにより、アプリ側は以下の二つの情報を Siri に渡すことが可能になる。</p>
 <ul>
-<li><strong>OpenCode</strong>：AIがコード全体を解析し、潜在的な脆弱性を抽出するフレームワーク。</li>
-<li><strong>Docker</strong>：テスト環境をコンテナ化し、環境依存の差異を排除。毎回クリーンな状態でテストを実行できる。</li>
-<li><strong>GitHub Actions</strong>：CI/CD パイプラインに組み込み、プルリクエストごとの AI レビューに加えて、週次で自動的にペネトレーションテストを走らせる。</li>
+<li>カスタムアクション：ユーザーが音声で呼び出す具体的な操作（例：画像編集、データ解析）</li>
+<li>コンテンツ提供：AI が利用できるメタデータやリアルタイムデータストリーム</li>
 </ul>
-<p>この仕組みにより、開発者は PR のマージ前に AI が生成したセキュリティレポートを確認でき、脆弱性が検出された場合は即座にフィードバックが返る。さらに、週次の自動テストは「実運用に近いシナリオ」をシミュレートし、AI エージェントが攻撃者視点でシステム全体を走査する。</p>
+<p>開発者は Xcode 27.3 beta のテンプレートを利用し、最小限のコード変更で Siri AI とのインタフェースを構築できる。</p>
 
-<p>しかし、AI エージェントの「危険行動」を抑止するためには、単なる「しないで」指示だけでは不十分であることが Qiita の調査で明らかになっている。具体的な対策としては、次の五つが提案されている。</p>
-<ol>
-<li>**明示的な許可リスト**（ホワイトリスト）を用意し、許可された操作のみを実行させる。</li>
-<li>**コンテキスト制御**：AI が参照できるデータやコマンドを限定し、意図しない権限昇格を防止。</li>
-<li>**監査ログの強化**：全ての AI の指示と実行結果を記録し、事後分析を可能にする。</li>
-<li>**人間のレビュー層**：AI が出した提案は必ず人間が確認し、承認するフローを設ける。</li>
-<li>**モデルの安全化**：Claude Code や Antigravity CLI といった特定のモデルに対し、危険行動抑止用のファインチューニングを実施。</li>
-</ol>
-<p>Zenn の実装は、GitHub Actions のジョブ定義に「安全性チェック」ステップを追加し、上記のうち「許可リスト」と「監査ログ」を自動的に適用している点が特徴的である。これにより、AI が生成した攻撃シナリオが実際に実行される前に、事前に安全性が検証される仕組みが整備された。</p>
+<h3>Siri Evaluations による振る舞いテスト</h3>
+<p>同時に公開された <strong>Siri Evaluations</strong> は、Siri の応答や動作をテストケースとして記述できる DSL（Domain Specific Language）を提供する。テストは Xcode のテストランナーに統合され、CI/CD パイプラインに組み込むことで、以下のような品質保証が実現できる。</p>
+<ul>
+<li>期待される音声応答と実際の出力の比較</li>
+<li>カスタムアクション実行後の状態遷移の検証</li>
+<li>エッジケース（ノイズ環境、方言入力）に対するロバスト性チェック</li>
+</ul>
+<p>この仕組みは、従来の手動テストに比べて再現性が高く、開発スピードの向上が期待できる。</p>
 
-<p>また、AI エージェントが高速に情報を取得できる基盤として、Qiita の「Decision RAG」も注目されている。Decision RAG は、判断特化型モデル（例：Jev）を検索エンジンに組み込み、従来の RAG（Retrieval‑Augmented Generation）に比べて「速い・安い・上手い」特性を持つとされる。Zenn のペネトレーションテストにおいても、脆弱性情報の検索や攻撃パターンの推論に Decision RAG を活用すれば、テスト実行時間を短縮しつつ、より精度の高い結果が期待できる。</p>
+<h3>Cortex AI Gateway の最新機能との連携</h3>
+<p>2026年11月3日に GA した <strong>Cortex AI Gateway</strong> は、AI 推論のトレース解析（Trace analytics）やレスポンス取得 API、ツール群（Tools for Cortex AI Gateway）といったプレビュー機能を備えている。Siri AI が外部の AI モデルを呼び出すシナリオにおいて、これらの機能を併用することで、以下が可能になる。</p>
+<ul>
+<li>推論過程の可視化：Siri がどのモデル・パラメータを使用したかをリアルタイムで追跡</li>
+<li>コスト管理：利用頻度や計算リソースを定量的に測定し、予算超過リスクを低減</li>
+<li>障害検知：異常なレスポンスが発生した際に自動アラートを生成</li>
+</ul>
+<p>このように、Siri AI と Cortex AI Gateway が相互に情報を共有できる点は、AI 開発の「観測可能性」と「制御性」を同時に高めるとみられる。</p>
 
-<p>さらに、Hacker News の議論（「Gemini trains on chat history」）からは、AI がユーザーのチャット履歴を学習に利用するケースが指摘されており、プライバシーとセキュリティの二重課題が浮き彫りになっている。Zenn の自動テストは社内リポジトリ内のコードに限定して実行されるため、外部データの流出リスクは低減できるが、同様のプライバシー保護策が他の AI セキュリティツールでも求められる。</p>
+<h3>AI ルールと Lint の併用事例</h3>
+<p>AI が生成するコードやドキュメントの品質を保証する手段として、Zenn の記事「AIルールだけでは守られない規約を、自作 lint で縛るようにした」では、AI ルールと従来の Lint ツールを組み合わせる手法が紹介されている。Siri Evaluations のテストケースも同様に、AI が出力した応答を Lint 風の静的解析で検証することで、ヒューマンレビューの負荷を削減できる可能性がある。</p>
+
+<h3>ソフトウェアファクトリーとしての位置付け</h3>
+<p>Qiita の記事「AI駆動開発の次の段階: ソフトウェアファクトリー」では、AI を中心に据えた開発プロセスが「ファクトリー化」されつつあると指摘されている。Siri AI と Cortex AI Gateway の統合は、音声インタフェースを含む全体的な AI ファクトリーの一部として機能し、コード生成・テスト・デプロイが一貫したパイプラインで回ることを示唆している。</p>
 
 <h2>影響・展望</h2>
-<p>全自動 AI ペネトレーションテストの実装は、以下のような波及効果をもたらすと考えられる。</p>
+<p>Siri AI にアプリを接続し、振る舞いを自動評価できる環境は、以下のような業界変化を促すとみられる。</p>
 <ul>
-<li>**開発サイクルの短縮**：脆弱性検出が PR 時点で完了するため、修正コストが大幅に削減される。</li>
-<li>**技術負債の顕在化**：AI が自動的に古いコードや非標準実装を指摘することで、長年放置されてきた技術負債が可視化され、リファクタリングの優先順位付けが容易になる。</li>
-<li>**安全性の標準化**：危険行動抑止のベストプラクティス（許可リスト、監査ログ、人間レビュー）が CI/CD に組み込まれることで、業界全体での安全基準が統一される可能性がある。</li>
-<li>**AI 活用のハードル低減**：Docker と GitHub Actions という一般的なツールチェーンで実装できるため、スタートアップや中小企業でも導入しやすくなる。</li>
+<li>音声アシスタント市場の参入障壁が低下し、垂直領域向けアプリが独自の音声体験を提供しやすくなる。</li>
+<li>開発チームはテスト自動化を通じてリリースサイクルを短縮でき、競争力が向上する。</li>
+<li>AI 推論の可観測性が標準化されることで、コスト管理やコンプライアンス遵守が容易になる。</li>
 </ul>
-<p>今後は、Decision RAG のような高速検索モデルや、AI エージェントの「安全性プロファイル」を自動生成する仕組みが加わることで、さらに高度な自動化とリスク管理が同時に実現できると予想される。また、AI が生成した攻撃手法が実世界で悪用されるリスクを抑えるため、AI の学習データや実行環境に対するガバナンスが法的・倫理的に問われる局面も増えてくるだろう。</p>
+<p>今後は、Siri Evaluations のプレビュー機能が正式リリースされ、Cortex AI Gateway の全機能が GA へ移行すれば、エンドツーエンドの AI 開発・評価フローがさらに成熟し、企業のデジタルトランスフォーメーションを加速させる可能性がある。</p>
 
 <h2>まとめ</h2>
-<p>サイバー攻撃が AI を活用して高度化する中、Zenn の「OpenCode＋Docker＋GitHub Actions」ベースの全自動ペネトレーションテストは、開発フローに安全性と自動化をシームレスに統合した先駆的事例である。危険行動抑止の具体策や Decision RAG の導入可能性を踏まえると、今後の AI エージェント活用は「安全な自動化」へと収束していくと見込まれる。</p>
+<p>Siri AI Developer Preview と Siri Evaluations の登場は、アプリと音声 AI のシームレス連携と自動品質評価を実現し、AI を活用した開発プロセスの標準化を後押しする。Cortex AI Gateway の可観測性機能と併用すれば、開発・運用の全段階で AI の振る舞いを可視化・制御でき、実務導入が加速することが期待される。</p>
+
+<p>出典：</p>
+<ul>
+<li>Zenn: Siri AIにアプリをつなぎ、振る舞いを評価する（https://zenn.dev/d_date/articles/e8e2c5d53b424e）</li>
+<li>Zenn: Cortex AI Gateway-Part2: GAリリースにPreview以降の追加機能を検証（https://zenn.dev/snowflakejp/articles/01fc867db3bf02）</li>
+<li>Zenn: AIルールだけでは守られない規約を、自作lintで縛るようにした（https://zenn.dev/zoma/articles/72011082f2b1b7）</li>
+<li>Qiita: AI駆動開発の次の段階: ソフトウェアファクトリー（https://qiita.com/Syoitu/items/9364a0a175893bb15219）</li>
+</ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/team_zenn/articles/opencode-docker-actions-ai-pentest" target="_blank" rel="noopener">OpenCode+Docker+GitHub Actionsで全自動AIペネトレーションテストはじめました</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/songchong/items/945479177d4dcbb80f69?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">「⚪︎⚪︎はしないで」は効かない？AI Agent の危険行動を制限する 5 つの方法と守られる強さで比べた</a><span class="src-name">(Qiita)</span></li><li><a href="https://spectrum.ieee.org/ai-in-cybersecurity-php2shell-vulnerability" target="_blank" rel="noopener">AI is forcing us to pay off 40 years of technical debt</a><span class="src-name">(Hacker News)</span></li><li><a href="https://news.ycombinator.com/item?id=50363461" target="_blank" rel="noopener">Tell HN: Gemini trains on chat history, even for subscribers (personal accounts)</a><span class="src-name">(Hacker News)</span></li><li><a href="https://qiita.com/kikuziro/items/cc82e6e4e4c215eac99f?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">新しいRAG「Decision RAG」は速い！安い！上手い！🍜</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/d_date/articles/e8e2c5d53b424e" target="_blank" rel="noopener">Siri AIにアプリをつなぎ、振る舞いを評価する</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/snowflakejp/articles/01fc867db3bf02" target="_blank" rel="noopener">Cortex AI Gateway-Part2: GAリリースにPreview以降の追加機能を検証</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/zoma/articles/72011082f2b1b7" target="_blank" rel="noopener">AIルールだけでは守られない規約を、自作lintで縛るようにした</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/Syoitu/items/9364a0a175893bb15219?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI駆動開発の次の段階: ソフトウェアファクトリー</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
