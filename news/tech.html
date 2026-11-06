@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Siri AIにアプリをつなぎ、振る舞いを評価する - Azenzazzaのサイト</title>
-  <meta name="description" content="Siri AIがアプリと連携し振る舞いを評価できる点は、AI開発の品質保証を革新し、実務への導入が加速するため重要。">
+  <title>AI駆動文章作成において俺が意識しているテクニック集 - Azenzazzaのサイト</title>
+  <meta name="description" content="AIがコード生成・文章作成を支援し、開発フローや創作プロセスを変革するトレンドが急速に拡大している。複数記事で実例・課題が示され、技術者にとって実践的価値が高い。">
   <style>
     body {
       margin: 0;
@@ -185,74 +185,62 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年11月06日</p>
-    <h1>Siri AIにアプリをつなぎ、振る舞いを評価する</h1>
+    <p class="news-date">2026年11月07日</p>
+    <h1>AI駆動文章作成において俺が意識しているテクニック集</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>2026年11月3日にリリースされたiOS 27.3 betaとXcode 27.3 betaに同梱された<strong>Siri AI Developer Preview</strong>により、任意のiOSアプリが独自のアクションやコンテンツをSiriに提供できるようになった。加えて、Siriの振る舞いをコード化してテストできる<strong>Siri Evaluations</strong>が登場し、AIを活用した開発プロセスと品質評価の新たな標準が形成されつつある。</p>
+<p>AI が文章やコードを瞬時に生成できる時代、実務で「読んでもらえる」文章を作るテクニックが求められています。本稿では、AI 生成文章の課題と、実際に有料ツールや Claude との連携で培った具体的な手法を紹介し、開発フローへの応用例を探ります。</p>
 
 <h2>背景</h2>
-<p>従来、iOSアプリと音声アシスタントの連携は、Appleが提供する固定的なインテントやショートカットに依存していた。そのため、開発者は限定的な対話フローしか実装できず、ユーザー体験の差別化が難しかった。さらに、AIが生成した応答や動作の品質を自動的に検証する仕組みは整備されておらず、手動テストやヒューマンレビューに多くの工数が費やされていた。</p>
-<p>このような課題を受け、Appleは「AIを活用した開発プロセスと評価」の実装例として、Siri AIにアプリを直接接続し、振る舞いをプログラム的に評価できるフレームワークを提供した。発表と同時に、Cortex AI GatewayがGA（一般提供）となり、AI推論の可観測性やコスト管理機能が本格化したことも相まって、エンドツーエンドのAI開発サイクルが一層統合的に管理できる環境が整いつつある。</p>
+<p>2026 年に入ってから、AI がコード生成やテスト自動化だけでなく、メニュー画像やドキュメント作成といったクリエイティブ領域にも浸透しています。たとえば、飲食店が AI で生成した料理画像をメニューに使用し、規則的な米の配置や奇抜な麺の形状が話題になるケースが報告されています。一方で、AI が生成した文章が「で、何が言いたいの？」と読者に疑問を抱かせることも多く、情報過多の中で実務に活かすための工夫が必要です。</p>
+<p>開発現場でも、Claude と MagicPod の連携により、テストケースを対話形式で作成・編集・実行できる環境が整備されました。従来はテストケースを「読む」作業が中心でしたが、AI がレビューや生成を担うことで、テスト工程自体が変化しています。また、AI に過度に依存した結果、問題解決力が低下し、先輩エンジニアからの質問に答えられなくなるリスクも指摘されています。</p>
 
 <h2>詳細</h2>
-<h3>Siri AI Developer Preview の概要</h3>
-<p>iOS 27.3 beta に同梱された Siri AI Developer Preview では、既存の <strong>App Intent</strong> に <code>@AppIntent(.tool)</code> アノテーションを付与するだけで、任意のアプリが Siri AI に対して独自のツールとして登録できる。これにより、アプリ側は以下の二つの情報を Siri に渡すことが可能になる。</p>
+<h3>AI 文章作成の基本姿勢</h3>
 <ul>
-<li>カスタムアクション：ユーザーが音声で呼び出す具体的な操作（例：画像編集、データ解析）</li>
-<li>コンテンツ提供：AI が利用できるメタデータやリアルタイムデータストリーム</li>
+<li><strong>読者の目的を明確化</strong>：文章は「誰も読みたくない」前提で、読者が何を得たいかを先に設定する。</li>
+<li><strong>AI の生成物は「草稿」扱い</strong>：生成された長文をそのまま流すのではなく、要点を抽出し再構成する。</li>
+<li><strong>情報の取捨選択</strong>：AI が出す情報は膨大だが、実務に直結する要素だけを残す。</li>
 </ul>
-<p>開発者は Xcode 27.3 beta のテンプレートを利用し、最小限のコード変更で Siri AI とのインタフェースを構築できる。</p>
 
-<h3>Siri Evaluations による振る舞いテスト</h3>
-<p>同時に公開された <strong>Siri Evaluations</strong> は、Siri の応答や動作をテストケースとして記述できる DSL（Domain Specific Language）を提供する。テストは Xcode のテストランナーに統合され、CI/CD パイプラインに組み込むことで、以下のような品質保証が実現できる。</p>
+<h3>Claude と MagicPod の連携活用例</h3>
+<p>2026 年 10 月に MagicPod の MCP サーバーが刷新され、Claude のコネクタ一覧から簡単に接続できるようになりました。この連携により、以下のフローが実現します。</p>
 <ul>
-<li>期待される音声応答と実際の出力の比較</li>
-<li>カスタムアクション実行後の状態遷移の検証</li>
-<li>エッジケース（ノイズ環境、方言入力）に対するロバスト性チェック</li>
+<li>対話形式でテストケースを作成：ユーザーが自然言語で指示すると、Claude がテストシナリオを生成。</li>
+<li>AI が自動レビュー：生成されたテストケースを Claude が評価し、改善点を提示。</li>
+<li>即時実行とフィードバック：MagicPod がテストを走らせ、結果を対話で返す。</li>
 </ul>
-<p>この仕組みは、従来の手動テストに比べて再現性が高く、開発スピードの向上が期待できる。</p>
+<p>この仕組みは、以前に「テストを読む」だけだった従来の手法と比べ、テストケースの作成・修正が対話一本化され、開発者の負荷が大幅に削減される可能性があります。</p>
 
-<h3>Cortex AI Gateway の最新機能との連携</h3>
-<p>2026年11月3日に GA した <strong>Cortex AI Gateway</strong> は、AI 推論のトレース解析（Trace analytics）やレスポンス取得 API、ツール群（Tools for Cortex AI Gateway）といったプレビュー機能を備えている。Siri AI が外部の AI モデルを呼び出すシナリオにおいて、これらの機能を併用することで、以下が可能になる。</p>
-<ul>
-<li>推論過程の可視化：Siri がどのモデル・パラメータを使用したかをリアルタイムで追跡</li>
-<li>コスト管理：利用頻度や計算リソースを定量的に測定し、予算超過リスクを低減</li>
-<li>障害検知：異常なレスポンスが発生した際に自動アラートを生成</li>
-</ul>
-<p>このように、Siri AI と Cortex AI Gateway が相互に情報を共有できる点は、AI 開発の「観測可能性」と「制御性」を同時に高めるとみられる。</p>
+<h3>AI 生成画像と文章の類似点</h3>
+<p>AI が生成した料理画像が規則的すぎたり、奇抜すぎたりして「不自然」さが指摘される点は、AI が生成した文章でも同様です。読者は「人が作った」感覚を求めるため、AI の出力をそのまま使用すると違和感が生まれやすいとされています。したがって、AI が生成したコンテンツは必ず人間が手を加える「ヒューマンインターフェイス」が重要です。</p>
 
-<h3>AI ルールと Lint の併用事例</h3>
-<p>AI が生成するコードやドキュメントの品質を保証する手段として、Zenn の記事「AIルールだけでは守られない規約を、自作 lint で縛るようにした」では、AI ルールと従来の Lint ツールを組み合わせる手法が紹介されている。Siri Evaluations のテストケースも同様に、AI が出力した応答を Lint 風の静的解析で検証することで、ヒューマンレビューの負荷を削減できる可能性がある。</p>
+<h3>過度な依存のリスクと対策</h3>
+<p>IT 未経験者が AI に頼りすぎて、コードの根本的な理解やエラー原因の自力調査ができなくなるケースが報告されています。結果として、先輩から質問された際に説明できず、開発が停滞する事態が起きました。対策としては、AI の提案を「参考情報」と位置付け、必ず自分の言葉で再構築するプロセスを設けることが推奨されています。</p>
 
-<h3>ソフトウェアファクトリーとしての位置付け</h3>
-<p>Qiita の記事「AI駆動開発の次の段階: ソフトウェアファクトリー」では、AI を中心に据えた開発プロセスが「ファクトリー化」されつつあると指摘されている。Siri AI と Cortex AI Gateway の統合は、音声インタフェースを含む全体的な AI ファクトリーの一部として機能し、コード生成・テスト・デプロイが一貫したパイプラインで回ることを示唆している。</p>
+<h3>次世代開発への示唆：ソフトウェアファクトリー</h3>
+<p>Claude Code の開発者である Felix Rieseberg 氏の考え方を引用すると、AI が生成するコードやテストは「志を高く持つ」姿勢で扱うべきとされています。AI が提供する「新しい惑星」のような可能性を活かしつつ、人間が方向性と品質を管理することで、ソフトウェアファクトリーとしての生産性向上が期待されます。</p>
 
 <h2>影響・展望</h2>
-<p>Siri AI にアプリを接続し、振る舞いを自動評価できる環境は、以下のような業界変化を促すとみられる。</p>
-<ul>
-<li>音声アシスタント市場の参入障壁が低下し、垂直領域向けアプリが独自の音声体験を提供しやすくなる。</li>
-<li>開発チームはテスト自動化を通じてリリースサイクルを短縮でき、競争力が向上する。</li>
-<li>AI 推論の可観測性が標準化されることで、コスト管理やコンプライアンス遵守が容易になる。</li>
-</ul>
-<p>今後は、Siri Evaluations のプレビュー機能が正式リリースされ、Cortex AI Gateway の全機能が GA へ移行すれば、エンドツーエンドの AI 開発・評価フローがさらに成熟し、企業のデジタルトランスフォーメーションを加速させる可能性がある。</p>
+<p>AI 駆動の文章作成テクニックは、開発ドキュメントや社内ナレッジの共有効率を高め、テスト自動化と併せて開発サイクル全体の短縮に寄与するとみられます。今後は、Claude と MagicPod のような対話型ツールが標準化され、AI が生成したコンテンツを人間が最適化するプロセスが一般化する可能性があります。また、AI 生成画像と同様に、文章でも「不自然さ」を排除するためのヒューマン・イン・ザ・ループが必須となり、教育や研修での AI リテラシー向上が求められるでしょう。</p>
 
 <h2>まとめ</h2>
-<p>Siri AI Developer Preview と Siri Evaluations の登場は、アプリと音声 AI のシームレス連携と自動品質評価を実現し、AI を活用した開発プロセスの標準化を後押しする。Cortex AI Gateway の可観測性機能と併用すれば、開発・運用の全段階で AI の振る舞いを可視化・制御でき、実務導入が加速することが期待される。</p>
+<p>AI が瞬時に文章やテストケースを生成できる環境は整っていますが、読者に価値を届けるには「目的の明確化」「要点抽出」「ヒューマン・インターフェイス」の三本柱が重要です。Claude と MagicPod の連携事例や、過度な依存のリスクを踏まえた実践的テクニックを取り入れることで、開発フローの効率化と品質向上が期待できます。</p>
 
-<p>出典：</p>
+<h2>出典</h2>
 <ul>
-<li>Zenn: Siri AIにアプリをつなぎ、振る舞いを評価する（https://zenn.dev/d_date/articles/e8e2c5d53b424e）</li>
-<li>Zenn: Cortex AI Gateway-Part2: GAリリースにPreview以降の追加機能を検証（https://zenn.dev/snowflakejp/articles/01fc867db3bf02）</li>
-<li>Zenn: AIルールだけでは守られない規約を、自作lintで縛るようにした（https://zenn.dev/zoma/articles/72011082f2b1b7）</li>
-<li>Qiita: AI駆動開発の次の段階: ソフトウェアファクトリー（https://qiita.com/Syoitu/items/9364a0a175893bb15219）</li>
+<li>Claude を使いこなす人に、MagicPod は要るのか。知らないアプリで Playwright と比べた記録（Zenn）</li>
+<li>今更だけど、AIってどう使えばいいの？（Zenn）</li>
+<li>AI 駆動文章作成において俺が意識しているテクニック集（Zenn）</li>
+<li>AI 駆動開発の次の段階: ソフトウェアファクトリー（Qiita）</li>
+<li>IT 未経験の私が AI に頼りすぎて挫折し、自分の頭で考えるようになるまで（Qiita）</li>
 </ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/d_date/articles/e8e2c5d53b424e" target="_blank" rel="noopener">Siri AIにアプリをつなぎ、振る舞いを評価する</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/snowflakejp/articles/01fc867db3bf02" target="_blank" rel="noopener">Cortex AI Gateway-Part2: GAリリースにPreview以降の追加機能を検証</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/zoma/articles/72011082f2b1b7" target="_blank" rel="noopener">AIルールだけでは守られない規約を、自作lintで縛るようにした</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/Syoitu/items/9364a0a175893bb15219?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI駆動開発の次の段階: ソフトウェアファクトリー</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/genda_jp/articles/7b423bcd20b532" target="_blank" rel="noopener">Claudeを使いこなす人に、MagicPodは要るのか。知らないアプリでPlaywrightと比べた記録</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/porters_tech/articles/4f6e5cc83aa74c" target="_blank" rel="noopener">今更だけど、AIってどう使えばいいの？</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/ntk221/articles/34ad88a9225364" target="_blank" rel="noopener">AI駆動文章作成において俺が意識しているテクニック集</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/Syoitu/items/9364a0a175893bb15219?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI駆動開発の次の段階: ソフトウェアファクトリー</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/yu_tsukamoto/items/5fa1e302097552255fb7?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">IT未経験の私がAIに頼りすぎて挫折し、自分の頭で考えるようになるまで</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
