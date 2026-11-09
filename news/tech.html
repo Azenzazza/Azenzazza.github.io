@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Claudeで脆弱性チェック自動化 - Azenzazzaのサイト</title>
-  <meta name="description" content="AIエージェントで開発・運用が自動化される流れが加速。ClaudeとGitHub Actions連携で脆弱性チェック自動化が実例化し、セキュリティと効率化の両立が注目される。">
+  <title>Claude Codeで自動開発環境を作る - Azenzazzaのサイト</title>
+  <meta name="description" content="AIエージェントがコード生成・テスト・デプロイを自動化し、開発フローを劇的に効率化する動きが拡大している。複数記事で実践例が紹介され、技術者にとって実用的な知見が得られる。">
   <style>
     body {
       margin: 0;
@@ -185,59 +185,42 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年11月09日</p>
-    <h1>Claudeで脆弱性チェック自動化</h1>
+    <p class="news-date">2026年11月10日</p>
+    <h1>Claude Codeで自動開発環境を作る</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>AIエージェントが開発・運用の自動化を加速させる中、Claude と GitHub Actions の連携で「公開サーバーの脆弱性チェック」が自動化された事例が注目を集めている。外部向けソフトウェアの重大 CVE に絞った Cloudflare の Zero Wire フィードを活用し、毎朝の判定を完全に AI に委任。セキュリティと効率化を同時に実現したこの仕組みは、AI エージェント活用の新たな指標となりそうだ。</p>
+<p>AI エージェント「Claude Code」が、コード生成からテスト、デプロイまでを自動で実行し、個人開発者が自らの開発環境を構築・改善できる時代が到来した。Zenn や Qiita に投稿された実践例は、AI に環境構築を委任することで、従来は膨大だった設定コストが劇的に削減されたことを示している。</p>
 
 <h2>背景</h2>
-<p>2026 年 11 月、Cloudflare Radar が「Zero Wire」という脆弱性インテリジェンスフィードを公開した。Zero Wire は全 CVE を網羅するのではなく、Web アプリやランタイム、インターネットに公開されたサービスなど「外向きのソフトウェアの重大な CVE」に限定し、ニュース形式のブリーフィングとして提供する（<a href="https://blog.cloudflare.com/zero-wire/">公式ブログ</a>）。この情報は RSS でも配信され、リアルタイムで取得可能である。</p>
-<p>一方、開発チームは自前の公開サーバーが Zero Wire に掲載された脆弱性に該当するかどうかを手作業で確認する負荷が大きく、見逃しリスクも懸念されていた。そこで、AI エージェントである Claude と CI/CD ツールの GitHub Actions を組み合わせ、毎朝自動で判定し結果を通知する仕組みが構築された。</p>
-<p>この流れは、AI が単なるコード生成に留まらず、タスク管理やテスト自動化、さらにはセキュリティチェックまでを包括的に担う「AI エージェント」時代の到来を示すものとみられる。</p>
+<p>従来、開発環境はツールごとに設定ファイルやルールが分散し、プロジェクトごとに乗り換えが必要だった。特に Claude Code と Codex を併用するケースでは、リポジトリ単位・ツール単位の設定が増大し、メンテナンスコストがボトルネックとなっていた。<strong>「自分の細かい要求に合わせて環境を作り込むコストが高すぎた」</strong>という認識が、多くのエンジニアの間で共有されている。</p>
+<p>しかし、AI エージェントの生成能力と自己修正機能が向上したことで、環境構築の「作るコスト」だけでなく、利用中に「直すコスト」も低減できるようになった。2026 年 9 月に開始された Switchboard プロジェクトは、こうした流れに乗り、エージェントに環境構築を委任する実験的試みとして注目されている。</p>
 
 <h2>詳細</h2>
-<h3>Zero Wire と GitHub Actions の連携</h3>
-<p>Zero Wire の RSS フィードを GitHub Actions のワークフローで定期的に取得し、取得した CVE 情報を Claude に渡す設計となっている。Claude は自然言語で記述された脆弱性概要を解析し、対象サーバーの構成情報と照合して「影響あり」か「影響なし」かを判定する。</p>
-<p>判定結果は GitHub の Issue として自動生成され、担当者に通知される仕組みである。これにより、開発者は「確認待ち」のみを処理すればよく、日々の脆弱性チェック作業が大幅に削減された。</p>
-
-<h3>タスク管理への AI エージェント適用例</h3>
-<p>同じく Claude を司令塔として活用した事例として、Zenn に投稿された「タスク管理まで AI エージェントに任せたら、確認待ちに答えるだけになった」記事がある。ここでは Claude Code がタスク全体の優先順位付けや実行順序の決定を行い、ユーザーは Claude が提示する「確認待ち」へ回答するだけで作業が進む。画面構成は左側に Claude Code、右側に Orca の「確認待ち」パネルが配置され、作業フローが視覚的に整理されている。</p>
-<p>このように、タスク管理から脆弱性判定まで、Claude が「司令塔」になることで人間の介在が最小化され、効率的な開発プロセスが実現されている。</p>
-
-<h3>テスト自動化への拡張例</h3>
-<p>Claude の拡張性はテスト領域にも波及している。2026 年 10 月に MagicPod の MCP サーバーが刷新され、Claude のコネクタ一覧から接続するだけで、Claude と対話しながらテストケースの作成・編集・実行が可能となった（プレスリリース参照）。この連携により、従来は手動で記述していた Playwright ベースのテストスクリプトを、Claude が自然言語指示で生成し、さらに AI がレビューするフローが構築された。</p>
-<p>同じく Zenn に掲載された「Claudeを使いこなす人に、MagicPodは要るのか」でも、Claude がテストケースを「読む」だけでなく、生成・改善まで担う姿が示されている。</p>
-
-<h3>Claude 認定プログラムの登場</h3>
-<p>AI エージェント活用が本格化する中、Claude の公式認定制度「Claude Certified Developer – Foundations（CCDV‑F）」が設けられ、2026 年 11 月 5 日に受験した受験者が 896 点で合格した例が Qiita に報告されている。受験時間は 10 時間未満、教材はコミュニティが公開した問答集を使用したとされ、比較的短期間で認定取得が可能であることが示唆されている。</p>
-<p>この認定は、Claude を本格的に業務に組み込むエンジニアにとってのスキルバリデーションとして、今後の採用やプロジェクト推進に影響を与える可能性がある。</p>
+<p>2026 年 9 月から作者は <strong>Switchboard</strong> というツールを開発し、コードの大半を Claude Code に委ねている。リポジトリごとに散らばっていた設定を一本化し、エージェントが「自分に必要なものを自分のために作る」形態を実現した（Zenn 記事）。この取り組みは、旅行アプリの例と同様に、個人の要件に合わせたカスタム環境を短時間で生成できる点が評価されている。</p>
+<p>同時期に、別の開発者は <strong>Herdr.app</strong> と <strong>hc（herdr-core）</strong> 上で Claude Code を司令塔として運用している。ここでは「Claude Code 1体だけが対話相手」となり、他のエージェントの管理はすべて司令塔が担う構成になっている（Zenn 記事）。このアーキテクチャは、エージェント間の協調を単一の指揮系統に集約することで、トラブルシューティングを容易にし、開発フローの可視化を促進している。</p>
+<p>さらに、ISUCON2026 のソロ参加者は、Claude Code にほぼ無人運転させるハーネスを自作し、競技時間中のコード修正・ベンチマーク・再起動テストをすべてエージェントに委託した。本人は旅行中にスマホで通知を確認するだけで済んだと報告している（Zenn 記事）。完全無人ではないものの、開始前のセットアップと数回の介入以外はエージェントが自律的に作業を進めた点が注目される。</p>
+<p>一方、インフラエンジニアの間では、GitHub Copilot アプリの導入が遅れがちであるという声もあるが、AI によるコード補完や自動生成の効果は実感されている（Qiita 記事）。また、Amazon Bedrock の <strong>AgentCore</strong> は、Web 検索結果と回答生成をマネージドで提供し、AI エージェントが最新情報を取得しやすくなる機能を備えている（Qiita 記事）。これらのサービスは、Claude Code が外部情報を参照しながら開発タスクを遂行する際の補完手段として位置付けられる。</p>
 
 <h2>影響・展望</h2>
-<p>Claude と GitHub Actions による脆弱性チェック自動化は、以下のような効果が期待できる。</p>
-<ul>
-<li><strong>セキュリティリスクの早期検知</strong>：Zero Wire が提供する「外向きのソフトウェア」特化型 CVE 情報をリアルタイムで取得し、AI が即座に判定するため、手動確認に比べて見逃しの可能性が低減するとみられる。</li>
-<li><strong>開発者の負荷軽減</strong>：確認待ちへの回答以外の作業が不要になることで、開発者は本来の機能開発や改善に専念できる。</li>
-<li><strong>プロセスの標準化</strong>：AI エージェントがタスク管理・テスト・脆弱性チェックを一元化することで、チーム間の認識齟齬が減少し、CI/CD パイプライン全体の一貫性が向上する。</li>
-</ul>
-<p>今後は、Zero Wire のフィード対象が拡大したり、Claude のプラグインエコシステムが成熟したりすることで、さらに多様な開発・運用タスクが自動化される可能性がある。また、Claude Certified Developer の認定が普及すれば、AI エージェントを活用できる人材が増加し、組織全体での AI 主導型開発が加速すると予測される。</p>
+<p>AI エージェントによる自動開発環境構築は、個人開発者だけでなく、スタートアップや中小企業にとってもコスト削減とスピード向上の鍵となり得る。設定の一元化と自己修正機能により、環境のバージョン管理が容易になり、チーム全体での環境統一が促進される可能性がある。</p>
+<p>今後は、Claude Code のような汎用エージェントと、Herdr.app や AgentCore のような専門ツールが連携し、検索・コード生成・デプロイまでのフルスタック自動化が実現する見込みである。特に、ISUCON のような高負荷競技での実証実験は、実運用に向けた信頼性評価の指標となり得る。</p>
 
 <h2>まとめ</h2>
-<p>Claude と GitHub Actions の連携により、Cloudflare Zero Wire の脆弱性情報を自動で判定する仕組みが実装されたことは、AI エージェントが開発・運用の幅広い領域で自律的に機能する好例だ。タスク管理やテスト自動化、認定制度と相まって、AI が人間の作業負荷を削減しつつセキュリティと品質を高める「開発自動化」の潮流が本格化している。</p>
+<p>Claude Code を中心に据えた自動開発環境は、設定コストの削減と自己修正による運用負荷の低減を実証している。Switchboard、Herdr.app、hc、そして ISUCON での無人運転ハーネスといった実例は、AI エージェントが開発フロー全体を自律的に管理できる可能性を示した。今後、関連ツールとの連携が進めば、開発現場の生産性はさらに大きく向上するだろう。</p>
 
-<h3>参考文献</h3>
 <ul>
-<li>Cloudflare Zero Wire × GitHub Actions × Claude で公開サーバーの脆弱性チェックを自動化（Zenn）</li>
-<li>タスク管理までAIエージェントに任せたら、確認待ちに答えるだけになった（Zenn）</li>
-<li>Claudeを使いこなす人に、MagicPodは要るのか（Zenn）</li>
-<li>Claude Certified Developer - Foundations（CCDV-F） 昨日受けてきました。（Qiita）</li>
+<li>AIエージェントに自分の開発環境を作らせ続けた2か月（Zenn）</li>
+<li>Herdr.app と hc の上で Claude Code の司令塔を回している（Zenn）</li>
+<li>ISUCON2026 ソロ参加記：自作ハーネスで Claude Code をほぼ無人運転した（Zenn）</li>
+<li>周回遅れ？インフラエンジニア、今さら GitHub Copilot app を使い始める！？（Qiita）</li>
+<li>結果を返すか、答えを返すか。Web SearchとWeb Answerの使い分け【AgentCore】（Qiita）</li>
 </ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/tomipetit/articles/zero-wire-github-actions" target="_blank" rel="noopener">Cloudflare Zero Wire × GitHub Actions × Claude で公開サーバーの脆弱性チェックを自動化</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/rescuenow/articles/4c03a548cd6589" target="_blank" rel="noopener">タスク管理までAIエージェントに任せたら、確認待ちに答えるだけになった</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/genda_jp/articles/7b423bcd20b532" target="_blank" rel="noopener">Claudeを使いこなす人に、MagicPodは要るのか。知らないアプリでPlaywrightと比べた記録</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/takeshi_Qiita/items/f8298084825898921cb4?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">Claude Certified Developer - Foundations (CCDV-F) 昨日受けてきました。【日本語受験】</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/otar/articles/switchboard-own-dev-environment" target="_blank" rel="noopener">AIエージェントに自分の開発環境を作らせ続けた2か月</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/hoshinotsuyoshi/articles/c994c29833f36c" target="_blank" rel="noopener">Herdr.app と hc の上で Claude Code の司令塔を回している</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/5alt_nacl/articles/isucon2026-solo-ai-agent" target="_blank" rel="noopener">ISUCON2026 ソロ参加記：自作ハーネスで Claude Code をほぼ無人運転した</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/carol0226/items/21c4ad96de4d8df2f047?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">周回遅れ？インフラエンジニア、今さら GitHub Copilot app を使い始める！？</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/Nana_777/items/6e466fb974972a79a323?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">【AWS】結果を返すか、答えを返すか。Web SearchとWeb Answerの使い分け【AgentCore】</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
