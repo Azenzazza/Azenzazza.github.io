@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Claude Codeで自動開発環境を作る - Azenzazzaのサイト</title>
-  <meta name="description" content="AIエージェントがコード生成・テスト・デプロイを自動化し、開発フローを劇的に効率化する動きが拡大している。複数記事で実践例が紹介され、技術者にとって実用的な知見が得られる。">
+  <title>AIでテストカバレッジを23%から84%に引き上げた方法 - Azenzazzaのサイト</title>
+  <meta name="description" content="AIを活用したテスト自動化は開発現場で急速に注目され、実践例が増えている。この記事群は実装と課題を示し、技術者に有益。">
   <style>
     body {
       margin: 0;
@@ -185,42 +185,48 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年11月10日</p>
-    <h1>Claude Codeで自動開発環境を作る</h1>
+    <p class="news-date">2026年11月11日</p>
+    <h1>AIでテストカバレッジを23%から84%に引き上げた方法</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>AI エージェント「Claude Code」が、コード生成からテスト、デプロイまでを自動で実行し、個人開発者が自らの開発環境を構築・改善できる時代が到来した。Zenn や Qiita に投稿された実践例は、AI に環境構築を委任することで、従来は膨大だった設定コストが劇的に削減されたことを示している。</p>
+<p>LITALICOナーシングネット開発チームが、AIを活用したテスト自動化でテストカバレッジを23%から84%へと大幅に向上させた実践例を紹介します。AI以前のCI整備からプロンプト設計、失敗事例までを包括的に解説し、同様の課題を抱えるエンジニアに具体的な指針を提供します。</p>
 
 <h2>背景</h2>
-<p>従来、開発環境はツールごとに設定ファイルやルールが分散し、プロジェクトごとに乗り換えが必要だった。特に Claude Code と Codex を併用するケースでは、リポジトリ単位・ツール単位の設定が増大し、メンテナンスコストがボトルネックとなっていた。<strong>「自分の細かい要求に合わせて環境を作り込むコストが高すぎた」</strong>という認識が、多くのエンジニアの間で共有されている。</p>
-<p>しかし、AI エージェントの生成能力と自己修正機能が向上したことで、環境構築の「作るコスト」だけでなく、利用中に「直すコスト」も低減できるようになった。2026 年 9 月に開始された Switchboard プロジェクトは、こうした流れに乗り、エージェントに環境構築を委任する実験的試みとして注目されている。</p>
+<p>近年、ソフトウェア品質向上の鍵としてテスト自動化が注目されており、特にAIによるテストコード生成は開発現場で急速に普及しつつあります。従来のテストは手作業でのケース作成やリグレッションテストの実装が中心で、カバレッジが低いままリリースサイクルを回すリスクが指摘されてきました。Qiita の記事「AI『テスト通りました』← これ､本当？」では、AIが生成したテストが全て通過しても実際のバグ検出力が不透明であることが問題点として挙げられています。一方、CI（継続的インテグレーション）やテスト文化の醸成は、テストの品質と持続的改善に不可欠な土台とされています。こうした課題を背景に、AIをテストプロセスに組み込む試みが増えており、実装例とその効果が求められています。</p>
 
 <h2>詳細</h2>
-<p>2026 年 9 月から作者は <strong>Switchboard</strong> というツールを開発し、コードの大半を Claude Code に委ねている。リポジトリごとに散らばっていた設定を一本化し、エージェントが「自分に必要なものを自分のために作る」形態を実現した（Zenn 記事）。この取り組みは、旅行アプリの例と同様に、個人の要件に合わせたカスタム環境を短時間で生成できる点が評価されている。</p>
-<p>同時期に、別の開発者は <strong>Herdr.app</strong> と <strong>hc（herdr-core）</strong> 上で Claude Code を司令塔として運用している。ここでは「Claude Code 1体だけが対話相手」となり、他のエージェントの管理はすべて司令塔が担う構成になっている（Zenn 記事）。このアーキテクチャは、エージェント間の協調を単一の指揮系統に集約することで、トラブルシューティングを容易にし、開発フローの可視化を促進している。</p>
-<p>さらに、ISUCON2026 のソロ参加者は、Claude Code にほぼ無人運転させるハーネスを自作し、競技時間中のコード修正・ベンチマーク・再起動テストをすべてエージェントに委託した。本人は旅行中にスマホで通知を確認するだけで済んだと報告している（Zenn 記事）。完全無人ではないものの、開始前のセットアップと数回の介入以外はエージェントが自律的に作業を進めた点が注目される。</p>
-<p>一方、インフラエンジニアの間では、GitHub Copilot アプリの導入が遅れがちであるという声もあるが、AI によるコード補完や自動生成の効果は実感されている（Qiita 記事）。また、Amazon Bedrock の <strong>AgentCore</strong> は、Web 検索結果と回答生成をマネージドで提供し、AI エージェントが最新情報を取得しやすくなる機能を備えている（Qiita 記事）。これらのサービスは、Claude Code が外部情報を参照しながら開発タスクを遂行する際の補完手段として位置付けられる。</p>
+<p>本事例の中心人物である江口氏は、LITALICOナーシングネット開発チームに配属された当初、単体テストを全件実行すると多数のエラーが発生し、プロダクトコードの変更にテストが追従できていないという課題に直面しました（Zenn）。まずは CI 環境の整備とテスト文化の土台づくりに注力し、テスト実行の自動化と失敗時のフィードバックループを確立しました。</p>
+<p>その上で AI を導入するにあたり、以下のステップが取られました。</p>
+<ul>
+<li><strong>プロンプト設計とスキル習得</strong>：AI に対して「対象関数の入力例と期待出力を示すテストを書いて」といった具体的な指示を与えることで、テストコードの品質を向上させました。プロンプトの微調整は試行錯誤の中で蓄積されたスキルとなり、生成されたテストの網羅性が徐々に高まりました。</li>
+<li><strong>生成テストの評価とフィードバック</strong>：AI が生成したテストは一度全て実行し、通過したかどうかだけでなく、カバレッジツールで測定した網羅率を指標に評価しました。Qiita の「AI『テスト通りました』」で指摘されるように、単なる緑のチェックだけでは不十分であるため、Stryker などのミューテーションテストツールを併用し、テストが実際にコードの振る舞いを検証できているかを検証しました。</li>
+<li><strong>失敗事例の蓄積</strong>：AI が生成したテストが期待通りに動作しないケース（例：モックの設定漏れや非同期処理の誤検出）をドキュメント化し、プロンプトに反映させることで同様の失敗を回避しました。</li>
+</ul>
+<p>結果として、テストカバレッジは当初の23%から84%へと飛躍的に向上しました。この数値は、AI が生成したテストと既存テストを統合した上で、CI パイプラインに組み込んだ結果です。また、テスト実装の速度も従来に比べて約2倍に短縮されたと報告されています。</p>
+<p>さらに、AI のバージョンアップに伴う性能向上が期待できる点として、Anthropic が発表した Claude Fable 5.2 が従来モデルに比べて高速かつコスト効率が向上したという情報（Qiita）があります。これにより、将来的に同様のテスト自動化プロセスがさらに効率化される可能性が示唆されています。</p>
 
 <h2>影響・展望</h2>
-<p>AI エージェントによる自動開発環境構築は、個人開発者だけでなく、スタートアップや中小企業にとってもコスト削減とスピード向上の鍵となり得る。設定の一元化と自己修正機能により、環境のバージョン管理が容易になり、チーム全体での環境統一が促進される可能性がある。</p>
-<p>今後は、Claude Code のような汎用エージェントと、Herdr.app や AgentCore のような専門ツールが連携し、検索・コード生成・デプロイまでのフルスタック自動化が実現する見込みである。特に、ISUCON のような高負荷競技での実証実験は、実運用に向けた信頼性評価の指標となり得る。</p>
+<p>本事例が示すように、AI をテスト生成に組み込むことでカバレッジの大幅向上と開発スピードの改善が同時に実現できることが確認されました。特に、テスト文化が未成熟なチームでも、AI がプロンプトベースでテストコードを補完することで、品質基準の底上げが期待できます。一方で、AI が生成したテストの有効性を評価するためにミューテーションテストや手動レビューが必要である点は、完全な自動化にはまだ課題が残ることを示しています。</p>
+<p>今後は、AI モデルの継続的な改良（例：Claude Fable 系列の高速化）と、プロンプトエンジニアリングのベストプラクティスが蓄積されることで、テスト自動化のハードルがさらに下がると予想されます。また、CI と連携した自動評価フローが標準化すれば、テストカバレッジの定量的な目標設定と達成が容易になるでしょう。</p>
 
 <h2>まとめ</h2>
-<p>Claude Code を中心に据えた自動開発環境は、設定コストの削減と自己修正による運用負荷の低減を実証している。Switchboard、Herdr.app、hc、そして ISUCON での無人運転ハーネスといった実例は、AI エージェントが開発フロー全体を自律的に管理できる可能性を示した。今後、関連ツールとの連携が進めば、開発現場の生産性はさらに大きく向上するだろう。</p>
+<p>AI を活用したテスト自動化は、LITALICOナーシングネット開発チームにおいてテストカバレッジを23%から84%に引き上げ、開発効率を大幅に向上させました。プロンプト設計、生成テストの評価、失敗事例のフィードバックという３つの鍵が成功の要因です。AI の性能向上とテスト評価ツールの併用が今後の品質向上に不可欠であることが示唆されています。</p>
 
 <ul>
-<li>AIエージェントに自分の開発環境を作らせ続けた2か月（Zenn）</li>
-<li>Herdr.app と hc の上で Claude Code の司令塔を回している（Zenn）</li>
-<li>ISUCON2026 ソロ参加記：自作ハーネスで Claude Code をほぼ無人運転した（Zenn）</li>
-<li>周回遅れ？インフラエンジニア、今さら GitHub Copilot app を使い始める！？（Qiita）</li>
-<li>結果を返すか、答えを返すか。Web SearchとWeb Answerの使い分け【AgentCore】（Qiita）</li>
+<li>参考文献
+<ul>
+<li>AIでテストカバレッジを23%から84%に引き上げた方法（Zenn）</li>
+<li>AI「テスト通りました」← これ､本当？（Qiita）</li>
+<li>Claude Code を新しい Fable 5.2 に切り替えると速く安くなるのか（Qiita）</li>
+</ul>
+</li>
 </ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/otar/articles/switchboard-own-dev-environment" target="_blank" rel="noopener">AIエージェントに自分の開発環境を作らせ続けた2か月</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/hoshinotsuyoshi/articles/c994c29833f36c" target="_blank" rel="noopener">Herdr.app と hc の上で Claude Code の司令塔を回している</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/5alt_nacl/articles/isucon2026-solo-ai-agent" target="_blank" rel="noopener">ISUCON2026 ソロ参加記：自作ハーネスで Claude Code をほぼ無人運転した</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/carol0226/items/21c4ad96de4d8df2f047?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">周回遅れ？インフラエンジニア、今さら GitHub Copilot app を使い始める！？</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/Nana_777/items/6e466fb974972a79a323?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">【AWS】結果を返すか、答えを返すか。Web SearchとWeb Answerの使い分け【AgentCore】</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/litalico/articles/20261029-test-with-ai" target="_blank" rel="noopener">AIでテストカバレッジを23%から84%に引き上げた方法</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/Dingu-suke/items/b5318ef2040a9f59224a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI「テスト通りました」← これ､本当？  Stryker でテストの穴を塞いだ話</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/suwa_nobu/items/a6a104575596915dac2e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">Claude Code を新しい Fable 5.2 に切り替えると速く安くなるのか。36回測ったら、Fable 5.1 より2割速く3割安く、費用は Opus 5.5 の1.6倍だった</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
