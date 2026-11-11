@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIでテストカバレッジを23%から84%に引き上げた方法 - Azenzazzaのサイト</title>
-  <meta name="description" content="AIを活用したテスト自動化は開発現場で急速に注目され、実践例が増えている。この記事群は実装と課題を示し、技術者に有益。">
+  <title>AIと開発ツールの最新動向 - Azenzazzaのサイト</title>
+  <meta name="description" content="AIが開発プロセスを変革し、コード生成、テスト自動化、データ分析ツールなどが進化。最新ツールと実践例をまとめ、技術者へのインサイトを提供する。特に、AI駆動型のフレームワークとプロンプト設計の重要性を解説。">
   <style>
     body {
       margin: 0;
@@ -185,48 +185,58 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年11月11日</p>
-    <h1>AIでテストカバレッジを23%から84%に引き上げた方法</h1>
+    <p class="news-date">2026年11月12日</p>
+    <h1>AIと開発ツールの最新動向</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>LITALICOナーシングネット開発チームが、AIを活用したテスト自動化でテストカバレッジを23%から84%へと大幅に向上させた実践例を紹介します。AI以前のCI整備からプロンプト設計、失敗事例までを包括的に解説し、同様の課題を抱えるエンジニアに具体的な指針を提供します。</p>
+<p>AIが開発プロセス全体に浸透しつつある。コード生成やテスト自動化、データ分析基盤まで、AI駆動型ツールは実務での活用例が増えている。本稿では、最新ツールの実装例と、フレームワークやプロンプト設計の重要ポイントを、実際の開発者の声を交えて解説する。</p>
 
 <h2>背景</h2>
-<p>近年、ソフトウェア品質向上の鍵としてテスト自動化が注目されており、特にAIによるテストコード生成は開発現場で急速に普及しつつあります。従来のテストは手作業でのケース作成やリグレッションテストの実装が中心で、カバレッジが低いままリリースサイクルを回すリスクが指摘されてきました。Qiita の記事「AI『テスト通りました』← これ､本当？」では、AIが生成したテストが全て通過しても実際のバグ検出力が不透明であることが問題点として挙げられています。一方、CI（継続的インテグレーション）やテスト文化の醸成は、テストの品質と持続的改善に不可欠な土台とされています。こうした課題を背景に、AIをテストプロセスに組み込む試みが増えており、実装例とその効果が求められています。</p>
+<p>近年、生成系AIの性能向上に伴い、開発者は「AIに作業を任せる」シナリオを試す機会が増えている。Zenn の記事「AIに書かせた、が全然AIが書いてない件」では、執筆作業を Slack のコマンドでトリガーし、毎朝自動で下書きを GitHub に配置する仕組みが紹介され、AI に対する期待と実際のギャップが語られている。テスト自動化に関しては Qiita の「AI『テスト通りました』← これ､本当？」が、AI が生成したテストコードが緑のチェックだけで本質的な検証を行えているか疑問を投げかけている。</p>
+<p>一方、AI の選択・最適化ロジックを提供する LiteLLM の Adaptive Router（ベータ版）は、リクエスト内容に応じて複数モデルへ振り分け、品質・コストの重み付けや学習シグナルを活用して最適モデルを選択する仕組みを示している。さらに、Claude の Fable 5.2 プロンプトガイドや PKSHA の AI ネイティブなデータ分析基盤 Laplace の設計指針は、プロンプト設計やシステム境界の定義がツールの有効活用に直結することを示唆している。</p>
 
 <h2>詳細</h2>
-<p>本事例の中心人物である江口氏は、LITALICOナーシングネット開発チームに配属された当初、単体テストを全件実行すると多数のエラーが発生し、プロダクトコードの変更にテストが追従できていないという課題に直面しました（Zenn）。まずは CI 環境の整備とテスト文化の土台づくりに注力し、テスト実行の自動化と失敗時のフィードバックループを確立しました。</p>
-<p>その上で AI を導入するにあたり、以下のステップが取られました。</p>
+<h3>AI 製記事自動化の実装例</h3>
+<p>「AIに書かせた、が全然AIが書いてない件」の執筆者は、Slack のカスタムコマンドで「お題」と「メモ」を保存し、毎朝それらを元に AI に下書きを生成させ、GitHub リポジトリへ自動プッシュするフローを構築した。文体指示書を繰り返し修正することで、次回の初稿が徐々に改善されるという実験的手法であり、AI に完全に依存せずヒューマン・イン・ザ・ループを維持しつつ自動化効果を測っている。</p>
+
+<h3>モデル選択と学習の自動化 – LiteLLM Adaptive Router</h3>
+<p>LiteLLM の Adaptive Router は、単一のモデル名で受けたリクエストを内部で解析し、以下の情報を基に複数モデルへ振り分ける。</p>
 <ul>
-<li><strong>プロンプト設計とスキル習得</strong>：AI に対して「対象関数の入力例と期待出力を示すテストを書いて」といった具体的な指示を与えることで、テストコードの品質を向上させました。プロンプトの微調整は試行錯誤の中で蓄積されたスキルとなり、生成されたテストの網羅性が徐々に高まりました。</li>
-<li><strong>生成テストの評価とフィードバック</strong>：AI が生成したテストは一度全て実行し、通過したかどうかだけでなく、カバレッジツールで測定した網羅率を指標に評価しました。Qiita の「AI『テスト通りました』」で指摘されるように、単なる緑のチェックだけでは不十分であるため、Stryker などのミューテーションテストツールを併用し、テストが実際にコードの振る舞いを検証できているかを検証しました。</li>
-<li><strong>失敗事例の蓄積</strong>：AI が生成したテストが期待通りに動作しないケース（例：モックの設定漏れや非同期処理の誤検出）をドキュメント化し、プロンプトに反映させることで同様の失敗を回避しました。</li>
+<li><strong>weights（品質とコストの重み）</strong> が選択結果に与える影響</li>
+<li>学習に使用するシグナルと、学習が発生しない条件</li>
+<li>日本語プロンプトの分類と学習</li>
+<li>運用時に考慮すべき制約</li>
 </ul>
-<p>結果として、テストカバレッジは当初の23%から84%へと飛躍的に向上しました。この数値は、AI が生成したテストと既存テストを統合した上で、CI パイプラインに組み込んだ結果です。また、テスト実装の速度も従来に比べて約2倍に短縮されたと報告されています。</p>
-<p>さらに、AI のバージョンアップに伴う性能向上が期待できる点として、Anthropic が発表した Claude Fable 5.2 が従来モデルに比べて高速かつコスト効率が向上したという情報（Qiita）があります。これにより、将来的に同様のテスト自動化プロセスがさらに効率化される可能性が示唆されています。</p>
+<p>この仕組みにより、開発者は「どのモデルが最適か」を手動で判断する必要がなくなり、実際の会話履歴から得たフィードバックが次回以降のモデル選択に反映される。</p>
+
+<h3>プロンプト設計の実践 – Claude Fable 5.2</h3>
+<p>Claude の Fable 5.2 用プロンプトガイドを読んだ感想が Zenn に掲載されている。特筆すべきは「effort」や「API の使い方」に関する具体的な記述で、プロンプトの構造化が生成品質に直結することが示されている。執筆者は実際に手元で軽く触ってみた結果を添えて、プロンプト設計の「試行錯誤」が必須である点を強調している。</p>
+
+<h3>AI ネイティブなデータ分析基盤 – Laplace</h3>
+<p>PKSHA Technology の SRE が語る Laplace の設計は、ツール選定ではなく「何を守るか」「どこに境界を引くか」に焦点を当てている。データ分析基盤を構築する際の契約（SLA）や、AI が生成する分析結果の信頼性を担保するためのガバナンスが明示され、単なるインフラの置き換えではなく、AI 活用の前提条件を体系化した点が特徴である。</p>
+
+<h3>AI 生成テストの落とし穴</h3>
+<p>Qiita の記事では、Stryker を用いた AI 生成テストが「すべて通過」したとしても、実際にコードが壊れていないかは保証できないと指摘されている。緑のチェックが表示されても、テスト自体が不十分であれば脆弱性は残る可能性がある。AI にテストを書かせる際は、テストケースの網羅性や境界条件の確認を人間が再度レビューするプロセスが不可欠である。</p>
 
 <h2>影響・展望</h2>
-<p>本事例が示すように、AI をテスト生成に組み込むことでカバレッジの大幅向上と開発スピードの改善が同時に実現できることが確認されました。特に、テスト文化が未成熟なチームでも、AI がプロンプトベースでテストコードを補完することで、品質基準の底上げが期待できます。一方で、AI が生成したテストの有効性を評価するためにミューテーションテストや手動レビューが必要である点は、完全な自動化にはまだ課題が残ることを示しています。</p>
-<p>今後は、AI モデルの継続的な改良（例：Claude Fable 系列の高速化）と、プロンプトエンジニアリングのベストプラクティスが蓄積されることで、テスト自動化のハードルがさらに下がると予想されます。また、CI と連携した自動評価フローが標準化すれば、テストカバレッジの定量的な目標設定と達成が容易になるでしょう。</p>
+<p>AI 駆動型ツールは、開発効率の向上だけでなく、品質保証やデータ分析の信頼性に新たな課題を投げかけている。モデル選択を自動化する Adaptive Router のような仕組みは、コスト最適化と品質維持を同時に実現できる可能性がある。一方、プロンプト設計やテスト自動化の現場では、ヒューマン・イン・ザ・ループが依然として重要であり、AI の出力を盲目的に受け入れるリスクは残る。今後は「AI と人間の協働」を前提にした開発フレームワークの標準化と、プロンプト品質評価指標の整備が求められるだろう。</p>
 
 <h2>まとめ</h2>
-<p>AI を活用したテスト自動化は、LITALICOナーシングネット開発チームにおいてテストカバレッジを23%から84%に引き上げ、開発効率を大幅に向上させました。プロンプト設計、生成テストの評価、失敗事例のフィードバックという３つの鍵が成功の要因です。AI の性能向上とテスト評価ツールの併用が今後の品質向上に不可欠であることが示唆されています。</p>
+<p>AI 駆動型開発ツールは、コード生成・テスト自動化・データ分析という三つの領域で実用化が進んでいる。実装例として Slack‑GitHub 連携の自動執筆、LiteLLM のモデル自動振り分け、Claude のプロンプトガイド、Laplace の設計指針、Stryker を用いたテスト自動生成が挙げられる。これらから見えてくるのは、AI の出力を最大限活かすには「プロンプト設計」や「ヒューマン・レビュー」のプロセスが不可欠であるという点だ。</p>
 
 <ul>
-<li>参考文献
-<ul>
-<li>AIでテストカバレッジを23%から84%に引き上げた方法（Zenn）</li>
-<li>AI「テスト通りました」← これ､本当？（Qiita）</li>
-<li>Claude Code を新しい Fable 5.2 に切り替えると速く安くなるのか（Qiita）</li>
-</ul>
-</li>
+<li>https://zenn.dev/appleworld/articles/65aed6c725af71</li>
+<li>https://zenn.dev/aws_japan/articles/ac9ae548d57323</li>
+<li>https://zenn.dev/tree_and_tree/articles/thoughts-on-claude-fable-5-2</li>
+<li>https://zenn.dev/pksha/articles/laplace-build-guide</li>
+<li>https://qiita.com/Dingu-suke/items/b5318ef2040a9f59224a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items</li>
 </ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/litalico/articles/20261029-test-with-ai" target="_blank" rel="noopener">AIでテストカバレッジを23%から84%に引き上げた方法</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/Dingu-suke/items/b5318ef2040a9f59224a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI「テスト通りました」← これ､本当？  Stryker でテストの穴を塞いだ話</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/suwa_nobu/items/a6a104575596915dac2e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">Claude Code を新しい Fable 5.2 に切り替えると速く安くなるのか。36回測ったら、Fable 5.1 より2割速く3割安く、費用は Opus 5.5 の1.6倍だった</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/appleworld/articles/65aed6c725af71" target="_blank" rel="noopener">AIに書かせた、が全然AIが書いてない件</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/aws_japan/articles/ac9ae548d57323" target="_blank" rel="noopener">LiteLLM Adaptive Router を検証する（前編）：モデル選択と学習の仕組み</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/tree_and_tree/articles/thoughts-on-claude-fable-5-2" target="_blank" rel="noopener">Claude Fable 5.2のプロンプトガイドを読んで正直に思ったことを書く</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/pksha/articles/laplace-build-guide" target="_blank" rel="noopener">AI ネイティブなデータ分析基盤を作った話（後編）</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/Dingu-suke/items/b5318ef2040a9f59224a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI「テスト通りました」← これ､本当？  Stryker でテストの穴を塞いだ話</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
