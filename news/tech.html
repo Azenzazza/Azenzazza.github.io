@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIと開発ツールの最新動向 - Azenzazzaのサイト</title>
-  <meta name="description" content="AIが開発プロセスを変革し、コード生成、テスト自動化、データ分析ツールなどが進化。最新ツールと実践例をまとめ、技術者へのインサイトを提供する。特に、AI駆動型のフレームワークとプロンプト設計の重要性を解説。">
+  <title>AIに書かせた、が全然AIが書いてない件 - Azenzazzaのサイト</title>
+  <meta name="description" content="AIエージェントがコードや運用を自動化する動きが加速し、実務での活用事例や課題が多数報告されている。複数記事が同テーマを扱うため、読者に実践的洞察を提供できる。">
   <style>
     body {
       margin: 0;
@@ -185,58 +185,65 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年11月12日</p>
-    <h1>AIと開発ツールの最新動向</h1>
+    <p class="news-date">2026年11月13日</p>
+    <h1>AIに書かせた、が全然AIが書いてない件</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>AIが開発プロセス全体に浸透しつつある。コード生成やテスト自動化、データ分析基盤まで、AI駆動型ツールは実務での活用例が増えている。本稿では、最新ツールの実装例と、フレームワークやプロンプト設計の重要ポイントを、実際の開発者の声を交えて解説する。</p>
+<p>AIエージェントがコード生成や運用タスクを自動化する動きが加速している。実務での活用例として、給与システムの意思決定が勝手に変わるケースや、社内クラウドエージェント基盤の構築・トークン削減手法、複数タスクを一つのチャットに集約する「いちょまる」など、さまざまな実装が報告されている。本稿では、これらの事例を横断的に整理し、現場が直面する課題と今後の展望を探る。</p>
 
 <h2>背景</h2>
-<p>近年、生成系AIの性能向上に伴い、開発者は「AIに作業を任せる」シナリオを試す機会が増えている。Zenn の記事「AIに書かせた、が全然AIが書いてない件」では、執筆作業を Slack のコマンドでトリガーし、毎朝自動で下書きを GitHub に配置する仕組みが紹介され、AI に対する期待と実際のギャップが語られている。テスト自動化に関しては Qiita の「AI『テスト通りました』← これ､本当？」が、AI が生成したテストコードが緑のチェックだけで本質的な検証を行えているか疑問を投げかけている。</p>
-<p>一方、AI の選択・最適化ロジックを提供する LiteLLM の Adaptive Router（ベータ版）は、リクエスト内容に応じて複数モデルへ振り分け、品質・コストの重み付けや学習シグナルを活用して最適モデルを選択する仕組みを示している。さらに、Claude の Fable 5.2 プロンプトガイドや PKSHA の AI ネイティブなデータ分析基盤 Laplace の設計指針は、プロンプト設計やシステム境界の定義がツールの有効活用に直結することを示唆している。</p>
+<p>近年、Claude Code、Codex、GPT‑3.5 Turbo など高度な大規模言語モデル（LLM）を活用したエージェントが、開発者の作業を補助するツールとして広がっている。特に「AI‑Native」な開発環境を目指す企業が増え、コード生成だけでなく、仕様書の自動更新や運用フローの自動化までを一括で担うケースが増加中だ。<strong>AIエージェントは、決定情報（ADR）や実装仕様（OpenSpec）を読み取り、指示に従ってコードを書き、さらにはその結果を別のシステムへ反映させるという一連の流れを自律的に実行できる</strong>と期待されている。</p>
+<p>しかし、エージェントが自律的に動くことは、意図しない意思決定変更や情報の食い違いといった新たなリスクも伴う。実務での導入事例が増えるにつれ、こうした課題への対策が急務となっている。</p>
 
 <h2>詳細</h2>
-<h3>AI 製記事自動化の実装例</h3>
-<p>「AIに書かせた、が全然AIが書いてない件」の執筆者は、Slack のカスタムコマンドで「お題」と「メモ」を保存し、毎朝それらを元に AI に下書きを生成させ、GitHub リポジトリへ自動プッシュするフローを構築した。文体指示書を繰り返し修正することで、次回の初稿が徐々に改善されるという実験的手法であり、AI に完全に依存せずヒューマン・イン・ザ・ループを維持しつつ自動化効果を測っている。</p>
-
-<h3>モデル選択と学習の自動化 – LiteLLM Adaptive Router</h3>
-<p>LiteLLM の Adaptive Router は、単一のモデル名で受けたリクエストを内部で解析し、以下の情報を基に複数モデルへ振り分ける。</p>
+<h3>1. 意思決定が勝手に変わるパターンと対策</h3>
+<p>Dress Code の HR Force チーム（給与ドメイン担当）が報告したケースでは、Claude Code や Codex に日常的にタスクを委任している最中に、以下の5つのパターンで決定が予期せず変化した。</p>
 <ul>
-<li><strong>weights（品質とコストの重み）</strong> が選択結果に与える影響</li>
-<li>学習に使用するシグナルと、学習が発生しない条件</li>
-<li>日本語プロンプトの分類と学習</li>
-<li>運用時に考慮すべき制約</li>
+<li>仕様質問が「仕様変更指示」として記録された。</li>
+<li>承認していない提案が次工程で「決定済み」と扱われた。</li>
+<li>エージェントが過去の ADR を参照せず、矛盾した判断を下した。</li>
+<li>外部環境（例：Slack のメッセージ）と内部状態が同期されず、状態遷移が失われた。</li>
+<li>自動生成されたコードが既存のテストケースと不整合を起こした。</li>
 </ul>
-<p>この仕組みにより、開発者は「どのモデルが最適か」を手動で判断する必要がなくなり、実際の会話履歴から得たフィードバックが次回以降のモデル選択に反映される。</p>
+<p>対策としては、エージェントに対し「決定情報は必ず ADR に書き込み、変更は人間の承認を必須にする」フローを組み込むこと、そして「OpenSpec の仕様書を読み込む前に最新の ADR を再取得させる」仕組みを導入した。</p>
 
-<h3>プロンプト設計の実践 – Claude Fable 5.2</h3>
-<p>Claude の Fable 5.2 用プロンプトガイドを読んだ感想が Zenn に掲載されている。特筆すべきは「effort」や「API の使い方」に関する具体的な記述で、プロンプトの構造化が生成品質に直結することが示されている。執筆者は実際に手元で軽く触ってみた結果を添えて、プロンプト設計の「試行錯誤」が必須である点を強調している。</p>
+<h3>2. 社内クラウドエージェント基盤の構築例（Uvin）</h3>
+<p>Ubie の CTO が語るように、2023 年に GPT‑3.5 Turbo がリリースされた頃から、Web UI や Slack を起点に動くクラウドエージェント基盤を内製し、2025 年には「Software Factory」へ向けたエンジニアリングエージェント <strong>Uvin</strong> の開発に着手した。</p>
+<p>基盤は、エージェントが「Bet」する（＝提案・実行）プロセスを統一的に管理し、タスクの割り当て・結果の集約・再利用を可能にする。これにより、複数チームが同一のエージェントを横断的に利用でき、開発サイクルの短縮とナレッジの共有が実現された。</p>
 
-<h3>AI ネイティブなデータ分析基盤 – Laplace</h3>
-<p>PKSHA Technology の SRE が語る Laplace の設計は、ツール選定ではなく「何を守るか」「どこに境界を引くか」に焦点を当てている。データ分析基盤を構築する際の契約（SLA）や、AI が生成する分析結果の信頼性を担保するためのガバナンスが明示され、単なるインフラの置き換えではなく、AI 活用の前提条件を体系化した点が特徴である。</p>
+<h3>3. トークン使用量の削減テクニック</h3>
+<p>Sae 氏は Claude Code のトークン消費が多いことに着目し、<strong>compact 設定</strong>と離席時の自動コンパクト化を組み合わせた結果、トークン使用量が約 40% 減少したと報告している。実験は 10/13〜11/9 の 15 日間と、設定変更後の 11 日間で比較し、作業内容は概ね同等であった。</p>
+<p>この手法は、エージェントが生成する出力を必要最小限に抑えることで、コスト削減と応答速度向上の両立が可能になる点が注目される。</p>
 
-<h3>AI 生成テストの落とし穴</h3>
-<p>Qiita の記事では、Stryker を用いた AI 生成テストが「すべて通過」したとしても、実際にコードが壊れていないかは保証できないと指摘されている。緑のチェックが表示されても、テスト自体が不十分であれば脆弱性は残る可能性がある。AI にテストを書かせる際は、テストケースの網羅性や境界条件の確認を人間が再度レビューするプロセスが不可欠である。</p>
+<h3>4. 複数担当・定期実行を一括管理する「いちょまる」</h3>
+<p>OpenCode を拡張し、親セッション（まとめ役）から子セッション（担当）へタスクを振り分け、結果を一つのチャットに集約する「いちょまる」も公開された。利用者は常に同一のチャット窓口に話しかけるだけで、AI が適切な担当へ指示を転送し、完了報告をまとめ役に返す仕組みだ。</p>
+<p>この設計は、同時進行する複数の依頼や定期的なリマインド作業を手動で再入力する手間を削減し、作業の可視化と履歴管理を容易にする。</p>
+
+<h3>5. コード脆弱性自動修正エージェント「CodeMender」</h3>
+<p>2026 年 11 月、Google Cloud のブログで紹介された <strong>CodeMender</strong> は、GitHub のプルリクエスト（PR）に組み込むことで、AI が脆弱性を検出し自動で修正する機能を提供する。実装例は Qiita 記事で取り上げられ、新卒エンジニアが基礎学習に活用できる点が強調されている。</p>
+<p>このように、AI がコード品質向上に直接関与するケースが増えると、従来のコードレビュー工程に変革が起きる可能性がある。</p>
 
 <h2>影響・展望</h2>
-<p>AI 駆動型ツールは、開発効率の向上だけでなく、品質保証やデータ分析の信頼性に新たな課題を投げかけている。モデル選択を自動化する Adaptive Router のような仕組みは、コスト最適化と品質維持を同時に実現できる可能性がある。一方、プロンプト設計やテスト自動化の現場では、ヒューマン・イン・ザ・ループが依然として重要であり、AI の出力を盲目的に受け入れるリスクは残る。今後は「AI と人間の協働」を前提にした開発フレームワークの標準化と、プロンプト品質評価指標の整備が求められるだろう。</p>
+<p>AI エージェントによるコード・運用自動化は、開発スピードの向上とコスト削減を実現しつつ、意思決定の透明性やトークン消費といった新たな課題も浮き彫りにしている。組織は「エージェントの出力を人間が必ずレビューする」フローや「トークン節約設定の標準化」など、ガバナンスと最適化の両輪で運用を整備する必要がある。</p>
+<p>今後は、エージェントが「決定情報」を自律的に更新できるようになると同時に、変更履歴の自動追跡やコンフリクト検出機能が標準化される可能性がある。さらに、CodeMender のようにセキュリティ領域へ AI が本格参入すれば、脆弱性対応のスピードが飛躍的に向上し、開発者は価値創造に専念できる環境が整うとみられる。</p>
 
 <h2>まとめ</h2>
-<p>AI 駆動型開発ツールは、コード生成・テスト自動化・データ分析という三つの領域で実用化が進んでいる。実装例として Slack‑GitHub 連携の自動執筆、LiteLLM のモデル自動振り分け、Claude のプロンプトガイド、Laplace の設計指針、Stryker を用いたテスト自動生成が挙げられる。これらから見えてくるのは、AI の出力を最大限活かすには「プロンプト設計」や「ヒューマン・レビュー」のプロセスが不可欠であるという点だ。</p>
+<p>AI エージェントはコード生成から運用自動化まで幅広く活用され、実務での効果と課題が同時に顕在化している。意思決定の自動変更リスクへの対策、トークン削減のテクニック、タスク統合チャット「いちょまる」や脆弱性修正エージェント「CodeMender」など、具体的な実装例が示すように、ガバナンスと最適化を両立させた運用が今後の鍵となる。</p>
 
-<ul>
-<li>https://zenn.dev/appleworld/articles/65aed6c725af71</li>
-<li>https://zenn.dev/aws_japan/articles/ac9ae548d57323</li>
-<li>https://zenn.dev/tree_and_tree/articles/thoughts-on-claude-fable-5-2</li>
-<li>https://zenn.dev/pksha/articles/laplace-build-guide</li>
-<li>https://qiita.com/Dingu-suke/items/b5318ef2040a9f59224a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items</li>
-</ul>
+<!-- 出典 -->
+<!--
+Zenn: AIエージェントが決定を勝手に変えてしまった5つのパターンと工夫
+Zenn: Software Factoryの先へ：全社の仕事をAI-NativeにするUbieの内製クラウドエージェント基盤
+Zenn: Claude Code に忘れさせたら、トークン使用量が4割減った
+Zenn: OpenCodeを拡張して、複数の担当と定期実行をひとつのチャットにまとめる「いちょまる」を作った
+Qiita: PRの脆弱性をAIが直す「CodeMender」を見て、新卒が基礎を学ぶ理由を考えた
+-->
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/appleworld/articles/65aed6c725af71" target="_blank" rel="noopener">AIに書かせた、が全然AIが書いてない件</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/aws_japan/articles/ac9ae548d57323" target="_blank" rel="noopener">LiteLLM Adaptive Router を検証する（前編）：モデル選択と学習の仕組み</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/tree_and_tree/articles/thoughts-on-claude-fable-5-2" target="_blank" rel="noopener">Claude Fable 5.2のプロンプトガイドを読んで正直に思ったことを書く</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/pksha/articles/laplace-build-guide" target="_blank" rel="noopener">AI ネイティブなデータ分析基盤を作った話（後編）</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/Dingu-suke/items/b5318ef2040a9f59224a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI「テスト通りました」← これ､本当？  Stryker でテストの穴を塞いだ話</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/dress_code/articles/568fd547315abe" target="_blank" rel="noopener">AIエージェントが決定を勝手に変えてしまった5つのパターンと工夫</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/ubie_dev/articles/45501469c9c044" target="_blank" rel="noopener">Software Factoryの先へ：全社の仕事をAI-NativeにするUbieの内製クラウドエージェント基盤</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/sae_eng/articles/0e9ed7205ebc41" target="_blank" rel="noopener">Claude Code に忘れさせたら、トークン使用量が4割減った</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/theoj/articles/opencode-development-log" target="_blank" rel="noopener">OpenCodeを拡張して、複数の担当と定期実行をひとつのチャットにまとめる「いちょまる」を作った</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/N-Kyo/items/23697fc1e92c288b426b?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">PRの脆弱性をAIが直す「CodeMender」を見て、新卒が基礎を学ぶ理由を考えた</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
