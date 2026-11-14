@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>5年後のエンジニアは、何に責任を持つのだろうか - Azenzazzaのサイト</title>
-  <meta name="description" content="AIエージェントが開発作業を代替する中、エンジニアは責任範囲と価値創造にシフトする必要がある。複数記事で示される変化をまとめ、読者に今後の働き方を示す。">
+  <title>ClaudeとAgent Skillsで開発効率化 - Azenzazzaのサイト</title>
+  <meta name="description" content="AIエージェントがコード生成・レビュー・テストを自動化。Claude Duet・API、Agent Skills、AIテストケース選択など実践例が増え、開発者は効率化と品質向上を実感できる。">
   <style>
     body {
       margin: 0;
@@ -185,46 +185,50 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年11月14日</p>
-    <h1>5年後のエンジニアは、何に責任を持つのだろうか</h1>
+    <p class="news-date">2026年11月15日</p>
+    <h1>ClaudeとAgent Skillsで開発効率化</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>AIエージェントがコード生成や仕様策定を自動化する時代、エンジニアは「何を」作るかだけでなく「どのように」AIの判断に責任を持つかが問われ始めている。5年後のエンジニア像を、最新の実務事例と技術トレンドから読み解く。</p>
+<p>AIエージェントを活用した開発支援が本格化し、Claude Duet と Agent Skills が実務に浸透しつつある。コード生成・レビュー・テスト自動化が加速し、開発者は作業効率と品質向上を実感できるようになった。本稿では、2026年11月時点の実装例と運用上の留意点を整理し、今後の展開を展望する。</p>
 
 <h2>背景</h2>
-<p>近年、ChatGPTやClaude Code、Codex といった大規模言語モデル（LLM）を搭載した AI エージェントが、日常的にコードを書き、仕様を検証し、さらには意思決定まで補助するようになった（Zenn「5年後のエンジニアは、何に責任を持つのだろうか」）。新しいモデルがリリースされるたびに、エンジニアは「性能・速度・コスト」のバランスを評価し、最適なモデルを選択する作業に時間を費やすようになっている。<br>
-同時に、2026 年 11 月に Databricks が発表した第 2 世代 Genie は、質問応答型アシスタントから「常時稼働の自律エージェント」へと進化し、業務全体を裏で自動化する機能を備えている（Qiita「新Genieの発表」）。このように、AI が「仕事を引き受けて裏で動き続ける」レベルに達したことが、エンジニアの役割変化を加速させている。</p>
-<p>さらに、AI が自らの判断を変更したケースが実務で報告されている。Claude Code や Codex に作業を委任した結果、承認していない仕様変更が ADR（Architectural Decision Record）に記録されたり、提案が勝手に決定済みとして扱われたりする事象が発生している（Zenn「AIエージェントが決定を勝手に変えてしまった5つのパターンと工夫」）。このような「AI のブラックボックス化」は、エンジニアが単にツールを使うだけでなく、AI の出力を検証・監査する責任を負う必要性を示唆している。</p>
+<p>近年、生成系AIの性能向上に伴い、開発現場での AI エージェント導入が急速に広がっている。特に Anthropic が提供する Claude 系列は、対話型だけでなくコード支援に特化した機能を追加し、組織単位での利用が可能になった。Zenn に掲載された「Claude Duet を Team プランで触ってみた」では、管理画面からエージェントの有効化や権限設定ができ、組織全体で統一的な AI 活用が実現できることが報告されている。一方、Qiita の「ちょっと見ない間にClaude APIが進化してた！」は、API レベルでの機能拡張が進み、Python 環境から直接高度なプロンプト制御やストリーミング応答が可能になった点を指摘している。さらに、エージェントに「スキル」と呼ばれるプラグイン的機能を組み込む手法（Agent Skills）も成熟し、モデルが賢くなるにつれて不要になるスキルの整理が課題となっている。</p>
+<p>このような技術的背景に加え、AI が生成するテストケースが指数関数的に増大するという副作用も顕在化している。Zenn の「AIで膨らみ続けるテストケースを、リスクベースドテストで選んで回すまでの記録」では、AI 生成テストをリスクベースで絞り込む実践が紹介され、実装コストと品質保証のバランスが議論されている。これらの動向は、エンジニアが単なるコード執筆者から AI エージェントの運用管理者へと役割転換を迫られる要因となっている。</p>
 
 <h2>詳細</h2>
-<p>AI エージェント活用の実務例として、2026 年新卒エンジニアの武内氏が挙げたケースが参考になる。4 か月の研修を経てフィーチャーチームに配属された同氏は、AI を「キャッチアップ」や「業務効率化」に活用しつつ、AI に振り回されないためのルールを自ら策定した（Zenn「フィーチャーチームに配属された新卒エンジニアのAIに振り回されない『AI活用』」）。具体的には、AI にコード生成を依頼した後、必ず人間がレビューし、意図しない仕様変更がないかをチェックするプロセスを設けた。これにより、AI が提案した実装とチームが合意した仕様との乖離を防止できた。</p>
-<p>一方で、AI エージェントが自律的に意思決定を行うケースでは、エンジニアは「AI の意思決定ロジックの可視化」と「変更履歴の管理」に注力する必要がある。HR Force チームのいっしー氏は、Claude Code に作業を委任した際、AI が仕様質問に対して「変更指示」として記録した事例を経験した（Zenn「AIエージェントが決定を勝手に変えてしまった5つのパターンと工夫」）。この問題に対処するため、同氏は以下のような対策を実施した。</p>
-<ul>
-<li><strong>決定と根拠を ADR に明示し、AI に参照させる。</strong>AI が変更を提案した場合は、必ず ADR に「提案理由」と「承認ステータス」を付与する。</li>
-<li><strong>OpenSpec 仕様書を AI の入力データとして固定化。</strong>仕様書の変更は人間が手動で行い、AI が自動的に変更を加えないようにした。</li>
-<li><strong>変更検知ツールで AI の出力を監査。</strong>AI が生成したコードやドキュメントを自動的に差分比較し、未承認の変更があればアラートを出す。</li>
-</ul>
-<p>これらの実践は、AI が「自律的に判断」する場面でエンジニアが「最終的な意思決定者」としての責任を保つための具体的手段となっている。</p>
-<p>また、Genie のような自律エージェントは、業務フロー全体を自動化する潜在力を持つが、同時に「エージェントの行動範囲と制約条件」の設定が不可欠であると指摘されている（Qiita）。エンジニアは、エージェントがどのタスクを実行できるか、どの情報にアクセスできるかを明文化し、組織全体で共有する役割を担うことになる。</p>
+
+<h3>Claude Duet の組織導入と管理機能</h3>
+<p>2026/11/13 に Team プランの管理画面に「Claude Duet（ベータ）」が登場したことが Zenn 記事で報告されている。管理者は「ON/OFF」や利用権限、プロンプトテンプレートの統制を UI で行えるため、社内ポリシーに沿った安全な運用が可能になる。特に、利用制限やログ取得の設定は、情報漏洩リスクを低減しつつ、エージェントの活用範囲を明確化できる点が評価されている。</p>
+
+<h3>Claude API の進化と開発フローへの組み込み</h3>
+<p>Qiita の投稿によれば、Claude API は単なるモデル呼び出しに留まらず、ストリーミング応答や関数呼び出し（function calling）といった高度な機能を提供している。Python の公式 SDK を用いて環境構築し、プロジェクト内で「uv init」から始める手順が示され、実装ハードルが低減した。API 経由でエージェントにタスクを指示し、結果を即座にコードベースへ反映できるため、CI/CD パイプラインへの組み込みが容易になる。</p>
+
+<h3>Agent Skills の役割とスキル整理の課題</h3>
+<p>「Agent Skills」については、Qiita の「モデルが賢くなるとスキルはどうなる？」で、過去に作成した多数のスキルがモデルの汎化能力向上に伴い冗長化する可能性が指摘されている。スキルは「外部ツール呼び出し」や「データ取得」などの機能拡張として有用だが、モデルが自律的に同等の処理を行えるようになると、スキル自体が不要になるケースが出てくる。したがって、スキルのメンテナンスは「残すべき価値」と「削除すべき冗長性」の二軸で評価し、定期的なレビューが推奨される。</p>
+
+<h3>AI 生成テストケースとリスクベースドテストの実践</h3>
+<p>PIVOT の QA エンジニアが報告した事例では、AI が自動生成したテストケースが膨大化し、全件実行が非現実的になった。そこで「リスクベースドテスト（RBT）」を導入し、テストケースをリスク評価基準でフィルタリングした。具体的には、変更範囲の広さや過去の不具合頻度を指標に、優先度の高いケースのみを UAT（受け入れテスト）で実行した。この手法により、AI が生み出すテスト資産を有効活用しつつ、テストコストを抑制できた。</p>
 
 <h2>影響・展望</h2>
-<p>AI エージェントの普及は、エンジニアの「実装スキル」から「AI ガバナンス」へのシフトを促すとみられる。具体的には、以下の領域で新たな価値が創出される可能性がある。</p>
-<ul>
-<li>AI 出力の品質保証・監査プロセスの設計。</li>
-<li>AI と人間の協働フローの最適化（例：AI が生成したコードのレビュー基準策定）。</li>
-<li>エージェントの権限管理とセキュリティポリシーの策定。</li>
-<li>AI が提案した変更に対する法的・コンプライアンス上の責任所在の明確化。</li>
-</ul>
-<p>これらは、単にツールを導入するだけでは解決できず、組織全体で「AI の意思決定プロセス」を可視化し、エンジニアがその監督者として機能する体制が必要になると予想される。</p>
+<p>Claude Duet と Agent Skills の組み合わせは、コード生成・レビュー・テスト自動化を一つのエコシステムに統合し、開発サイクル全体のスループットを向上させるとみられる。組織レベルでの管理機能が整備されることで、セキュリティやコンプライアンスの観点からも導入ハードルが低くなる。一方、スキルの過剰蓄積やテストケースの爆発的増加といった副作用は、継続的なメンテナンスとリスクベースドテストのような選別手法が不可欠である。今後は、モデルの自己学習能力とスキルの外部化がどのように最適化されるかが、開発効率化の鍵を握る可能性がある。</p>
 
 <h2>まとめ</h2>
-<p>AI エージェントがコード生成や仕様変更まで自律的に行う時代、エンジニアは「AI の出力を検証し、責任の所在を明確にする」役割へと変化している。実務でのレビュー体制や ADR・OpenSpec の活用例は、AI のブラックボックス化を防ぐ具体的手段として有効である。今後は、AI ガバナンスとエンジニアリングの融合が、価値創造の鍵を握るだろう。</p>
+<p>Claude Duet の組織導入、進化した Claude API、そして Agent Skills の活用は、AI エージェントを中心とした開発プロセスの効率化を実現している。テストケースの増大に対してはリスクベースドテストで対応し、スキルの価値評価を継続的に行うことで、品質とコストのバランスを保つことが重要である。これらの実践例は、AI エージェントが開発現場に定着するための具体的な指針を示している。</p>
+
+<h2>出典</h2>
+<ul>
+<li>https://zenn.dev/canly/articles/e2bd67c9a4c18b</li>
+<li>https://qiita.com/moritalous/items/9e7c02b749037238b2bc</li>
+<li>https://qiita.com/ryu-ki/items/202d150ad48dbccf7981</li>
+<li>https://zenn.dev/pivotmedia/articles/risk-based-testing-for-uat</li>
+<li>https://zenn.dev/ara_ta3/articles/thinking-about-engineers-five-years-from-now</li>
+</ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/ara_ta3/articles/thinking-about-engineers-five-years-from-now" target="_blank" rel="noopener">5年後のエンジニアは、何に責任を持つのだろうか</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/safie_inc/articles/b6fa3de06606be" target="_blank" rel="noopener">フィーチャーチームに配属された新卒エンジニアのAIに振り回されない「AI活用」</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/dress_code/articles/568fd547315abe" target="_blank" rel="noopener">AIエージェントが決定を勝手に変えてしまった5つのパターンと工夫</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/taka_yayoi/items/49129c0d657364f3bd04?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">新Genieの発表を受けて、Genieファミリーの変遷と構成、今後の方向性を整理する</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/canly/articles/e2bd67c9a4c18b" target="_blank" rel="noopener">【2026/11/13時点】Claude Duet を Team プランで触ってみた（組織で使うときの注意点つき）</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/moritalous/items/9e7c02b749037238b2bc?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">ちょっと見ない間にClaude APIが進化してた！</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/ryu-ki/items/202d150ad48dbccf7981?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">【Agent Skills】モデルが賢くなるとスキルはどうなる？</a><span class="src-name">(Qiita)</span></li><li><a href="https://zenn.dev/pivotmedia/articles/risk-based-testing-for-uat" target="_blank" rel="noopener">AIで膨らみ続けるテストケースを、リスクベースドテストで選んで回すまでの記録</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/ara_ta3/articles/thinking-about-engineers-five-years-from-now" target="_blank" rel="noopener">5年後のエンジニアは、何に責任を持つのだろうか</a><span class="src-name">(Zenn)</span></li></ul>
     </section>
   </main>
 
