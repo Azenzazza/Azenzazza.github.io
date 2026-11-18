@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI駆動開発で自動化を実現 - Azenzazzaのサイト</title>
-  <meta name="description" content="AIエージェント・コード生成・QA自動化が統合され、開発・運用の効率化が急速に進んでいる。日本語で解説すれば技術者の実務に直結し、注目度が高い。">
+  <title>Claude Desktop 開発のすゝめ - Azenzazzaのサイト</title>
+  <meta name="description" content="AIエージェントが業務効率化や意思決定を支援し、実務での採用が急増している。複数記事で実例が示され、読者に実践的価値がある。">
   <style>
     body {
       margin: 0;
@@ -185,35 +185,49 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年11月18日</p>
-    <h1>AI駆動開発で自動化を実現</h1>
+    <p class="news-date">2026年11月19日</p>
+    <h1>Claude Desktop 開発のすゝめ</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>AIエージェントやコード生成、QA自動化が一体化した「AI駆動開発」が急速に浸透しています。カーナベル株式会社のAndyが毎月6,000セッションを処理する実装例や、開発者がコード読解に費やす時間を削減する試み、GA TechnologiesのQA AIプラットフォーム「GAQ」まで、実務に直結する具体的事例を交えて現状と今後の展望を解説します。</p>
+<p>AIエージェントの実務活用が急速に拡大する中、開発者が日常的に利用するツールも変化を遂げている。この記事では、Claude Desktop の Code タブを中心に据えた開発フローと、AI エージェントを大量に捌く実践例を通じて、業務効率化と意思決定支援における具体的な効果を紹介する。</p>
 
 <h2>背景</h2>
-<p>近年、生成系AI（Claude、Codex など）の性能向上と、Orca ADE のような開発支援基盤の成熟が相まって、開発フロー全体にAIを組み込む動きが顕在化しています。従来は「コードは人が読む」ことが前提でしたが、AI が出すコードが「大体正しい」前提が整うと、開発者はコードの精読よりもAI の前提条件設定や結果の評価に時間を割く方が効率的と考えるケースが増えています。また、QA の現場でも同様に、テストケース生成やバグ検出を AI に委任し、プロセス全体をスキル化（12個の Skill）して自動化する取り組みが進行中です。</p>
+<p>近年、AI エージェントは単なる実験的技術から、実務の中核を担うツールへと位置付けが変わってきた。特にコード生成やレビュー、タスク自動化に特化した Claude や Codex といったモデルは、開発チームの生産性向上に直結することが実証されている。日本国内でも、KPMG の監査事例に見られるように、AI エージェントが専門家以上の洞察を提示し、意思決定プロセスを支援するケースが報告されている。</p>
+<p>このような流れの中で、開発環境自体も AI とシームレスに統合される方向へとシフトしている。従来のエディタはプラグインや拡張機能で AI を呼び出す形が主流だったが、Claude Desktop のように AI がネイティブに組み込まれたプラットフォームが登場し、開発者は「エディタ」から「AI アシスタント」への移行を余儀なくされつつある。</p>
 
 <h2>詳細</h2>
-<p>Andy はカーナベル株式会社で開発統括兼 Microservices Platform Owner を務め、8 月から <strong>git worktree</strong> と <strong>orca workspace</strong> を活用した開発スタイルに完全移行しました。その結果、1 日あたり 200 前後の AI セッションが安定して稼働し、稀に 500〜600 件のコミットを一日に生成することも珍しくなくなっています。月間 6,000 セッションという規模は、Claude と Codex を主に利用した <strong>Orca ADE</strong> の高いスループットを示す指標です。</p>
+<h3>Claude Desktop の Code タブで実装を完結させる</h3>
+<p>PeopleX のプロダクト開発に従事する Aki 氏は、長年 VS Code をメインエディタとして使用してきた。2018 年に Atom から VS Code へ移行し、Subversion から GitHub、JavaScript から TypeScript への変換期を経験したという。</p>
+<p>しかし、現在は Claude Desktop の Code タブで開発のほとんどを完結させており、VS Code の利用は 2026 年 7 月 27 日をもって終了する計画だ。Claude Desktop は、コード補完やエラーハンドリング、テスト生成といった機能を AI がリアルタイムで提供し、エディタ上での操作を最小化することが特徴である。</p>
 
-<p>一方、hiromoo 氏は「コードを真面目に読まなくなった」と題したエッセイで、AI が生成したコードは「大体正しい」前提で差分レビューに注力する手法を紹介しています。前提条件（プロンプト設計や依存関係の明示）さえ整えば、コード全体を丁寧に読む必要は減少し、同じ熱量を AI の正しい動作を保証する作業にシフトできると主張しています。</p>
+<h3>毎月 6,000 セッションを捌く実践的開発フロー</h3>
+<p>カーナベル株式会社の開発統括兼 Microservices Platform Owner を務める Andy 氏は、Orca ADE の利便性に注目し、2023 年 8 月から git worktree と orca workspace を活用した開発スタイルへ完全移行した。</p>
+<p>この環境下では、Claude と Codex を主に利用し、月間約 6,000 セッション、1 日あたり 200 前後のセッションを安定的に実行している。開発 velocity（開発速度）は 1 日 100 セッションを下回ることはほとんどなく、ピーク時には 500〜600 件のコミットが日次で生成されることもある。</p>
+<p>Andy 氏は、AI エージェントがコードレビューやバグ予測、リファクタリング提案を自動化することで、手動での確認作業が大幅に削減されたと述べている。特に、Orca workspace が提供する分散型作業領域と git worktree の組み合わせは、複数のブランチや機能開発を同時に走らせる際のコンテキスト切り替えコストを低減し、AI エージェントが生成したコードの即時適用を可能にした。</p>
 
-<p>QA の自動化に関しては、akki 氏が GA Technologies に復帰後に構築した QA AI プラットフォーム「GAQ」の事例が注目されます。GAQ は QA 工程を 12 個の Skill に分割し、AI がテストケース生成、結果評価、レポート作成などを自動化。これにより、インプロセス QA メンバーの作業負荷が大幅に軽減され、チーム全体の生産性が向上したと報告されています。</p>
-
-<p>さらに、Qiita の投稿では、AI コーディングツールを前提にした開発環境構築のために「AI が作る OSS スニペット」の類似性問題に対処するツールを自ら実装した事例が示されています。AI が生成したコードと既存 OSS の重複を検知し、ライセンスコンプライアンスを保ちながら開発スピードを維持する仕組みは、AI 駆動開発の実務的課題解決に直結しています。</p>
+<h3>AI エージェントが専門家を上回る質問力</h3>
+<p>欧州ビジネス誌の報道によれば、AI エージェントは KPMG の会計士が行った質問よりも的確な質問を投げかけ、監査プロセスにおいて新たな洞察を引き出したとされる。この事例は、AI が高度な専門領域においても「質問力」を発揮できる可能性を示唆しており、単なるコード生成に留まらない意思決定支援ツールとしての価値を裏付けている。</p>
 
 <h2>影響・展望</h2>
-<p>AI エージェントの大量処理、コードレビューの自動化、QA のスキル化といった取り組みは、開発サイクルの短縮と品質向上を同時に実現する可能性があります。特に「大体正しい」コードを前提にした差分レビューは、開発者が設計やアーキテクチャの検討に時間を割く余裕を生み、イノベーション速度を加速させるとみられます。一方で、AI の出力を盲目的に受け入れるリスクや、OSS スニペットの類似性問題は、継続的なモニタリングとガバナンスが必要です。今後は、AI と人間の役割分担を最適化する「ハイブリッド開発モデル」の成熟が期待されます。</p>
+<p>Claude Desktop のように AI が開発環境に組み込まれることで、エディタ選択の基準が「拡張性」から「AI 連携度」へと変化しつつある。これに伴い、開発チームは従来のコードレビューやテスト工程を AI に委任し、ヒューマンリソースは設計や戦略策定といった付加価値領域にシフトできる。</p>
+<p>また、Andy 氏が示したように、AI エージェントを大量に運用するためのインフラ整備（git worktree、Orca workspace 等）が標準化すれば、数千件規模のセッションでも安定した開発速度が維持できる。さらに、AI が専門的質問を投げかける能力は、監査や法務、マーケティングといった非技術領域への応用を加速させる可能性がある。</p>
+<p>今後は、AI エージェントと人間の協働モデルが成熟し、エージェントが生成したアウトプットの品質保証や倫理的ガバナンスが重要課題として浮上するとみられる。企業は、AI の活用範囲を拡大すると同時に、透明性と説明責任を担保する仕組みを構築する必要がある。</p>
 
 <h2>まとめ</h2>
-<p>AI 駆動開発は、Andy の高スループット開発環境、hiromoo のコードレビュー手法、GAQ の QA 自動化、そして AI スニペット管理ツールの実装という具体例を通じて、実務レベルでの効率化が進んでいることが確認できます。開発者は「AI が正しく動く前提」を整えることに注力し、AI と協働する新たな開発フローを構築することが、今後の競争力向上に不可欠です。</p>
+<p>Claude Desktop の Code タブへの完全移行と、Orca ADE と git worktree を活用した大量セッション運用は、AI エージェントが実務に深く根付く具体例である。AI がコード生成だけでなく、専門的質問を通じて意思決定を支援できることが確認された現在、開発フローの再設計とインフラ整備が業務効率化の鍵となるだろう。</p>
+
+<h2>出典</h2>
+<ul>
+<li>Claude Desktop 開発のすゝめ（Zenn）</li>
+<li>毎月6,000 AI Agentsを捌くためにキーボードを捨てた話（Zenn）</li>
+<li>AI Agents Ask Better Questions Than KPMG Accountants in Landmark Audit Trial（European Business Magazine）</li>
+</ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/andoshin11/articles/ba68b39ef9a8ce" target="_blank" rel="noopener">毎月6,000 AI Agentsを捌くためにキーボードを捨てた話</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/hiromoo/articles/reading-less-preparing-more" target="_blank" rel="noopener">最近、コードを真面目に読まなくなった</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/gatechnologies/articles/8bdea59269eb10" target="_blank" rel="noopener">QA生産性を爆上げさせるためのQA AIプラットフォーム構築</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/kizuku_tabata/items/79e3411b93aff5c46177?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AI駆動開発を導入するためのツールをAIで作ってみた</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/peoplex_blog/articles/vscode-to-claude-desktop" target="_blank" rel="noopener">Claude Desktop 開発のすゝめ</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/andoshin11/articles/ba68b39ef9a8ce" target="_blank" rel="noopener">毎月6,000 AI Agentsを捌くためにキーボードを捨てた話</a><span class="src-name">(Zenn)</span></li><li><a href="https://europeanbusinessmagazine.com/ai-agents-better-questions-kpmg/" target="_blank" rel="noopener">AI Agents Ask Better Questions Than KPMG Accountants in Landmark Audit Trial</a><span class="src-name">(Hacker News)</span></li></ul>
     </section>
   </main>
 
