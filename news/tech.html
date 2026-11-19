@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Claude Desktop 開発のすゝめ - Azenzazzaのサイト</title>
-  <meta name="description" content="AIエージェントが業務効率化や意思決定を支援し、実務での採用が急増している。複数記事で実例が示され、読者に実践的価値がある。">
+  <title>自分の代わりに動くAgentへ - Azenzazzaのサイト</title>
+  <meta name="description" content="AIエージェントは開発の自動化を促進するが、コード品質や運用コスト、ワークフロー設計といった課題が多く議論されている。複数記事で共通テーマが浮上し、読者に実践的価値を提供できる。">
   <style>
     body {
       margin: 0;
@@ -185,49 +185,45 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年11月19日</p>
-    <h1>Claude Desktop 開発のすゝめ</h1>
+    <p class="news-date">2026年11月20日</p>
+    <h1>自分の代わりに動くAgentへ</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>AIエージェントの実務活用が急速に拡大する中、開発者が日常的に利用するツールも変化を遂げている。この記事では、Claude Desktop の Code タブを中心に据えた開発フローと、AI エージェントを大量に捌く実践例を通じて、業務効率化と意思決定支援における具体的な効果を紹介する。</p>
+<p>AIエージェントが「自分の代わりに」コードを書き、テストを走らせ、改善まで行う時代が到来しつつある。Claude CodeやCodexを活用した自律的なハーネスや、pstack のような品質保証フレームワークが登場し、開発の自動化が加速している。一方で、コード品質の担保や運用コスト、ワークフロー設計といった課題も顕在化しており、実務での適用方法が議論の焦点となっている。</p>
 
 <h2>背景</h2>
-<p>近年、AI エージェントは単なる実験的技術から、実務の中核を担うツールへと位置付けが変わってきた。特にコード生成やレビュー、タスク自動化に特化した Claude や Codex といったモデルは、開発チームの生産性向上に直結することが実証されている。日本国内でも、KPMG の監査事例に見られるように、AI エージェントが専門家以上の洞察を提示し、意思決定プロセスを支援するケースが報告されている。</p>
-<p>このような流れの中で、開発環境自体も AI とシームレスに統合される方向へとシフトしている。従来のエディタはプラグインや拡張機能で AI を呼び出す形が主流だったが、Claude Desktop のように AI がネイティブに組み込まれたプラットフォームが登場し、開発者は「エディタ」から「AI アシスタント」への移行を余儀なくされつつある。</p>
+<p>過去 1 年で大規模言語モデルは飛躍的に性能を向上させ、AI エージェントは「コード修正」や「テスト実行」まで人間の逐次指示を必要としなくなった（Qiita「人間がボトルネックになった時代のAIエージェント設計」）。しかし、複数のエージェントを並行して運用すると、期待した速度向上が得られないケースが増えている。指示の重複や過去作業の追跡不能、エージェント間で設定が分散する問題が顕在化し、開発者は「エージェントに任せる範囲」と「人が介在すべきポイント」の境界線を再定義する必要に迫られている。</p>
 
 <h2>詳細</h2>
-<h3>Claude Desktop の Code タブで実装を完結させる</h3>
-<p>PeopleX のプロダクト開発に従事する Aki 氏は、長年 VS Code をメインエディタとして使用してきた。2018 年に Atom から VS Code へ移行し、Subversion から GitHub、JavaScript から TypeScript への変換期を経験したという。</p>
-<p>しかし、現在は Claude Desktop の Code タブで開発のほとんどを完結させており、VS Code の利用は 2026 年 7 月 27 日をもって終了する計画だ。Claude Desktop は、コード補完やエラーハンドリング、テスト生成といった機能を AI がリアルタイムで提供し、エディタ上での操作を最小化することが特徴である。</p>
+<h3>自律改善ハーネスの試み</h3>
+<p>Zenn に掲載された記事「自分の代わりに動くAgentへ」では、2026 年 7 月に個人用ハーネスの構築が開始されたと報告されている。このハーネスは Claude Code と Codex を組み合わせ、過去に指示した内容をエージェントが記憶し、同一タスクだけでなく多様な作業に対して自律的に行動できるよう設計された。従来の ADE（Agentic Development Environment）では、ターミナルごとにエージェントを分散させるため、指示の重複や作業履歴の欠如が問題となっていたが、ハーネスは「一度伝えたことは覚えている」ことを前提に、指示回数の削減と作業の可視化を実現しようとしている。</p>
 
-<h3>毎月 6,000 セッションを捌く実践的開発フロー</h3>
-<p>カーナベル株式会社の開発統括兼 Microservices Platform Owner を務める Andy 氏は、Orca ADE の利便性に注目し、2023 年 8 月から git worktree と orca workspace を活用した開発スタイルへ完全移行した。</p>
-<p>この環境下では、Claude と Codex を主に利用し、月間約 6,000 セッション、1 日あたり 200 前後のセッションを安定的に実行している。開発 velocity（開発速度）は 1 日 100 セッションを下回ることはほとんどなく、ピーク時には 500〜600 件のコミットが日次で生成されることもある。</p>
-<p>Andy 氏は、AI エージェントがコードレビューやバグ予測、リファクタリング提案を自動化することで、手動での確認作業が大幅に削減されたと述べている。特に、Orca workspace が提供する分散型作業領域と git worktree の組み合わせは、複数のブランチや機能開発を同時に走らせる際のコンテキスト切り替えコストを低減し、AI エージェントが生成したコードの即時適用を可能にした。</p>
+<h3>品質保証のための pstack</h3>
+<p>同じく Zenn に掲載された「pstack 完全ガイド」では、AI エージェントが自信満々に生成したコードが未検証のまま提供されるケースが指摘されている。pstack は元 React コアチームのエンジニアが実践している手法を体系化し、AI が書くコードの品質を担保するためのワークフローを提示している。具体的には、コード生成後に自動テストとスタティック解析を組み合わせ、結果をエージェントにフィードバックすることで、エージェント自身が改善サイクルを回す仕組みを構築する。これにより「雑なコードを書かせない」だけでなく、エージェントが自律的に修正提案を行うようになる。</p>
 
-<h3>AI エージェントが専門家を上回る質問力</h3>
-<p>欧州ビジネス誌の報道によれば、AI エージェントは KPMG の会計士が行った質問よりも的確な質問を投げかけ、監査プロセスにおいて新たな洞察を引き出したとされる。この事例は、AI が高度な専門領域においても「質問力」を発揮できる可能性を示唆しており、単なるコード生成に留まらない意思決定支援ツールとしての価値を裏付けている。</p>
+<h3>役割分担と継続的改善</h3>
+<p>Qiita の「AIに役割を持たせたワークフローを、使うたびに直していたら、止まらなくなった話」では、AI に単なるコード生成以上の役割—要件整理、実装方針策定、レビュー、修正—を持たせる試みが語られている。実際に、Claude Code や Codex に対し、段階的にタスクを割り当て、各フェーズで人間が評価・修正を行うことで、エージェントが「自律的に」次の工程へ進むプロセスが構築された。これにより、エージェントは単なるツールから、開発プロセス全体を横断する「パーソナルエージェント」へと変容しつつある（Qiita「今話題のMuseってなに？」）。</p>
 
 <h2>影響・展望</h2>
-<p>Claude Desktop のように AI が開発環境に組み込まれることで、エディタ選択の基準が「拡張性」から「AI 連携度」へと変化しつつある。これに伴い、開発チームは従来のコードレビューやテスト工程を AI に委任し、ヒューマンリソースは設計や戦略策定といった付加価値領域にシフトできる。</p>
-<p>また、Andy 氏が示したように、AI エージェントを大量に運用するためのインフラ整備（git worktree、Orca workspace 等）が標準化すれば、数千件規模のセッションでも安定した開発速度が維持できる。さらに、AI が専門的質問を投げかける能力は、監査や法務、マーケティングといった非技術領域への応用を加速させる可能性がある。</p>
-<p>今後は、AI エージェントと人間の協働モデルが成熟し、エージェントが生成したアウトプットの品質保証や倫理的ガバナンスが重要課題として浮上するとみられる。企業は、AI の活用範囲を拡大すると同時に、透明性と説明責任を担保する仕組みを構築する必要がある。</p>
+<p>AI エージェントが自律的に作業を進める基盤が整いつつあることで、開発チームは「人がボトルネックになる」領域を削減できる可能性がある。一方で、エージェント間の設定管理や作業履歴の統合、品質保証の自動化は依然として課題であり、pstack のようなフレームワークやハーネスのような記憶機構が標準化されるかどうかが鍵となる。今後は、エージェントが生成したコードとテスト結果を統合的に評価し、継続的に学習させる「自己改善ループ」の実装が主流になると予想される。さらに、エージェントが個人の開発履歴やチームのコードベースを長期的に保持し、プロジェクト全体の技術負債を自動で管理できる段階へと進化すれば、開発コストの大幅削減と品質向上が同時に実現できるだろう。</p>
 
 <h2>まとめ</h2>
-<p>Claude Desktop の Code タブへの完全移行と、Orca ADE と git worktree を活用した大量セッション運用は、AI エージェントが実務に深く根付く具体例である。AI がコード生成だけでなく、専門的質問を通じて意思決定を支援できることが確認された現在、開発フローの再設計とインフラ整備が業務効率化の鍵となるだろう。</p>
+<p>AI エージェントはコード生成を超えて、要件整理からテスト、改善までを自律的に行う基盤を提供しつつある。Claude Code と Codex を組み合わせたハーネスや、pstack による品質保証フレームワークは、エージェントの実務適用を支える重要な要素だ。課題は依然として残るが、エージェントの記憶・自己改善機能が成熟すれば、開発プロセス全体の自動化が加速し、エンジニアは創造的作業に専念できる新たな開発環境が実現する。</p>
 
-<h2>出典</h2>
-<ul>
-<li>Claude Desktop 開発のすゝめ（Zenn）</li>
-<li>毎月6,000 AI Agentsを捌くためにキーボードを捨てた話（Zenn）</li>
-<li>AI Agents Ask Better Questions Than KPMG Accountants in Landmark Audit Trial（European Business Magazine）</li>
-</ul>
+<!-- 出典 -->
+<!--
+Zenn: 自分の代わりに動くAgentへ。Claude CodeとCodexで作る自律改善ハーネス
+Zenn: pstack 完全ガイド ─AIエージェントに雑なコードを書かせない技術─
+Qiita: 人間がボトルネックになった時代のAIエージェント設計
+Qiita: AIに役割を持たせたワークフローを、使うたびに直していたら、止まらなくなった話
+Qiita: 今話題のMuseってなに？どんなことができる？
+-->
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/peoplex_blog/articles/vscode-to-claude-desktop" target="_blank" rel="noopener">Claude Desktop 開発のすゝめ</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/andoshin11/articles/ba68b39ef9a8ce" target="_blank" rel="noopener">毎月6,000 AI Agentsを捌くためにキーボードを捨てた話</a><span class="src-name">(Zenn)</span></li><li><a href="https://europeanbusinessmagazine.com/ai-agents-better-questions-kpmg/" target="_blank" rel="noopener">AI Agents Ask Better Questions Than KPMG Accountants in Landmark Audit Trial</a><span class="src-name">(Hacker News)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/nttdata_tech/articles/9562962cc181a1" target="_blank" rel="noopener">自分の代わりに動くAgentへ。Claude CodeとCodexで作る自律改善ハーネス</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/karamage/books/50c18e52e7d19e" target="_blank" rel="noopener">pstack 完全ガイド ─AIエージェントに雑なコード     を書かせない技術─</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/Syoitu/items/5bb47c01a8513e52d1b5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">人間がボトルネックになった時代のAIエージェント設計</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/Masato_Iwasaki/items/db76e7388cece3cff66e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AIに役割を持たせたワークフローを、使うたびに直していたら、止まらなくなった話</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/inoyu-qiita/items/05f9c10adc1a398d6ff5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">今話題のMuseってなに？どんなことができる？※この記事はMuseが書いて自動で投稿しています</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
