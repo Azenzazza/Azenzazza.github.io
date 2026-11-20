@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>自分の代わりに動くAgentへ - Azenzazzaのサイト</title>
-  <meta name="description" content="AIエージェントは開発の自動化を促進するが、コード品質や運用コスト、ワークフロー設計といった課題が多く議論されている。複数記事で共通テーマが浮上し、読者に実践的価値を提供できる。">
+  <title>Meta Museの内部構造とセキュリティ調査 - Azenzazzaのサイト</title>
+  <meta name="description" content="AIエージェントの開発・運用が加速する中、Muse、Claude Code、pstack、Gemini、AgentCore Memoryといったツールやフレームワークが登場。品質・セキュリティを確保する手法が重要で、読者に即戦力を提供できる。">
   <style>
     body {
       margin: 0;
@@ -185,45 +185,66 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年11月20日</p>
-    <h1>自分の代わりに動くAgentへ</h1>
+    <p class="news-date">2026年11月21日</p>
+    <h1>Meta Museの内部構造とセキュリティ調査</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>AIエージェントが「自分の代わりに」コードを書き、テストを走らせ、改善まで行う時代が到来しつつある。Claude CodeやCodexを活用した自律的なハーネスや、pstack のような品質保証フレームワークが登場し、開発の自動化が加速している。一方で、コード品質の担保や運用コスト、ワークフロー設計といった課題も顕在化しており、実務での適用方法が議論の焦点となっている。</p>
+<p>Metaが提供するAIエージェント「Muse」の内部構造とセキュリティ設計が、実務での品質管理の指標として注目を集めている。Zenn に掲載された実体験レポートと、同時期に話題となっている Claude Code、pstack、Gemini 4 Hydrogen、AgentCore Memory といったツール群を横断的に比較し、AI エージェント運用に必要な安全・品質確保の手法を整理した。</p>
 
 <h2>背景</h2>
-<p>過去 1 年で大規模言語モデルは飛躍的に性能を向上させ、AI エージェントは「コード修正」や「テスト実行」まで人間の逐次指示を必要としなくなった（Qiita「人間がボトルネックになった時代のAIエージェント設計」）。しかし、複数のエージェントを並行して運用すると、期待した速度向上が得られないケースが増えている。指示の重複や過去作業の追跡不能、エージェント間で設定が分散する問題が顕在化し、開発者は「エージェントに任せる範囲」と「人が介在すべきポイント」の境界線を再定義する必要に迫られている。</p>
+<p>2024 年以降、生成系大規模言語モデル（LLM）をベースにした自律エージェントの開発・導入が急速に拡大している。エージェントはコード生成、タスク自動化、情報検索といった多様な業務を代行できる一方で、出力されたコードや指示が未検証・未テストのまま本番環境に流入するリスクが顕在化している。特に、企業内部での機密情報取り扱いや外部サービスへの API 呼び出しは、セキュリティ侵害の入口になる可能性が指摘されている。</p>
+<p>このような状況の中で、Meta が 2024 年にリリースした「Muse」は、エージェントの実行環境を「安全に」かつ「再現可能」に保つことを目的としたプラットフォームとして注目された。Zenn の実践レポートでは、Muse が 2 週間にわたる実装テストを通じて示した「内部構造」と「安全設計」の具体例が紹介されている。</p>
+<p>同時に、Claude Code と Codex を組み合わせた自律改善ハーネス、pstack が提唱する「検証可能な開発ワークフロー」、Google の Gemini 4 Hydrogen が提供する Agent Studio、そして Amazon の OpenSearch Memory と AgentCore Memory といったメモリ機構が、エージェントの品質管理手法として次々に登場している。これらのツールは、エージェントが生成した成果物の信頼性を測定・保証するための共通フレームワーク構築の兆しとみられる。</p>
 
 <h2>詳細</h2>
-<h3>自律改善ハーネスの試み</h3>
-<p>Zenn に掲載された記事「自分の代わりに動くAgentへ」では、2026 年 7 月に個人用ハーネスの構築が開始されたと報告されている。このハーネスは Claude Code と Codex を組み合わせ、過去に指示した内容をエージェントが記憶し、同一タスクだけでなく多様な作業に対して自律的に行動できるよう設計された。従来の ADE（Agentic Development Environment）では、ターミナルごとにエージェントを分散させるため、指示の重複や作業履歴の欠如が問題となっていたが、ハーネスは「一度伝えたことは覚えている」ことを前提に、指示回数の削減と作業の可視化を実現しようとしている。</p>
+<h3>Meta Muse の内部構造</h3>
+<p>Muse は、LLM の推論エンジンと「安全層（Safety Layer）」を分離した二層アーキテクチャを採用している。安全層は、ユーザー指示を受け取った後に「意図検証」と「リスク評価」を行い、危険度が一定以上と判定された場合は実行をブロックする仕組みだ。実装例としては、指示文中に機密情報や外部 API キーが含まれるかどうかを正規表現ベースでスキャンし、検出された場合はサンドボックス化された実行環境へ転送する。</p>
+<p>さらに、Muse は「メモリコンテキスト管理」機能を備えており、エージェントが過去の対話やコード履歴を保持しつつ、必要に応じて「コンテキストクリア」を指示できる。これにより、長期的なタスクにおいても情報漏洩リスクを低減できる。</p>
 
-<h3>品質保証のための pstack</h3>
-<p>同じく Zenn に掲載された「pstack 完全ガイド」では、AI エージェントが自信満々に生成したコードが未検証のまま提供されるケースが指摘されている。pstack は元 React コアチームのエンジニアが実践している手法を体系化し、AI が書くコードの品質を担保するためのワークフローを提示している。具体的には、コード生成後に自動テストとスタティック解析を組み合わせ、結果をエージェントにフィードバックすることで、エージェント自身が改善サイクルを回す仕組みを構築する。これにより「雑なコードを書かせない」だけでなく、エージェントが自律的に修正提案を行うようになる。</p>
+<h3>安全設計のポイント</h3>
+<ul>
+<li><strong>サンドボックス実行</strong>：外部サービス呼び出しやファイルシステム操作は、制限付きコンテナ内で行われ、ホスト環境への直接アクセスは不可。</li>
+<li><strong>指示検証パイプライン</strong>：ユーザー入力はまず「安全フィルタ」に通過し、危険語句やパターンが検出された場合は自動的にリジェクトされる。</li>
+<li><strong>ロギングと監査</strong>：全ての実行ログは暗号化されたストレージに保存され、後から監査可能な形で保持される。</li>
+</ul>
 
-<h3>役割分担と継続的改善</h3>
-<p>Qiita の「AIに役割を持たせたワークフローを、使うたびに直していたら、止まらなくなった話」では、AI に単なるコード生成以上の役割—要件整理、実装方針策定、レビュー、修正—を持たせる試みが語られている。実際に、Claude Code や Codex に対し、段階的にタスクを割り当て、各フェーズで人間が評価・修正を行うことで、エージェントが「自律的に」次の工程へ進むプロセスが構築された。これにより、エージェントは単なるツールから、開発プロセス全体を横断する「パーソナルエージェント」へと変容しつつある（Qiita「今話題のMuseってなに？」）。</p>
+<h3>他ツールとの比較</h3>
+<p>Claude Code と Codex を組み合わせたハーネスは、エージェントが「一度伝えた指示を記憶」し、同一タスクを繰り返し実行できる点で Muse と共通するが、メモリ管理が分散化されているため、指示の一貫性が失われやすいと指摘されている。</p>
+<p>pstack は、AI エージェントが生成したコードを「自動テスト」や「スタティック解析」へパイプライン化する手法を提供し、未検証コードが本番に流入するリスクを根本的に排除することを目指す。実践ガイドでは、pstack の「検証ステージ」を Muse の安全層と組み合わせることで、二重の品質保証が可能になると示唆されている。</p>
+<p>Gemini 4 Hydrogen の Agent Studio は、エージェントのデプロイからモニタリングまでを一元管理できるプラットフォームであり、実行時のメトリクス（CPU 使用率、API 呼び出し回数など）を可視化できる点が特徴だ。これにより、エージェントの異常挙動を早期に検出し、対策を講じやすくなる。</p>
+<p>Amazon の OpenSearch Memory と AgentCore Memory は、エージェントが保持する「長期メモリ」の実装方式に差異がある。OpenSearch Memory は検索エンジンベースで高速検索を実現する一方、AgentCore Memory はベクトルデータベースを活用し、類似度検索に強みがある。どちらも「メモリの永続化」と「スケーラビリティ」を重視しており、Muse のコンテキスト管理と併用することで、エージェントの知識ベースを拡張できる。</p>
+
+<h3>品質管理フローの実装例</h3>
+<p>以下は、Muse と pstack、Gemini 4 Hydrogen を組み合わせた品質管理フローの概略である。</p>
+<ul>
+<li>① ユーザー指示 → Muse の安全層で検証</li>
+<li>② 安全と判断された指示は、pstack の「コード生成」モジュールへ送信</li>
+<li>③ 生成コードは自動テスト・スタティック解析を通過し、合格したものだけがコンテナにデプロイ</li>
+<li>④ デプロイ後、Gemini 4 Hydrogen の Agent Studio が実行メトリクスを収集・可視化</li>
+<li>⑤ 異常が検知された場合は、Muse のサンドボックスにロールバックし、再度安全評価を実施</li>
+</ul>
+<p>このサイクルを継続的に回すことで、エージェントが自律的にタスクを遂行しつつ、品質とセキュリティを保つ仕組みが構築できる。</p>
 
 <h2>影響・展望</h2>
-<p>AI エージェントが自律的に作業を進める基盤が整いつつあることで、開発チームは「人がボトルネックになる」領域を削減できる可能性がある。一方で、エージェント間の設定管理や作業履歴の統合、品質保証の自動化は依然として課題であり、pstack のようなフレームワークやハーネスのような記憶機構が標準化されるかどうかが鍵となる。今後は、エージェントが生成したコードとテスト結果を統合的に評価し、継続的に学習させる「自己改善ループ」の実装が主流になると予想される。さらに、エージェントが個人の開発履歴やチームのコードベースを長期的に保持し、プロジェクト全体の技術負債を自動で管理できる段階へと進化すれば、開発コストの大幅削減と品質向上が同時に実現できるだろう。</p>
+<p>AI エージェントが業務プロセスの一部を担う時代において、Muse のような「安全層」＋「メモリ管理」モデルは、企業が導入リスクを最小化するための標準的な設計指針となり得る。特に、機密情報を扱う金融・医療・公的機関では、指示検証とサンドボックス実行がコンプライアンス遵守の鍵になるとみられる。</p>
+<p>今後は、Claude Code や pstack が提供する「自律改善」機能と、OpenSearch Memory や AgentCore Memory の「スケーラブルメモリ」機構が統合され、エージェントが「学習」しながらも「安全」な動作を維持できるプラットフォームが登場する可能性がある。さらに、Gemini 4 Hydrogen のようなモニタリングツールが標準化すれば、エージェントの運用可視化が一般化し、品質保証のコストが大幅に削減されると期待される。</p>
 
 <h2>まとめ</h2>
-<p>AI エージェントはコード生成を超えて、要件整理からテスト、改善までを自律的に行う基盤を提供しつつある。Claude Code と Codex を組み合わせたハーネスや、pstack による品質保証フレームワークは、エージェントの実務適用を支える重要な要素だ。課題は依然として残るが、エージェントの記憶・自己改善機能が成熟すれば、開発プロセス全体の自動化が加速し、エンジニアは創造的作業に専念できる新たな開発環境が実現する。</p>
+<p>Meta の Muse は、指示検証・サンドボックス実行・コンテキスト管理という三本柱で安全性を確保し、Claude Code、pstack、Gemini 4 Hydrogen、AgentCore Memory といったツールと組み合わせることで、AI エージェントの品質管理を体系化できる。実務での即戦力としては、上記フローを参考に自社環境へ導入し、継続的なテストとモニタリングを組み込むことが最も効果的である。</p>
 
-<!-- 出典 -->
-<!--
-Zenn: 自分の代わりに動くAgentへ。Claude CodeとCodexで作る自律改善ハーネス
-Zenn: pstack 完全ガイド ─AIエージェントに雑なコードを書かせない技術─
-Qiita: 人間がボトルネックになった時代のAIエージェント設計
-Qiita: AIに役割を持たせたワークフローを、使うたびに直していたら、止まらなくなった話
-Qiita: 今話題のMuseってなに？どんなことができる？
--->
+<ul>
+<li>Zenn: MetaのMuseを使ってみた: 内部構造とセキュリティの調査</li>
+<li>Zenn: 自分の代わりに動くAgentへ。Claude CodeとCodexで作る自律改善ハーネス</li>
+<li>Zenn: pstack 完全ガイド ─AIエージェントに雑なコードを…</li>
+<li>Qiita: Gemini 4 Hydrogen「とりあえず一番上」から卒業！Agent Studioで試す手順</li>
+<li>Qiita: [AWS] 徹底比較！ OpenSearch Memory vs AgentCore Memory</li>
+</ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/nttdata_tech/articles/9562962cc181a1" target="_blank" rel="noopener">自分の代わりに動くAgentへ。Claude CodeとCodexで作る自律改善ハーネス</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/karamage/books/50c18e52e7d19e" target="_blank" rel="noopener">pstack 完全ガイド ─AIエージェントに雑なコード     を書かせない技術─</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/Syoitu/items/5bb47c01a8513e52d1b5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">人間がボトルネックになった時代のAIエージェント設計</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/Masato_Iwasaki/items/db76e7388cece3cff66e?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">AIに役割を持たせたワークフローを、使うたびに直していたら、止まらなくなった話</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/inoyu-qiita/items/05f9c10adc1a398d6ff5?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">今話題のMuseってなに？どんなことができる？※この記事はMuseが書いて自動で投稿しています</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/shoyataguchi/articles/b1bc6a96d4b963" target="_blank" rel="noopener">MetaのMuseを使ってみた: 内部構造とセキュリティの調査</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/nttdata_tech/articles/9562962cc181a1" target="_blank" rel="noopener">自分の代わりに動くAgentへ。Claude CodeとCodexで作る自律改善ハーネス</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/karamage/books/50c18e52e7d19e" target="_blank" rel="noopener">pstack 完全ガイド ─AIエージェントに雑なコード     を書かせない技術─</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/N-Kyo/items/80ac96fd59b08b1a879a?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">【Gemini 4 Hydrogen】「とりあえず一番上」から卒業！Agent Studioで試す手順</a><span class="src-name">(Qiita)</span></li><li><a href="https://qiita.com/kikuziro/items/939887bcd8fbb3a78ba0?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">[AWS] 徹底比較！ OpenSearch Memory vs AgentCore Memory</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
