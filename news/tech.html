@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Claude Codeで自律改善ハーネス - Azenzazzaのサイト</title>
-  <meta name="description" content="AIエージェントがコードを書き、テストし、改善する流れが急速に実用化されつつある。複数記事で同様のテーマが登場し、技術者の生産性向上に直結するため注目度が高い。">
+  <title>AIエージェントで自律開発を実現 - Azenzazzaのサイト</title>
+  <meta name="description" content="AIエージェントがコード生成・テスト・デプロイを自動化し、開発プロセスを変える。本記事は実装例・課題・ベストプラクティスをまとめ、技術者が即戦力として活用できる知見を提供。">
   <style>
     body {
       margin: 0;
@@ -185,51 +185,64 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年11月23日</p>
-    <h1>Claude Codeで自律改善ハーネス</h1>
+    <p class="news-date">2026年11月24日</p>
+    <h1>AIエージェントで自律開発を実現</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>AIコーディングエージェントが「書く」「テストする」「改善する」一連の作業を自律的に実行するハーネスが登場した。Claude Code と Codex を組み合わせた「自律改善ハーネス」は、指示一回で設計からテストまでを約10分で完走させ、開発者が睡眠中にプルリクエストを大量に生成できる実証実験が報告されている。本稿では、ハーネスの構成要素と実装事例、そして開発現場への波及効果を整理する。</p>
+<p>AIエージェントがコード生成・テスト・デプロイまでを自律的に実行する「自律開発」の実装例が続々と公開され、開発プロセスの効率化が加速している。この記事では、実際の導入事例と「基準・証拠・説明」の検証手順、pstack や Orca Bots といったツールチェーンの活用法をまとめ、技術者が即座に活用できるベストプラクティスと残された課題を整理する。</p>
 
 <h2>背景</h2>
-<p>近年、AI がコードを生成・修正する技術は急速に成熟し、Claude Code、OpenAI Codex、OpenCode など複数のエージェントが実務で利用され始めている。従来はエージェントへの指示を都度手動で行い、作業履歴の管理や設定の統一が課題となっていた。特に、複数ターミナル上で同一指示を繰り返す必要がある点や、過去作業の追跡が困難な点が開発効率を阻害していた。</p>
-<p>このような課題を解決すべく、NTTデータが 2026 年 7 月に「自律作業のための個人ハーネス」構築に着手したことが注目されている。さらに、AI Engineer CODE 2026（2026 年 11 月 11 日）で poteto 氏が発表した実例では、1 か月で 3,000 本以上のプルリクエストを自動生成し、その多くが開発者の睡眠時間中に処理されたと報告された。これらの背景から、エージェントが単なるコード生成ツールから、開発フロー全体を自律的に走らせる「開発エージェント」へと進化する期待が高まっている。</p>
+<p>従来、AI にコードを書かせても最終的な判断は人間が行うのが常識だった。<a href="https://zenn.dev/kinuuu/articles/ai-coding-criteria-evidence-explanation">「AIに実装を任せても、理解と判断は手放さない」</a>では、AI が生成した変更を受け入れるか否かを「基準」「証拠」「説明」の三段階で検証する手法が提案されている。これにより、AI が基準外の判断をしたケースを容易に抽出でき、テストがカバーしきれない領域や本番環境との差異を自ら見つけ出すことが可能になる。</p>
+<p>同時期に、<a href="https://zenn.dev/canly/articles/ca6875cd79539f">「寝てる間に自動で動くAIエージェント」</a>が示すように、Claude Code と pstack を組み合わせたワークフローでは、1 回の指示で設計・実装・自動テスト（14 件）・故障テストまでを約 10 分で完走させ、1 か月で 3,000 本以上のプルリクエストを本番へ投入した実績がある。これらは「AI が人手を介さずに開発サイクルを回せる」ことを実証した初期事例として注目を集めている。</p>
 
 <h2>詳細</h2>
-<p>本ハーネスは大きく以下の三つの要素で構成される。</p>
+<h3>1. 検証フレームワーク：基準・証拠・説明</h3>
+<p>AI に実装を委託する際、まず「基準」をコード変更の前提として文書化する。基準は機能要件や非機能要件（例：パフォーマンス上限、セキュリティ方針）を明示し、AI が生成したコードがこれに適合しているかを自動的に比較できるようにする。次に「証拠」として、テスト結果や静的解析レポートを取得し、基準と照合する。最後に「説明」段階で、AI が生成した変更点を自分の言葉で要約し、マージ判断を行う。これにより、AI が「自信満々に」報告したコードでも、根拠が不明確な場合は即座に差し戻すことができる。</p>
+
+<h3>2. pstack による自律開発パイプライン</h3>
+<p>pstack は、元 React コアチームのエンジニアが公開したスキル集で、AI エージェントに「雑なコードを書かせない」ための設計思想が凝縮されている。具体的な流れは次のとおりだ。</p>
 <ul>
-<li><strong>エージェント統合層（ADE：Agentic Development Environment）</strong>：Claude Code と Codex を同一インターフェースで扱える環境を提供し、指示の重複や設定分散を防止する。</li>
-<li><strong>自律タスクフロー</strong>：コードの設計、実装、テスト（自動テスト 14 件）から、意図的にコードを壊すテスト検証までをシーケンシャルに実行。指示は「1 回」のみで、エージェントが途中で必要な情報を保持しながら次工程へ遷移する。</li>
-<li><strong>成果物管理とフィードバック</strong>：実行結果やエラー情報をハーネス内部で蓄積し、次回以降の指示に反映させることで、エージェントが自己学習的に改善を続ける。</li>
+<li>指示を 1 回だけ与える（例：新しい Go API の実装）</li>
+<li>Claude Code が設計ドキュメントを生成し、コード雛形を作成</li>
+<li>自動テスト 14 件を走らせ、テストが失敗した場合はエージェントが自律的に修正を試みる</li>
+<li>故障テスト（コードを意図的に壊すテスト）で回復力を検証</li>
+<li>最終的に生成物を人間が「基準・証拠・説明」フレームワークでレビューし、マージを決定</li>
 </ul>
-<p>実装例として、Cursor 公式スキル集「pstack」を Claude Code に組み込んだケースが報告されている。この構成では、指示 1 回で設計からツール実装、テスト実行までを約 10 分で完了し、開発者の介在なしに 3,000 本規模の PR を本番環境へデプロイできたとされる。また、Qiita に掲載された 150 行程度の Python 実装例は、同様のハーネスを自作する際の参考コードとして公開され、エージェントが「コードを読み、ファイルを編集し、テストを実行し、エラーを直す」一連の流れを自律的に処理できることを示している。</p>
-<p>これらの事例は、エージェントが単なる補助ツールではなく、開発者の代替としてタスク全体を完結できるレベルに到達したことを示唆している。ただし、現在は「Claude Code と Codex の設定が分かれている」「過去作業の追跡が不十分」といった課題が残っており、ADE の成熟が鍵となる。</p>
+<p>このサイクルは 10 分程度で完了し、1 か月で 3,000 本以上の PR を本番環境へ投入した実績が報告されている。</p>
+
+<h3>3. Orca Bots と ADE（Agentic Development Environment）</h3>
+<p>Orca は Claude Code や Codex を統合した IDE で、AI エージェントを前提とした開発環境を提供する。<a href="https://zenn.dev/kg_motors_mibot/articles/orca-bot-intro">Orca Bots の紹介記事</a>によれば、Orca 上で複数エージェントを同時に走らせ、作業履歴を追跡できる点が大きな特徴だ。従来の「同じ指示を何度も繰り返す」問題や「設定が分散する」課題を緩和し、作業の再現性と可視化を実現している。</p>
+
+<h3>4. 自律改善ハーネス：Claude Code と Codex の連携</h3>
+<p>NTT データが公開したハーネスは、エージェントが過去の作業を記憶し、同様のタスクを自律的に再実行できる仕組みを提供する。2026 年 7 月に開発が始まり、仕事の種類を問わず「私の代わりに」動くことを目指している。ハーネスは ADE の一部として機能し、作業ログをもとにエージェントが次回以降の指示を最適化する。</p>
 
 <h2>影響・展望</h2>
-<p>自律改善ハーネスの実装が広がれば、以下のような影響が予測される。</p>
+<p>自律開発の実装が広がることで、以下のような変化が期待される。</p>
 <ul>
-<li><strong>開発者の生産性向上</strong>：ルーチン的な実装・テスト作業が自動化され、開発者は設計やアーキテクチャといった高付加価値業務に集中できる。</li>
-<li><strong>リリースサイクルの短縮</strong>：エージェントが夜間に PR を生成・マージできるため、デプロイ頻度が上がり、アジャイル開発のスピードが加速する。</li>
-<li><strong>品質保証の自動化</strong>：自動テスト 14 件やコード破壊テストが標準化されることで、ヒューマンエラーが減少し、コード品質の均一化が期待できる。</li>
-<li><strong>新たなスキル要件</strong>：エージェントの設定・運用が重要になるため、AI エージェント運用スキルがエンジニアの必須能力として浮上する可能性がある。</li>
+<li><strong>開発スピードの飛躍的向上</strong>：10 分で設計からテストまで完了するパイプラインは、従来数時間かかっていたタスクを数分に短縮できる。</li>
+<li><strong>品質保証の新たなパラダイム</strong>：「基準・証拠・説明」による人間側の最終判断は、AI の自律性と人間の責任を明確に分離し、コードレビューの負荷を削減しつつ根拠の透明性を確保できる。</li>
+<li><strong>組織文化の変容</strong>：エージェントが夜間に PR を生成・マージするケース（例：3,000 本/月）は、開発者が「AI と協働」する新しい働き方を促進する。</li>
+<li><strong>課題の残存</strong>：テストがカバーしきれない領域の検出や、AI が基準外の判断をした際の迅速なフィードバックループ構築は、引き続き研究・実装が必要である。</li>
 </ul>
-<p>今後は、ADE のさらなる統合と、エージェント間の状態共有機構が整備されることで、複数プロジェクトに跨る自律開発が実現する可能性があるとみられる。また、オープンソース化された pstack のようなツールが普及すれば、個人開発者でも同様のハーネスを構築できる環境が整い、開発現場全体の自律化が加速するだろう。</p>
+<p>今後は、ADE の標準化や pstack の拡張、Orca Bots のエコシステム化が進むと同時に、法的・倫理的なガイドラインが整備される可能性がある。</p>
 
 <h2>まとめ</h2>
-<p>Claude Code と Codex を核にした自律改善ハーネスは、指示一回で設計からテストまでを約10分で完走させ、開発者が睡眠中に大量の PR を生成できる実証実験を通じて、AI エージェントの自律開発への転換点を示した。現在は設定分散や履歴管理の課題が残るものの、ADE の成熟とツールエコシステムの拡充により、開発者の生産性向上とリリースサイクル短縮が期待できる。</p>
+<p>AI エージェントによる自律開発は、設計・実装・テスト・デプロイを一連のフローで自動化し、開発速度と品質の両立を実現する新しいパラダイムである。基準・証拠・説明による人間側の検証フレームワーク、pstack の 10 分パイプライン、Orca Bots の統合 IDE、そして自律改善ハーネスといったツール群は、即戦力として活用できる具体的手段を提供している。一方で、テスト網羅の限界やエージェントの意思決定根拠の可視化といった課題は依然として残っており、継続的な改善が求められる。</p>
 
-<h2>出典</h2>
+<p>出典：</p>
 <ul>
-<li>自分の代わりに動くAgentへ。Claude CodeとCodexで作る自律改善ハーネス（Zenn）</li>
-<li>寝てる間に自動で動くAIエージェントを誰でも作れる：10分でわかる pstack 実践ガイド（Zenn）</li>
-<li>Agent Harnessを理解するために、150行ほどのPythonで自作してみた（Qiita）</li>
+<li>https://zenn.dev/kinuuu/articles/ai-coding-criteria-evidence-explanation</li>
+<li>https://zenn.dev/canly/articles/ca6875cd79539f</li>
+<li>https://zenn.dev/nttdata_tech/articles/9562962cc181a1</li>
+<li>https://zenn.dev/karamage/books/50c18e52e7d19e</li>
+<li>https://zenn.dev/kg_motors_mibot/articles/orca-bot-intro</li>
 </ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/nttdata_tech/articles/9562962cc181a1" target="_blank" rel="noopener">自分の代わりに動くAgentへ。Claude CodeとCodexで作る自律改善ハーネス</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/canly/articles/ca6875cd79539f" target="_blank" rel="noopener">寝てる間に自動で動くAIエージェントを誰でも作れる：10分でわかる pstack 実践ガイド</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/yamamoto_a_genee/items/76562c5c80032ad9e962?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">Agent Harnessを理解するために、150行ほどのPythonで自作してみた</a><span class="src-name">(Qiita)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/kinuuu/articles/ai-coding-criteria-evidence-explanation" target="_blank" rel="noopener">AIに実装を任せても、理解と判断は手放さない：基準・証拠・説明をGoのAPIで試した記録</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/canly/articles/ca6875cd79539f" target="_blank" rel="noopener">寝てる間に自動で動くAIエージェントを誰でも作れる：10分でわかる pstack 実践ガイド</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/nttdata_tech/articles/9562962cc181a1" target="_blank" rel="noopener">自分の代わりに動くAgentへ。Claude CodeとCodexで作る自律改善ハーネス</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/karamage/books/50c18e52e7d19e" target="_blank" rel="noopener">pstack 完全ガイド ─AIエージェントに雑なコード     を書かせない技術─</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/kg_motors_mibot/articles/orca-bot-intro" target="_blank" rel="noopener">Orca Botsが良さそう、何ができるのか</a><span class="src-name">(Zenn)</span></li></ul>
     </section>
   </main>
 
