@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIエージェントで自律開発を実現 - Azenzazzaのサイト</title>
-  <meta name="description" content="AIエージェントがコード生成・テスト・デプロイを自動化し、開発プロセスを変える。本記事は実装例・課題・ベストプラクティスをまとめ、技術者が即戦力として活用できる知見を提供。">
+  <title>Microsoft Foundry で AI エージェント設計 - Azenzazzaのサイト</title>
+  <meta name="description" content="AIエージェントの設計・開発フローが急速に進化し、実務での活用が増えているため、開発者にとって必須知識となる。">
   <style>
     body {
       margin: 0;
@@ -185,64 +185,58 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年11月24日</p>
-    <h1>AIエージェントで自律開発を実現</h1>
+    <p class="news-date">2026年11月25日</p>
+    <h1>Microsoft Foundry で AI エージェント設計</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>AIエージェントがコード生成・テスト・デプロイまでを自律的に実行する「自律開発」の実装例が続々と公開され、開発プロセスの効率化が加速している。この記事では、実際の導入事例と「基準・証拠・説明」の検証手順、pstack や Orca Bots といったツールチェーンの活用法をまとめ、技術者が即座に活用できるベストプラクティスと残された課題を整理する。</p>
+<p>Microsoft が提供する AI 開発プラットフォーム <strong>Foundry</strong> でエージェントを設計する際に必ず検討すべき5つのポイントが明確化された。データ保存先、エージェント生成方式、外部ツール連携、権限設定、ネットワーク構成という要素が相互に影響し合うことから、実務での導入・運用を成功させるには全体像を俯瞰した設計が不可欠となっている。</p>
 
 <h2>背景</h2>
-<p>従来、AI にコードを書かせても最終的な判断は人間が行うのが常識だった。<a href="https://zenn.dev/kinuuu/articles/ai-coding-criteria-evidence-explanation">「AIに実装を任せても、理解と判断は手放さない」</a>では、AI が生成した変更を受け入れるか否かを「基準」「証拠」「説明」の三段階で検証する手法が提案されている。これにより、AI が基準外の判断をしたケースを容易に抽出でき、テストがカバーしきれない領域や本番環境との差異を自ら見つけ出すことが可能になる。</p>
-<p>同時期に、<a href="https://zenn.dev/canly/articles/ca6875cd79539f">「寝てる間に自動で動くAIエージェント」</a>が示すように、Claude Code と pstack を組み合わせたワークフローでは、1 回の指示で設計・実装・自動テスト（14 件）・故障テストまでを約 10 分で完走させ、1 か月で 3,000 本以上のプルリクエストを本番へ投入した実績がある。これらは「AI が人手を介さずに開発サイクルを回せる」ことを実証した初期事例として注目を集めている。</p>
+<p>AI エージェントは、コード生成から業務判断まで幅広いタスクを自動化できることから、開発現場に急速に浸透している。2026 年に入ってからは、OSS 開発の加速や、AI がコードレビューや認可ロジックの実装を担うケースが増加し、エージェントの設計・管理がプロジェクト成功の鍵となっている。</p>
+<p>しかし、エージェントは単体で完結するわけではなく、会話履歴や生成ファイルの永続化、外部ツール（例：tmux、iTerm2）とのシームレスな連携、さらに組織内の権限体系やネットワークポリシーとの整合が求められる。そのため、設計段階で「どこに保存するか」「どの方式で作るか」などを曖昧にすると、後工程でのデータ漏洩リスクや運用コストの増大につながる。</p>
+<p>このような課題に応える形で、Microsoft が公式ドキュメントにまとめた「Foundry で AI エージェントを設計するときに決める5つのこと」は、実務者向けの実践的ロードマップとして注目を浴びている。</p>
 
 <h2>詳細</h2>
-<h3>1. 検証フレームワーク：基準・証拠・説明</h3>
-<p>AI に実装を委託する際、まず「基準」をコード変更の前提として文書化する。基準は機能要件や非機能要件（例：パフォーマンス上限、セキュリティ方針）を明示し、AI が生成したコードがこれに適合しているかを自動的に比較できるようにする。次に「証拠」として、テスト結果や静的解析レポートを取得し、基準と照合する。最後に「説明」段階で、AI が生成した変更点を自分の言葉で要約し、マージ判断を行う。これにより、AI が「自信満々に」報告したコードでも、根拠が不明確な場合は即座に差し戻すことができる。</p>
+<h3>1. 会話履歴・ファイルの保存先選定</h3>
+<p>Foundry では、プロジェクト単位でリソースを作成し、その下にエージェントを配置する構造になっている。保存先は Azure Blob Storage、Cosmos DB、あるいは Microsoft Teams のファイル領域など複数から選択でき、選択肢はエージェントのスケールやデータ保持ポリシーに直結する。</p>
+<p>たとえば、機密性の高い会話履歴は暗号化対応の Blob に保存し、検索性が重視されるファイルは Cosmos DB のコンテナに格納するといったハイブリッド構成が推奨される。</p>
 
-<h3>2. pstack による自律開発パイプライン</h3>
-<p>pstack は、元 React コアチームのエンジニアが公開したスキル集で、AI エージェントに「雑なコードを書かせない」ための設計思想が凝縮されている。具体的な流れは次のとおりだ。</p>
-<ul>
-<li>指示を 1 回だけ与える（例：新しい Go API の実装）</li>
-<li>Claude Code が設計ドキュメントを生成し、コード雛形を作成</li>
-<li>自動テスト 14 件を走らせ、テストが失敗した場合はエージェントが自律的に修正を試みる</li>
-<li>故障テスト（コードを意図的に壊すテスト）で回復力を検証</li>
-<li>最終的に生成物を人間が「基準・証拠・説明」フレームワークでレビューし、マージを決定</li>
-</ul>
-<p>このサイクルは 10 分程度で完了し、1 か月で 3,000 本以上の PR を本番環境へ投入した実績が報告されている。</p>
+<h3>2. エージェント作成方式の決定</h3>
+<p>Foundry では「コードベース」「ノーコード」「ハイブリッド」の三つの作成方式が提供されている。コードベースは開発者が Python や TypeScript でロジックを記述し、細かなチューニングが可能。一方、ノーコードは UI 上でフローを組むだけでエージェントを構築でき、非エンジニアでも活用しやすい。</p>
+<p>実務では、コアロジックはコードベースで実装し、補助的なタスク（例：定型レポート生成）はノーコードで迅速に追加するハイブリッド手法が多く採用されている。</p>
 
-<h3>3. Orca Bots と ADE（Agentic Development Environment）</h3>
-<p>Orca は Claude Code や Codex を統合した IDE で、AI エージェントを前提とした開発環境を提供する。<a href="https://zenn.dev/kg_motors_mibot/articles/orca-bot-intro">Orca Bots の紹介記事</a>によれば、Orca 上で複数エージェントを同時に走らせ、作業履歴を追跡できる点が大きな特徴だ。従来の「同じ指示を何度も繰り返す」問題や「設定が分散する」課題を緩和し、作業の再現性と可視化を実現している。</p>
+<h3>3. 接続ツール・インテグレーションの選択</h3>
+<p>エージェントは外部ツールと連携してタスクを実行することが前提になる。Zenn に掲載された実例では、iTerm2 のタブや tmux セッションを制御し、開発者が「コードを書く」から「判断を委任する」までのフローを自動化した。</p>
+<p>このようなツール連携は、Foundry の「Tool Connector」機能を介して API 呼び出しや CLI 実行を行うことで実現でき、エージェントが生成した指示を直接シェルに流す形が一般的だ。</p>
 
-<h3>4. 自律改善ハーネス：Claude Code と Codex の連携</h3>
-<p>NTT データが公開したハーネスは、エージェントが過去の作業を記憶し、同様のタスクを自律的に再実行できる仕組みを提供する。2026 年 7 月に開発が始まり、仕事の種類を問わず「私の代わりに」動くことを目指している。ハーネスは ADE の一部として機能し、作業ログをもとにエージェントが次回以降の指示を最適化する。</p>
+<h3>4. 権限・認可設計</h3>
+<p>AI エージェントがデータにアクセスする際の権限は、Azure AD のロールベースアクセス制御（RBAC）で細分化できる。たとえば、コード生成エージェントはリポジトリへの書き込み権限のみ、機密情報検索エージェントはシークレットストアへの読み取り権限だけというように、最小権限の原則に沿った設定が求められる。</p>
+<p>実務例として、Claude Code を活用したリリース作業では、AI が全コードを読むわけではなく、レビュー対象箇所を限定することで認可リスクを低減した。</p>
+
+<h3>5. ネットワーク構成とセキュリティ</h3>
+<p>Foundry のエージェントは VNet 内で動作させることが推奨され、外部 API へのアクセスはプライベートエンドポイント経由で行う。これにより、データがインターネット上に流出するリスクを抑えつつ、内部サービスとの高速通信が確保できる。</p>
+<p>また、Gemini 4 Neon と Claude Code・Codex CLI の比較実験では、トークン数が増大するとネットワーク遅延が顕在化するケースが報告されており、エージェントの設計段階で帯域幅やレイテンシ要件を見積もる重要性が示唆されている。</p>
 
 <h2>影響・展望</h2>
-<p>自律開発の実装が広がることで、以下のような変化が期待される。</p>
-<ul>
-<li><strong>開発スピードの飛躍的向上</strong>：10 分で設計からテストまで完了するパイプラインは、従来数時間かかっていたタスクを数分に短縮できる。</li>
-<li><strong>品質保証の新たなパラダイム</strong>：「基準・証拠・説明」による人間側の最終判断は、AI の自律性と人間の責任を明確に分離し、コードレビューの負荷を削減しつつ根拠の透明性を確保できる。</li>
-<li><strong>組織文化の変容</strong>：エージェントが夜間に PR を生成・マージするケース（例：3,000 本/月）は、開発者が「AI と協働」する新しい働き方を促進する。</li>
-<li><strong>課題の残存</strong>：テストがカバーしきれない領域の検出や、AI が基準外の判断をした際の迅速なフィードバックループ構築は、引き続き研究・実装が必要である。</li>
-</ul>
-<p>今後は、ADE の標準化や pstack の拡張、Orca Bots のエコシステム化が進むと同時に、法的・倫理的なガイドラインが整備される可能性がある。</p>
+<p>AI エージェント設計の標準化が進むことで、開発チームは「AI に任せる領域」と「人が介在すべき領域」の境界を明確に描けるようになる。OSS 開発におけるコード生成エージェントの導入例や、認可ロジックを AI に委託した実装事例は、今後の開発プロセスを大幅に効率化する可能性を示している。</p>
+<p>一方で、権限設定やネットワーク構成のミスはセキュリティインシデントにつながるリスクがあるため、設計フレームワークの遵守が求められる。Microsoft が提供する 5 つの設計項目は、これらリスクを体系的に管理するためのチェックリストとして、企業の AI 活用戦略に組み込まれることが予想される。</p>
 
 <h2>まとめ</h2>
-<p>AI エージェントによる自律開発は、設計・実装・テスト・デプロイを一連のフローで自動化し、開発速度と品質の両立を実現する新しいパラダイムである。基準・証拠・説明による人間側の検証フレームワーク、pstack の 10 分パイプライン、Orca Bots の統合 IDE、そして自律改善ハーネスといったツール群は、即戦力として活用できる具体的手段を提供している。一方で、テスト網羅の限界やエージェントの意思決定根拠の可視化といった課題は依然として残っており、継続的な改善が求められる。</p>
+<p>Microsoft Foundry で AI エージェントを設計する際の 5 つの決定事項は、データ保存、エージェント生成方式、ツール連携、権限・認可、ネットワーク構成という全体像を網羅している。実務での成功事例は、ハイブリッド作成方式と最小権限の徹底、プライベートネットワーク活用が鍵であることを示唆している。これらを踏まえた設計が、今後の AI エージェント活用を加速させるだろう。</p>
 
-<p>出典：</p>
 <ul>
-<li>https://zenn.dev/kinuuu/articles/ai-coding-criteria-evidence-explanation</li>
-<li>https://zenn.dev/canly/articles/ca6875cd79539f</li>
-<li>https://zenn.dev/nttdata_tech/articles/9562962cc181a1</li>
-<li>https://zenn.dev/karamage/books/50c18e52e7d19e</li>
-<li>https://zenn.dev/kg_motors_mibot/articles/orca-bot-intro</li>
+<li>Microsoft Foundry で AI エージェントを設計するときに決める5つのこと（Zenn）</li>
+<li>「コードを書く」から「迷わず判断する」へ——AIエージェント時代の開発ワークフローを自作ツールで再設計した話（Zenn）</li>
+<li>コーディングエージェントが変えたOSS開発のプロセスと喜び（Zenn）</li>
+<li>コードを全部は読まずにClaude Codeで本番リリースするためにしたこと（Zenn）</li>
+<li>Gemini 4 Neon を API で叩いて Claude Code・Codex CLI と比べた：65万トークンの超長文、費用、失敗（Zenn）</li>
 </ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/kinuuu/articles/ai-coding-criteria-evidence-explanation" target="_blank" rel="noopener">AIに実装を任せても、理解と判断は手放さない：基準・証拠・説明をGoのAPIで試した記録</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/canly/articles/ca6875cd79539f" target="_blank" rel="noopener">寝てる間に自動で動くAIエージェントを誰でも作れる：10分でわかる pstack 実践ガイド</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/nttdata_tech/articles/9562962cc181a1" target="_blank" rel="noopener">自分の代わりに動くAgentへ。Claude CodeとCodexで作る自律改善ハーネス</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/karamage/books/50c18e52e7d19e" target="_blank" rel="noopener">pstack 完全ガイド ─AIエージェントに雑なコード     を書かせない技術─</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/kg_motors_mibot/articles/orca-bot-intro" target="_blank" rel="noopener">Orca Botsが良さそう、何ができるのか</a><span class="src-name">(Zenn)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/microsoft/articles/daedf42c8463b8" target="_blank" rel="noopener">Microsoft Foundry で AI エージェントを設計するときに決める5つのこと</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/syarihu/articles/ba25f243ca79ed" target="_blank" rel="noopener">「コードを書く」から「迷わず判断する」へ——AIエージェント時代の開発ワークフローを自作ツールで再設計した話</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/cybergarage/articles/5ee7ac6b3b0565" target="_blank" rel="noopener">コーディングエージェントが変えたOSS開発のプロセスと喜び</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/teradox_blog/articles/8ec76cc0d9e2bb" target="_blank" rel="noopener">コードを全部は読まずにClaude Codeで本番リリースするためにしたこと</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/canly/articles/40e773759da8f8" target="_blank" rel="noopener">Gemini 4 Neon を API で叩いて Claude Code・Codex CLI と比べた：65万トークンの超長文、費用、失敗</a><span class="src-name">(Zenn)</span></li></ul>
     </section>
   </main>
 
