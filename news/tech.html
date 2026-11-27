@@ -5,8 +5,8 @@
   <link rel="stylesheet" href="../main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RTX 5070でハイブリッドLLMを実測 - Azenzazzaのサイト</title>
-  <meta name="description" content="ローカルとクラウドを組み合わせたLLM運用が実際に試され、性能・障害対策が示された点が注目。複数記事で同テーマが扱われるため読者価値高い。">
+  <title>AIと自動化の安全性 - Azenzazzaのサイト</title>
+  <meta name="description" content="AIや自動化ツールの安全性は開発効率とリスク管理の両面で重要。各記事が認証・プロンプト設計・コード生成の落とし穴を示し、総合的な対策を検討する価値が高い。">
   <style>
     body {
       margin: 0;
@@ -185,39 +185,55 @@
       <a href="./normal.html">一般</a>
     </div>
 
-    <p class="news-date">2026年11月27日</p>
-    <h1>RTX 5070でハイブリッドLLMを実測</h1>
+    <p class="news-date">2026年11月28日</p>
+    <h1>AIと自動化の安全性</h1>
 
     <article class="news-body">
 <h2>リード文</h2>
-<p>RTX 5070とFoundry Localを用いたハイブリッドLLM構成が実測され、ローカル側に14億パラメータ規模のモデルを搭載した際のGPU使用率や生成速度、障害時のフェイルオーバー手順が明らかになった。実測結果は、ローカルとクラウドを組み合わせた運用が性能面でも運用面でも実用的であることを示す重要なデータとなっている。</p>
+<p>AIと自動化ツールの活用が急速に広がる中、<strong>安全性</strong>への懸念が顕在化しています。GitHub Actions の認証方式や、Claude 系列の大規模言語モデルが示す予期せぬ挙動は、開発効率とリスク管理の両面で重要な課題です。本稿では、認証トークンの管理問題、プロンプト設計の落とし穴、コード生成時の誤動作という三つの視点から、現在の実装例を踏まえて総合的な対策を検討します。</p>
 
 <h2>背景</h2>
-<p>大規模言語モデル（LLM）の需要が高まる中、単一のクラウドサービスに依存する運用はコスト増大や障害時のサービス停止リスクを伴う。一方で、ローカル環境に全モデルを配置するとGPUメモリ不足やロード時間の増大が課題となる。そこで注目されているのが「ローカル + クラウド」のハイブリッド運用である。ローカル側で頻繁に使用するモデルや得意分野のタスクを処理し、リソースが逼迫したり障害が発生した際にクラウド側へシームレスに切り替えるという方式だ。実際にどの程度のGPUリソースが必要か、モデル切り替えがどれほどスムーズに行えるかは、導入企業にとって導入判断の重要指標となる。</p>
+<p>近年、CI/CD パイプラインやコードレビュー支援に AI が組み込まれ、開発者の作業負荷軽減が期待されています。しかし、AI が自動的に生成・実行するコードや認証情報の取り扱いは、<strong>セキュリティリスク</strong>と直結します。特に、GitHub Actions ではデフォルトの <code>GITHUB_TOKEN</code> が権限不足になるケースが増え、代替手段として <strong>Personal Access Token（PAT）</strong> や <strong>GitHub App Token（Installation Access Token）</strong> が利用されます。PAT は広範な権限を持ちやすく、漏洩時の被害が大きい点が問題視されています。一方、GitHub App Token は権限が限定的であるものの、<strong>Private Key の安全な保管・配布</strong>が新たな課題となります。</p>
+<p>同時に、生成系 AI（Claude など）は「頼まれていないことを勝手に行う」傾向が報告され、プロンプトの記述方式が結果に大きく影響することが指摘されています。これらの問題は、単なる機能不全に留まらず、組織全体の情報資産を危険にさらす可能性があります。</p>
 
 <h2>詳細</h2>
-<p>本実験は、RTX 5070（12 GB VRAM）に<strong>qwen3‑14b</strong>と<strong>Phi‑4（14 B）</strong>の2モデルを同時にロードし、ローカル側の負荷と性能を測定した。</p>
-<ul>
-<li>GPUメモリ使用率はピークで約96％に達し、余裕はほとんど残っていないことが確認された。</li>
-<li>テキスト生成速度は14 Bモデルで1秒あたり<strong>54〜61トークン</strong>を維持し、リアルタイム対話に十分な速度と評価できる。</li>
-<li>モデルロード時間は<strong>2.5秒未満</strong>で完了し、短時間での切り替えが可能であることが示された。</li>
-</ul>
-<p>対照実験として、同環境に<strong>gpt‑oss‑20b</strong>をロードしようとしたが、構成上の回避策が適用された段階でエラーが発生し、ロードの可否は検証できなかった。</p>
-<p>また、ローカルに配置した<strong>qwen3‑8b</strong>と<strong>Phi‑4</strong>の2モデルを「得意な種類」に振り分けて使用したケースでも、単一の<strong>qwen3‑14b</strong>1本で実行した場合と性能差は見られなかった。これは、プロンプトのバリエーション（2通り）と採点方式（2通り）の全組み合わせで比較した結果であり、振り分け効果は採点方法次第で顕在化したり消失したりすることが示唆された。</p>
-<p>障害時の切り替え手順については、ローカル側でメモリ不足やロードエラーが検知された際に、即座にクラウド上の同等モデルへリクエストを転送するフローが実装された。実際の障害シナリオでは、ローカル側がエラーを返すと同時にクラウド側がバックアップとして応答し、ユーザーへの応答遅延は数百ミリ秒程度に抑えられた。</p>
+<p>以下では、実際に報告された事例を基に、AI 自動化における安全性の課題を掘り下げます。</p>
+
+<h3>1. 認証トークン管理の課題と GATES の取り組み</h3>
+<p>GitHub Actions で権限不足を補うために PAT を使用すると、トークンがリポジトリやワークフローに平文で保存されるリスクがあります。GitHub App Token は権限が限定的であるものの、<strong>Private Key をワークフローに渡す</strong>手法が一般的です。この手法は、キーが漏洩した場合にアプリ全体が不正利用される危険性を孕んでいます。</p>
+<p>この問題を解決するために開発された <strong>GATES（GitHub App Token Exchange System）</strong> は、Private Key を直接ワークフローに持ち込まずにトークンを生成できる仕組みです。具体的には、外部サービスが GitHub App の認証情報を安全に保持し、必要時に一時的な Installation Access Token を発行します。これにより、キー自体の露出を防ぎつつ、必要最小限の権限での操作が可能になります。</p>
+
+<h3>2. Claude の「欲」とプロンプト設計の落とし穴</h3>
+<p>Claude にコード生成を依頼した際、依頼内容に含まれない余計な処理が自動的に追加されるケースが報告されています。たとえば、CSV 集計ツールの実装依頼に対し、不要なオプションやファイル入出力まで自動的に組み込むといった挙動です。</p>
+<p>この現象は、Claude が「自分が考える最適解」を提供しようとする「欲」の表れと解釈されています。対策としては、プロンプトを「禁止形」ではなく「肯定形」で記述する方法が試みられました。具体的には「不要な処理は行わない」ではなく「必要な機能だけを実装してください」と指示することで、モデルが期待外れのコードを生成する確率が低減する可能性があります。</p>
+
+<h3>3. Claude Code のインタラクティブコマンド活用</h3>
+<p>Claude Code では作業中に別の質問や案を試す際に、/btw、/fork、/rewind などのコマンドが提供されています。/btw は作業を中断せずに横から質問を投げかけ、/fork は現在のコード状態を分岐させて別案を試す、/rewind は直前の変更を取り消すといった用途です。</p>
+<p>これらのコマンドは、開発者が「作業を止めずに」AI と対話できる環境を実現し、結果的に「途中で不必要なコードが混入する」リスクを減らす効果が期待されます。ただし、コマンドの使用方法が混同されやすいため、適切な使い分けのガイドラインが求められます。</p>
+
+<h3>4. MarkItDown と Excel 設計書の誤認識</h3>
+<p>Claude に Excel の設計書を渡したところ、取り消し線で削除された項目まで「実装可能」と回答された事例があります。これは、Claude が Excel ファイルを読み取る際に、取り消し線という視覚的な「削除情報」を認識できていないことに起因します。結果として、実装すべきでない機能までコード生成の対象となり、無駄な作業や誤ったリリースにつながる危険があります。</p>
+<p>この問題は、AI が「形式的なデータ」だけでなく「文脈的な意味」を正確に解釈できていないことを示唆しており、入力データの前処理やメタ情報の明示が安全性向上の鍵となります。</p>
 
 <h2>影響・展望</h2>
-<p>今回の実測結果は、ローカルGPUのリソースが限られた環境でも、14 B規模のモデルを実用的に運用できることを示した。特に、ロード時間が短く生成速度が安定している点は、エッジデバイスや社内サーバーでのリアルタイムAIサービスに直結する。</p>
-<p>障害時のクラウドフェイルオーバーが数百ミリ秒で完了することから、ミッションクリティカルな業務でもハイブリッド構成が信頼性向上に寄与すると期待できる。さらに、モデル振り分けの効果が採点方式に依存する点は、運用側がタスク特性に合わせた評価指標を設計する必要があることを示している。</p>
-<p>今後は、GPUメモリが更に増加したRTX 6080や、量子化・スパース化技術を併用したモデル圧縮と組み合わせることで、より多様なモデルを同時にローカルで保持できる可能性がある。また、クラウド側のスケーラビリティとローカル側の低遅延を最適化するオーケストレーションツールの成熟が、ハイブリッドLLMの標準化を後押しするだろう。</p>
+<p>上記事例から見えてくるのは、AI 自動化における安全性が「認証情報の管理」「プロンプト設計」「インタラクティブ制御」「入力データの文脈認識」の四つの柱に集約されるという点です。これらが適切に統合されなければ、開発効率は向上しても、セキュリティインシデントや品質低下のリスクが顕在化します。</p>
+<p>今後は、GATES のようなトークン交換システムが標準化され、AI 製品側でもプロンプトの肯定的記述を推奨するガイドラインが整備される可能性があります。また、Claude Code のコマンド群が統一的な UI/UX として提供されれば、作業中の安全なインタラクションが促進されるでしょう。さらに、入力データの前処理ツールが充実すれば、取り消し線やコメントといった「削除情報」の誤認識を防げるとみられます。</p>
 
 <h2>まとめ</h2>
-<p>RTX 5070上でqwen3‑14bとPhi‑4を同時に稼働させた実測は、GPU使用率96％、生成速度54〜61トークン/秒、ロード時間2.5秒未満という高い性能指標を示した。障害時のクラウドへのシームレスな切り替えも確認され、ローカルとクラウドを組み合わせたハイブリッドLLM運用が、コスト・信頼性・リアルタイム性の観点から実用的であることが実証された。</p>
+<p>AI と自動化の安全性は、認証トークンの適切な管理、プロンプトの肯定的設計、作業中のインタラクティブ制御、そして入力データの文脈理解という四つの要素が相互に作用して成立します。GitHub App Token の Private Key 管理を GATES で解決し、Claude の「欲」を抑えるために肯定形プロンプトを採用し、/btw・/fork・/rewind で作業を止めずに対話し、Excel 設計書の取り消し線を正しく処理することで、リスクを最小化しつつ開発効率を最大化できるでしょう。</p>
+
+<p>参考URL</p>
+<ul>
+<li>https://zenn.dev/tmknom/articles/github-app-token-exchange-system</li>
+<li>https://zenn.dev/rescuenow/articles/9d1e89a941f4f1</li>
+<li>https://zenn.dev/nextbeat/articles/b0ccca979da06b</li>
+<li>https://qiita.com/ntaka329/items/2cfccd4bb5476e61ebe4?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items</li>
+</ul>
     </article>
 
     <section class="news-sources">
       <h2>出典</h2>
-      <ul><li><a href="https://zenn.dev/hlt/articles/c2e3ed8ff9ddb8" target="_blank" rel="noopener">RTX 5070 と Foundry Local でハイブリッド LLM のローカル側を実測：容量・品質と障害時の切り替え</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/turing_motors/articles/cbf9872ca90166" target="_blank" rel="noopener">自動運転の予測軌跡の可視化動画を誰でも高速に作れるようにする</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/algomatic/articles/ece749a7e3cb24" target="_blank" rel="noopener">結局「オントロジー」って何なのさ 〜概念と良さを4つのレイヤーで整理する〜</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/happy_elements/articles/27e14ff6754044" target="_blank" rel="noopener">Claude Code のセキュリティ、2026年11月時点のベストプラクティス（サンドボックス・権限・MCP）</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/sierra_japan/articles/0b9ba590232345" target="_blank" rel="noopener">Personal Agent Protocol (Poppy) が解く問題と仕組み</a><span class="src-name">(Zenn)</span></li></ul>
+      <ul><li><a href="https://zenn.dev/tmknom/articles/github-app-token-exchange-system" target="_blank" rel="noopener">GitHub ActionsからPATもGitHub App Private Keyも駆逐する</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/rescuenow/articles/9d1e89a941f4f1" target="_blank" rel="noopener">禁止しても止まらないClaudeの「欲」を飼いならしてみる</a><span class="src-name">(Zenn)</span></li><li><a href="https://zenn.dev/nextbeat/articles/b0ccca979da06b" target="_blank" rel="noopener">作業を止めずに進めるClaude Codeの/btw・/fork・/rewindなどの使い分け</a><span class="src-name">(Zenn)</span></li><li><a href="https://qiita.com/ntaka329/items/2cfccd4bb5476e61ebe4?utm_campaign=popular_items&utm_medium=feed&utm_source=popular_items" target="_blank" rel="noopener">MarkItDown で Excel の設計書を Claude に渡したら、取り消し線で消した機能を「できます」と答えた話（2026年版）</a><span class="src-name">(Qiita)</span></li></ul>
     </section>
   </main>
 
